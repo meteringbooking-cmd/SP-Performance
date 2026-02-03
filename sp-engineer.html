@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineer Portal - Scottish Power</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #005EB8;
+            --primary-dark: #003d7a;
+            --accent: #00A3E0;
+            --bg-dark: #0A1628;
+            --bg-card: #1a2942;
+            --text-light: #E8EDF2;
+            --text-muted: #8B9AAE;
+            --border: #2a3f5f;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #0d1f3a 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 163, 224, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 94, 184, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Login Page Styles */
+        .login-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'DM Mono', monospace;
+            font-weight: 500;
+            font-size: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 163, 224, 0.3);
+            margin: 0 auto 1.5rem;
+        }
+
+        .login-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="date"] {
+            width: 100%;
+            padding: 1rem;
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-light);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Work Sans', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 163, 224, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-dark);
+            color: var(--text-light);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            background: var(--bg-card);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            display: none;
+            padding: 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--error);
+            border-radius: 12px;
+            color: var(--error);
+            text-align: center;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Dashboard Page Styles */
+        header {
+            margin-bottom: 3rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text-light) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-family: 'DM Mono', monospace;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+        }
+
+        .logout-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-light);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .date-range-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .results-section {
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .record-count {
+            font-family: 'DM Mono', monospace;
+            color: var(--accent);
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 163, 224, 0.1);
+            border-radius: 8px;
+        }
+
+        .day-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-dark);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .day-header {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .job-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .job-card {
+            padding: 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .job-card:hover {
+            border-color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .job-detail {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .job-detail:last-child {
+            margin-bottom: 0;
+        }
+
+        .job-label {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .job-value {
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        .status-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-completed {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        .no-results-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1.5rem;
+            }
+
+            .login-card {
+                padding: 2rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .date-range-section,
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .logout-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Page -->
+        <div id="loginPage" class="page active">
+            <div class="login-wrapper">
+                <div class="login-card">
+                    <div class="login-header">
+                        <div class="logo">SP</div>
+                        <h2 class="login-title">Engineer Portal</h2>
+                        <p class="login-subtitle">Scottish Power Data System</p>
+                    </div>
+
+                    <div id="loginError" class="error-message"></div>
+
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" required autocomplete="username">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" required autocomplete="current-password">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Sign In</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboardPage" class="page">
+            <header>
+                <div class="header-content">
+                    <div class="welcome-section">
+                        <h1>Welcome, <span id="engineerName"></span></h1>
+                    </div>
+                    <button id="logoutBtn" class="logout-btn">Logout</button>
+                </div>
+                <p class="subtitle">ENGINEER DASHBOARD</p>
+            </header>
+
+            <main>
+                <div class="card">
+                    <div class="date-range-section">
+                        <div class="form-group">
+                            <label for="startDate">Start Date</label>
+                            <input type="date" id="startDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="endDate">End Date</label>
+                            <input type="date" id="endDate" required>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button id="showBreakdownBtn" class="btn btn-primary">Show Daily Breakdown</button>
+                        <button id="submitPaymentsBtn" class="btn btn-secondary">Submit Additional Payments</button>
+                    </div>
+                </div>
+
+                <div id="loadingSection" class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading data...</p>
+                </div>
+
+                <div id="resultsSection" class="results-section">
+                    <div class="card">
+                        <div class="results-header">
+                            <h2 class="results-title">Daily Breakdown</h2>
+                            <span id="totalRecords" class="record-count">0 jobs</span>
+                        </div>
+
+                        <div id="resultsContainer"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCMmUOdW2uEIGVd6XQfWXKF8eaFmwEog1g",
+            authDomain: "oesperformance-a54c0.firebaseapp.com",
+            projectId: "oesperformance-a54c0",
+            storageBucket: "oesperformance-a54c0.firebasestorage.app",
+            messagingSenderId: "484894102454",
+            appId: "1:484894102454:web:17535ee497eac2d90d6717",
+            measurementId: "G-R56BGZYV8N"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // DOM elements
+        const loginPage = document.getElementById('loginPage');
+        const dashboardPage = document.getElementById('dashboardPage');
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const engineerNameSpan = document.getElementById('engineerName');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const showBreakdownBtn = document.getElementById('showBreakdownBtn');
+        const submitPaymentsBtn = document.getElementById('submitPaymentsBtn');
+        const loadingSection = document.getElementById('loadingSection');
+        const resultsSection = document.getElementById('resultsSection');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const totalRecords = document.getElementById('totalRecords');
+
+        // Current user data
+        let currentUser = null;
+
+        // Handle login
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+
+            // Simple authentication - you should replace this with proper authentication
+            // For now, we'll just check if both fields are filled and store the username
+            if (username && password) {
+                currentUser = {
+                    username: username,
+                    name: username // You can enhance this to fetch actual name from Firebase
+                };
+
+                // Switch to dashboard
+                loginPage.classList.remove('active');
+                dashboardPage.classList.add('active');
+                engineerNameSpan.textContent = currentUser.name;
+                
+                // Clear form
+                loginForm.reset();
+                loginError.classList.remove('show');
+            } else {
+                loginError.textContent = 'Please enter both username and password';
+                loginError.classList.add('show');
+            }
+        });
+
+        // Handle logout
+        logoutBtn.addEventListener('click', () => {
+            currentUser = null;
+            dashboardPage.classList.remove('active');
+            loginPage.classList.add('active');
+            resultsSection.classList.remove('show');
+            resultsContainer.innerHTML = '';
+        });
+
+        // Show daily breakdown
+        showBreakdownBtn.addEventListener('click', async () => {
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
+
+            if (!startDate || !endDate) {
+                alert('Please select both start and end dates');
+                return;
+            }
+
+            if (new Date(startDate) > new Date(endDate)) {
+                alert('Start date must be before end date');
+                return;
+            }
+
+            loadingSection.classList.add('show');
+            resultsSection.classList.remove('show');
+            resultsContainer.innerHTML = '';
+
+            try {
+                // Query Firebase for data
+                const dataCollection = collection(db, 'SP Submitted Data');
+                const q = query(dataCollection);
+                const querySnapshot = await getDocs(q);
+
+                // Filter and organize data by date
+                const dataByDate = {};
+                let totalJobs = 0;
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const jobDate = data.jobDate;
+
+                    // Check if job date is within selected range
+                    if (isDateInRange(jobDate, startDate, endDate)) {
+                        if (!dataByDate[jobDate]) {
+                            dataByDate[jobDate] = [];
+                        }
+                        dataByDate[jobDate].push(data);
+                        totalJobs++;
+                    }
+                });
+
+                // Display results
+                displayResults(dataByDate, totalJobs);
+                
+                loadingSection.classList.remove('show');
+                resultsSection.classList.add('show');
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                alert('Error loading data. Please try again.');
+                loadingSection.classList.remove('show');
+            }
+        });
+
+        // Check if a date is within range
+        function isDateInRange(dateStr, startStr, endStr) {
+            // Convert DD/MM/YYYY to YYYY-MM-DD for comparison
+            const dateParts = dateStr.split('/');
+            if (dateParts.length !== 3) return false;
+            
+            const date = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+            const start = new Date(startStr);
+            const end = new Date(endStr);
+
+            return date >= start && date <= end;
+        }
+
+        // Display results grouped by date
+        function displayResults(dataByDate, totalJobs) {
+            resultsContainer.innerHTML = '';
+            totalRecords.textContent = `${totalJobs} jobs`;
+
+            if (totalJobs === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon">📭</div>
+                        <p>No jobs found for the selected date range</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort dates
+            const sortedDates = Object.keys(dataByDate).sort((a, b) => {
+                const [dayA, monthA, yearA] = a.split('/');
+                const [dayB, monthB, yearB] = b.split('/');
+                return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);
+            });
+
+            // Create sections for each date
+            sortedDates.forEach(date => {
+                const jobs = dataByDate[date];
+                const daySection = document.createElement('div');
+                daySection.className = 'day-section';
+
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'day-header';
+                dayHeader.textContent = `${formatDateDisplay(date)} - ${jobs.length} job${jobs.length !== 1 ? 's' : ''}`;
+
+                const jobGrid = document.createElement('div');
+                jobGrid.className = 'job-grid';
+
+                jobs.forEach(job => {
+                    const jobCard = document.createElement('div');
+                    jobCard.className = 'job-card';
+                    jobCard.innerHTML = `
+                        <div class="job-detail">
+                            <span class="job-label">Job ID</span>
+                            <span class="job-value">${escapeHtml(job.jobId)}</span>
+                        </div>
+                        <div class="job-detail">
+                            <span class="job-label">Job Type</span>
+                            <span class="job-value">${escapeHtml(job.jobType)}</span>
+                        </div>
+                        <div class="job-detail">
+                            <span class="job-label">Status</span>
+                            <span class="status-badge ${getStatusClass(job.jobStatus)}">${escapeHtml(job.jobStatus)}</span>
+                        </div>
+                        ${job.startTime ? `
+                        <div class="job-detail">
+                            <span class="job-label">Start Time</span>
+                            <span class="job-value">${escapeHtml(job.startTime)}</span>
+                        </div>
+                        ` : ''}
+                    `;
+                    jobGrid.appendChild(jobCard);
+                });
+
+                daySection.appendChild(dayHeader);
+                daySection.appendChild(jobGrid);
+                resultsContainer.appendChild(daySection);
+            });
+        }
+
+        // Format date for display
+        function formatDateDisplay(dateStr) {
+            const [day, month, year] = dateStr.split('/');
+            const date = new Date(year, month - 1, day);
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-GB', options);
+        }
+
+        // Get status badge class
+        function getStatusClass(status) {
+            const statusLower = status.toLowerCase();
+            if (statusLower.includes('complete') || statusLower.includes('done')) {
+                return 'status-completed';
+            } else if (statusLower.includes('cancel') || statusLower.includes('failed')) {
+                return 'status-cancelled';
+            }
+            return 'status-pending';
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text || '';
+            return div.innerHTML;
+        }
+
+        // Submit additional payments button (placeholder)
+        submitPaymentsBtn.addEventListener('click', () => {
+            alert('Additional Payments functionality will be implemented separately');
+        });
+    </script>
+</body>
+</html>
