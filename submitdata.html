@@ -548,6 +548,25 @@
             checkInputs();
         });
 
+        // Convert Excel serial date to DD/MM/YYYY format
+        function convertExcelDate(serial) {
+            if (!serial) return '';
+            
+            // If it's already a string (not a number), return it as is
+            if (typeof serial === 'string') return serial;
+            
+            // Excel serial date starts from 1900-01-01
+            // Serial number 1 = January 1, 1900
+            const excelEpoch = new Date(1899, 11, 30); // December 30, 1899
+            const date = new Date(excelEpoch.getTime() + serial * 86400000);
+            
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            
+            return `${day}/${month}/${year}`;
+        }
+
         // Upload and preview
         uploadBtn.addEventListener('click', async () => {
             const file = fileInput.files[0];
