@@ -595,7 +595,7 @@
                             return {
                                 jobId: row[0] || '',
                                 jobType: row[2] || '',
-                                jobDate: row[3] || '',
+                                jobDate: convertExcelDate(row[3]),
                                 startTime: row[4] || '',
                                 jobStatus: row[6] || '',
                                 outcomeResource: row[8] || ''
