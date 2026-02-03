@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Data - Scottish Power</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #005EB8;
+            --primary-dark: #003d7a;
+            --accent: #00A3E0;
+            --bg-dark: #0A1628;
+            --bg-card: #1a2942;
+            --text-light: #E8EDF2;
+            --text-muted: #8B9AAE;
+            --border: #2a3f5f;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #0d1f3a 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 163, 224, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 94, 184, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .back-btn {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-light);
+            font-size: 1.25rem;
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+            border-color: var(--accent);
+            transform: translateX(-4px);
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text-light) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-family: 'DM Mono', monospace;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-left: 64px;
+            letter-spacing: 0.05em;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        input[type="date"],
+        input[type="file"] {
+            width: 100%;
+            padding: 1rem;
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-light);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="date"]:focus,
+        input[type="file"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.1);
+        }
+
+        input[type="file"] {
+            cursor: pointer;
+        }
+
+        input[type="file"]::file-selector-button {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 1rem;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 163, 224, 0.3);
+        }
+
+        .file-info {
+            margin-top: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            border-radius: 8px;
+            color: var(--success);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .preview-section {
+            display: none;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .preview-section.show {
+            display: block;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .record-count {
+            font-family: 'DM Mono', monospace;
+            color: var(--accent);
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 163, 224, 0.1);
+            border-radius: 8px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-dark);
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+
+        tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(0, 163, 224, 0.05);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Work Sans', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 163, 224, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-dark);
+            color: var(--text-light);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            background: var(--bg-card);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            display: none;
+            padding: 1.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid var(--success);
+            border-radius: 12px;
+            color: var(--success);
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .error-message {
+            display: none;
+            padding: 1.5rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--error);
+            border-radius: 12px;
+            color: var(--error);
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1.5rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .subtitle {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <a href="index.html" class="back-btn">←</a>
+                <h1>Submit Data</h1>
+            </div>
+            <p class="subtitle">UPLOAD AND SUBMIT JOB DATA</p>
+        </header>
+
+        <main>
+            <div id="successMessage" class="success-message">
+                ✓ Data successfully saved to Firebase!
+            </div>
+
+            <div id="errorMessage" class="error-message">
+                ✗ Error saving data. Please try again.
+            </div>
+
+            <div class="card">
+                <div class="form-group">
+                    <label for="dateInput">Select Date</label>
+                    <input type="date" id="dateInput" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="fileInput">Upload Excel File</label>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" required>
+                    <div id="fileInfo" class="file-info"></div>
+                </div>
+
+                <div class="btn-group">
+                    <button id="uploadBtn" class="btn btn-primary" disabled>Upload & Preview</button>
+                </div>
+            </div>
+
+            <div id="loadingSection" class="loading">
+                <div class="spinner"></div>
+                <p>Processing file...</p>
+            </div>
+
+            <div id="previewSection" class="preview-section">
+                <div class="card">
+                    <div class="preview-header">
+                        <h2 class="preview-title">Data Preview</h2>
+                        <span id="recordCount" class="record-count">0 records</span>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Job ID</th>
+                                    <th>Job Type</th>
+                                    <th>Job Date</th>
+                                    <th>Start Time</th>
+                                    <th>Job Status</th>
+                                    <th>Outcome Resource</th>
+                                </tr>
+                            </thead>
+                            <tbody id="previewTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="btn-group">
+                        <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+                        <button id="saveBtn" class="btn btn-primary">Save to Firebase</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCMmUOdW2uEIGVd6XQfWXKF8eaFmwEog1g",
+            authDomain: "oesperformance-a54c0.firebaseapp.com",
+            projectId: "oesperformance-a54c0",
+            storageBucket: "oesperformance-a54c0.firebasestorage.app",
+            messagingSenderId: "484894102454",
+            appId: "1:484894102454:web:17535ee497eac2d90d6717",
+            measurementId: "G-R56BGZYV8N"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // DOM elements
+        const dateInput = document.getElementById('dateInput');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const loadingSection = document.getElementById('loadingSection');
+        const previewSection = document.getElementById('previewSection');
+        const previewTableBody = document.getElementById('previewTableBody');
+        const recordCount = document.getElementById('recordCount');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        let parsedData = [];
+
+        // Set today's date as default
+        dateInput.valueAsDate = new Date();
+
+        // Enable upload button when both inputs are filled
+        function checkInputs() {
+            uploadBtn.disabled = !(dateInput.value && fileInput.files.length > 0);
+        }
+
+        dateInput.addEventListener('change', checkInputs);
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                fileInfo.textContent = `📄 ${e.target.files[0].name}`;
+                fileInfo.classList.add('show');
+            } else {
+                fileInfo.classList.remove('show');
+            }
+            checkInputs();
+        });
+
+        // Upload and preview
+        uploadBtn.addEventListener('click', async () => {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            loadingSection.classList.add('show');
+            successMessage.classList.remove('show');
+            errorMessage.classList.remove('show');
+
+            try {
+                const data = await parseExcelFile(file);
+                parsedData = data;
+                
+                // Display preview
+                displayPreview(data);
+                loadingSection.classList.remove('show');
+                previewSection.classList.add('show');
+            } catch (error) {
+                console.error('Error parsing file:', error);
+                errorMessage.textContent = '✗ Error parsing file: ' + error.message;
+                errorMessage.classList.add('show');
+                loadingSection.classList.remove('show');
+            }
+        });
+
+        // Parse Excel file using SheetJS
+        async function parseExcelFile(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                
+                reader.onload = async (e) => {
+                    try {
+                        // Load SheetJS library
+                        const XLSX = await loadSheetJS();
+                        
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                        const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+
+                        // Map columns A, C, D, E, G, I (indices 0, 2, 3, 4, 6, 8)
+                        const mappedData = jsonData.slice(1).map(row => {
+                            if (!row[0]) return null; // Skip empty rows
+                            
+                            return {
+                                jobId: row[0] || '',
+                                jobType: row[2] || '',
+                                jobDate: row[3] || '',
+                                startTime: row[4] || '',
+                                jobStatus: row[6] || '',
+                                outcomeResource: row[8] || ''
+                            };
+                        }).filter(item => item !== null);
+
+                        resolve(mappedData);
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+
+                reader.onerror = () => reject(new Error('Failed to read file'));
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
+        // Load SheetJS library dynamically
+        function loadSheetJS() {
+            return new Promise((resolve, reject) => {
+                if (window.XLSX) {
+                    resolve(window.XLSX);
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+                script.onload = () => resolve(window.XLSX);
+                script.onerror = () => reject(new Error('Failed to load SheetJS library'));
+                document.head.appendChild(script);
+            });
+        }
+
+        // Display preview table
+        function displayPreview(data) {
+            previewTableBody.innerHTML = '';
+            recordCount.textContent = `${data.length} records`;
+
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${escapeHtml(item.jobId)}</td>
+                    <td>${escapeHtml(item.jobType)}</td>
+                    <td>${escapeHtml(item.jobDate)}</td>
+                    <td>${escapeHtml(item.startTime)}</td>
+                    <td>${escapeHtml(item.jobStatus)}</td>
+                    <td>${escapeHtml(item.outcomeResource)}</td>
+                `;
+                previewTableBody.appendChild(row);
+            });
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Cancel preview
+        cancelBtn.addEventListener('click', () => {
+            previewSection.classList.remove('show');
+            parsedData = [];
+        });
+
+        // Save to Firebase
+        saveBtn.addEventListener('click', async () => {
+            if (parsedData.length === 0) return;
+
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+            loadingSection.classList.add('show');
+            successMessage.classList.remove('show');
+            errorMessage.classList.remove('show');
+
+            try {
+                const selectedDate = dateInput.value;
+                const collectionRef = collection(db, 'SP Submitted Data');
+
+                // Save each record to Firebase
+                const promises = parsedData.map(item => 
+                    addDoc(collectionRef, {
+                        submissionDate: selectedDate,
+                        jobId: item.jobId,
+                        jobType: item.jobType,
+                        jobDate: item.jobDate,
+                        startTime: item.startTime,
+                        jobStatus: item.jobStatus,
+                        outcomeResource: item.outcomeResource,
+                        timestamp: serverTimestamp()
+                    })
+                );
+
+                await Promise.all(promises);
+
+                // Success
+                loadingSection.classList.remove('show');
+                successMessage.classList.add('show');
+                previewSection.classList.remove('show');
+                
+                // Reset form
+                fileInput.value = '';
+                fileInfo.classList.remove('show');
+                parsedData = [];
+                checkInputs();
+
+                // Scroll to success message
+                successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            } catch (error) {
+                console.error('Error saving to Firebase:', error);
+                errorMessage.textContent = '✗ Error saving data: ' + error.message;
+                errorMessage.classList.add('show');
+                loadingSection.classList.remove('show');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save to Firebase';
+            }
+        });
+    </script>
+</body>
+</html>
