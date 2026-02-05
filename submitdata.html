@@ -587,13 +587,14 @@
                         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
                         const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
 
-                        // Map columns A, C, E, G, I (indices 0, 2, 4, 6, 8)
+                        // Map columns B, C, E, G, I (indices 1, 2, 4, 6, 8)
+                        // Column B = Job Reference (stored as jobId)
                         // Ignore column D (Job Date) - we'll use the selected date instead
                         const mappedData = jsonData.slice(1).map(row => {
-                            if (!row[0]) return null; // Skip empty rows
+                            if (!row[1]) return null; // Skip empty rows (check Job Reference)
                             
                             return {
-                                jobId: row[0] || '',
+                                jobId: row[1] || '', // Column B - Job Reference
                                 jobType: row[2] || '',
                                 startTime: row[4] || '',
                                 jobStatus: row[6] || '',
