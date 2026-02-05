@@ -548,15 +548,30 @@
             checkInputs();
         });
 
-        // Convert Excel serial date to DD/MM/YYYY format
+        // Convert Excel serial date to UK format DD/MM/YYYY
         function convertExcelDate(serial) {
             if (!serial) return '';
             
-            // If it's already a string (not a number), return it as is
-            if (typeof serial === 'string') return serial;
+            // If it's already a string in UK format, return it as is
+            if (typeof serial === 'string') {
+                // Check if it's already in dd/mm/yyyy format
+                if (/^\d{2}\/\d{2}\/\d{4}$/.test(serial)) {
+                    return serial;
+                }
+                // Try to parse other string date formats
+                const parsed = new Date(serial);
+                if (!isNaN(parsed)) {
+                    const day = String(parsed.getDate()).padStart(2, '0');
+                    const month = String(parsed.getMonth() + 1).padStart(2, '0');
+                    const year = parsed.getFullYear();
+                    return `${day}/${month}/${year}`;
+                }
+                return serial;
+            }
             
-            // Excel serial date starts from 1900-01-01
-            // Serial number 1 = January 1, 1900
+            // Handle Excel serial date number
+            // Excel serial date: January 1, 1900 = 1
+            // Note: Excel incorrectly treats 1900 as a leap year
             const excelEpoch = new Date(1899, 11, 30); // December 30, 1899
             const date = new Date(excelEpoch.getTime() + serial * 86400000);
             
