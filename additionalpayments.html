@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Additional Payments - Scottish Power</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #005EB8;
+            --primary-dark: #003d7a;
+            --accent: #00A3E0;
+            --bg-dark: #0A1628;
+            --bg-card: #1a2942;
+            --text-light: #E8EDF2;
+            --text-muted: #8B9AAE;
+            --border: #2a3f5f;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #0d1f3a 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 163, 224, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 94, 184, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .back-btn {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-light);
+            font-size: 1.25rem;
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+            border-color: var(--accent);
+            transform: translateX(-4px);
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text-light) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-family: 'DM Mono', monospace;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-left: 64px;
+            letter-spacing: 0.05em;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        input[type="date"],
+        input[type="text"],
+        input[type="time"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 0.875rem;
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-light);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.1);
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Work Sans', sans-serif;
+            align-self: flex-end;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 163, 224, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--error) 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-dark);
+            color: var(--text-light);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            background: var(--bg-card);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            background: var(--bg-dark);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .payment-card {
+            background: var(--bg-dark);
+            border: 2px solid var(--warning);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .payment-card:hover {
+            border-color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .payment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .engineer-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .payment-date {
+            font-family: 'DM Mono', monospace;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-awaiting {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .payment-details {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-section {
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: 10px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .detail-title {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.95rem;
+        }
+
+        .detail-amount {
+            font-family: 'DM Mono', monospace;
+            font-weight: 700;
+            color: var(--success);
+            font-size: 1rem;
+        }
+
+        .detail-content {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .editable-field {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .editable-field input {
+            width: auto;
+            min-width: 80px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .checkbox-field {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-field input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .payment-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .jobs-list {
+            margin-top: 0.5rem;
+        }
+
+        .job-item {
+            padding: 0.75rem;
+            background: var(--bg-dark);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .total-row {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-label {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .total-amount {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--success);
+            font-family: 'DM Mono', monospace;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        .no-results-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1.5rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .payment-actions {
+                flex-direction: column;
+            }
+
+            .subtitle {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <a href="index.html" class="back-btn">←</a>
+                <h1>Additional Payments</h1>
+            </div>
+            <p class="subtitle">MANAGE PAYMENT SUBMISSIONS</p>
+        </header>
+
+        <main>
+            <div class="card">
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-label">Pending Approvals</div>
+                        <div class="stat-value" id="pendingCount">0</div>
+                    </div>
+                    <div class="stat-card" style="border-left-color: var(--success);">
+                        <div class="stat-label">Total Value</div>
+                        <div class="stat-value" id="totalValue">£0.00</div>
+                    </div>
+                    <div class="stat-card" style="border-left-color: var(--warning);">
+                        <div class="stat-label">Engineers</div>
+                        <div class="stat-value" id="engineersCount">0</div>
+                    </div>
+                </div>
+
+                <div class="filters">
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" id="startDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">End Date</label>
+                        <input type="date" id="endDate">
+                    </div>
+                    <button id="filterBtn" class="btn btn-primary">Apply Filter</button>
+                </div>
+            </div>
+
+            <div id="loadingSection" class="loading">
+                <div class="spinner"></div>
+                <p>Loading payments...</p>
+            </div>
+
+            <div id="paymentsContainer"></div>
+        </main>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCMmUOdW2uEIGVd6XQfWXKF8eaFmwEog1g",
+            authDomain: "oesperformance-a54c0.firebaseapp.com",
+            projectId: "oesperformance-a54c0",
+            storageBucket: "oesperformance-a54c0.firebasestorage.app",
+            messagingSenderId: "484894102454",
+            appId: "1:484894102454:web:17535ee497eac2d90d6717",
+            measurementId: "G-R56BGZYV8N"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // DOM elements
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const filterBtn = document.getElementById('filterBtn');
+        const loadingSection = document.getElementById('loadingSection');
+        const paymentsContainer = document.getElementById('paymentsContainer');
+        const pendingCount = document.getElementById('pendingCount');
+        const totalValue = document.getElementById('totalValue');
+        const engineersCount = document.getElementById('engineersCount');
+
+        // Set default date range (last 30 days)
+        const today = new Date();
+        const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+        endDateInput.valueAsDate = today;
+        startDateInput.valueAsDate = thirtyDaysAgo;
+
+        // Load payments on page load
+        loadPayments();
+
+        // Filter button
+        filterBtn.addEventListener('click', loadPayments);
+
+        // Load payments from Firebase
+        async function loadPayments() {
+            loadingSection.classList.add('show');
+            paymentsContainer.innerHTML = '';
+
+            try {
+                const paymentsCollection = collection(db, 'SP Additional Payment');
+                const q = query(paymentsCollection, where('status', '==', 'Awaiting Approval'));
+                const querySnapshot = await getDocs(q);
+
+                const payments = [];
+                querySnapshot.forEach((doc) => {
+                    payments.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+
+                // Filter by date range
+                const startDate = startDateInput.value;
+                const endDate = endDateInput.value;
+
+                const filteredPayments = payments.filter(payment => {
+                    if (startDate && endDate) {
+                        return isDateInRange(payment.paymentDate, startDate, endDate);
+                    }
+                    return true;
+                });
+
+                // Sort by date (newest first)
+                filteredPayments.sort((a, b) => {
+                    const [dayA, monthA, yearA] = a.paymentDate.split('/');
+                    const [dayB, monthB, yearB] = b.paymentDate.split('/');
+                    const dateA = new Date(yearA, monthA - 1, dayA);
+                    const dateB = new Date(yearB, monthB - 1, dayB);
+                    return dateB - dateA;
+                });
+
+                // Update stats
+                updateStats(filteredPayments);
+
+                // Display payments
+                displayPayments(filteredPayments);
+
+                loadingSection.classList.remove('show');
+
+            } catch (error) {
+                console.error('Error loading payments:', error);
+                loadingSection.classList.remove('show');
+                paymentsContainer.innerHTML = `
+                    <div class="card">
+                        <div class="no-results">
+                            <div class="no-results-icon">⚠️</div>
+                            <p>Error loading payments. Please try again.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Check if date is in range
+        function isDateInRange(dateStr, startStr, endStr) {
+            const [day, month, year] = dateStr.split('/');
+            const date = new Date(year, month - 1, day);
+            const start = new Date(startStr);
+            const end = new Date(endStr);
+            return date >= start && date <= end;
+        }
+
+        // Update statistics
+        function updateStats(payments) {
+            pendingCount.textContent = payments.length;
+            
+            const total = payments.reduce((sum, payment) => sum + (payment.totalAmount || 0), 0);
+            totalValue.textContent = `£${total.toFixed(2)}`;
+
+            const uniqueEngineers = new Set(payments.map(p => p.engineerName));
+            engineersCount.textContent = uniqueEngineers.size;
+        }
+
+        // Display payments
+        function displayPayments(payments) {
+            if (payments.length === 0) {
+                paymentsContainer.innerHTML = `
+                    <div class="card">
+                        <div class="no-results">
+                            <div class="no-results-icon">📭</div>
+                            <p>No pending payments found</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            payments.forEach(payment => {
+                const paymentCard = createPaymentCard(payment);
+                paymentsContainer.appendChild(paymentCard);
+            });
+        }
+
+        // Create payment card
+        function createPaymentCard(payment) {
+            const card = document.createElement('div');
+            card.className = 'card payment-card';
+            card.dataset.paymentId = payment.id;
+
+            let detailsHTML = '';
+
+            // Standby section
+            if (payment.standby) {
+                detailsHTML += `
+                    <div class="detail-section">
+                        <div class="detail-header">
+                            <span class="detail-title">Standby Payment</span>
+                            <span class="detail-amount">£${payment.standbyAmount.toFixed(2)}</span>
+                        </div>
+                        <div class="detail-content">
+                            <div class="checkbox-field">
+                                <input type="checkbox" class="approve-standby" checked>
+                                <label>Approve standby payment (${getDayType(payment.paymentDate)})</label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Working away section
+            if (payment.workingAway) {
+                detailsHTML += `
+                    <div class="detail-section">
+                        <div class="detail-header">
+                            <span class="detail-title">Working Away Allowance</span>
+                        </div>
+                        <div class="detail-content">
+                            <div class="checkbox-field">
+                                <input type="checkbox" class="approve-working-away" checked>
+                                <label>Approve working away allowance</label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Overtime section
+            if (payment.overtime) {
+                detailsHTML += `
+                    <div class="detail-section">
+                        <div class="detail-header">
+                            <span class="detail-title">Overtime</span>
+                            <span class="detail-amount">£${payment.overtimeAmount.toFixed(2)}</span>
+                        </div>
+                        <div class="detail-content">
+                            <div class="detail-row">
+                                <span>Start Time:</span>
+                                <span class="editable-field">
+                                    <input type="time" class="overtime-start" value="${payment.overtimeStart}">
+                                </span>
+                            </div>
+                            <div class="detail-row">
+                                <span>End Time:</span>
+                                <span class="editable-field">
+                                    <input type="time" class="overtime-end" value="${payment.overtimeEnd}">
+                                </span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Hours:</span>
+                                <span class="overtime-hours">${payment.overtimeHours.toFixed(2)} hrs</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Rate:</span>
+                                <span>£${payment.overtimeRate.toFixed(2)}/hr (${getDayType(payment.paymentDate)})</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Reason:</span>
+                                <span>${payment.overtimeReason}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Jobs section
+            if (payment.jobs && payment.jobs.length > 0) {
+                let jobsHTML = '<div class="jobs-list">';
+                payment.jobs.forEach((job, index) => {
+                    jobsHTML += `
+                        <div class="job-item">
+                            <strong>Job ${index + 1}:</strong> ${job.jobNumber} | ${job.jobType} | ${job.postCode}
+                        </div>
+                    `;
+                });
+                jobsHTML += '</div>';
+
+                detailsHTML += `
+                    <div class="detail-section">
+                        <div class="detail-header">
+                            <span class="detail-title">Jobs Carried Out</span>
+                            <span style="color: var(--accent);">${payment.jobs.length} job${payment.jobs.length !== 1 ? 's' : ''}</span>
+                        </div>
+                        <div class="detail-content">
+                            ${jobsHTML}
+                        </div>
+                    </div>
+                `;
+            }
+
+            card.innerHTML = `
+                <div class="payment-header">
+                    <div class="payment-info">
+                        <div class="engineer-name">${escapeHtml(payment.engineerName)}</div>
+                        <div class="payment-date">Payment Date: ${formatDateDisplay(payment.paymentDate)}</div>
+                    </div>
+                    <span class="status-badge status-awaiting">Awaiting Approval</span>
+                </div>
+
+                <div class="payment-details">
+                    ${detailsHTML}
+                </div>
+
+                <div class="total-row">
+                    <span class="total-label">Total Amount</span>
+                    <span class="total-amount calculated-total">£${payment.totalAmount.toFixed(2)}</span>
+                </div>
+
+                <div class="payment-actions">
+                    <button class="btn btn-danger deny-btn">Deny</button>
+                    <button class="btn btn-success approve-btn">Approve</button>
+                </div>
+            `;
+
+            // Add event listeners for editable fields
+            const overtimeStart = card.querySelector('.overtime-start');
+            const overtimeEnd = card.querySelector('.overtime-end');
+            
+            if (overtimeStart && overtimeEnd) {
+                overtimeStart.addEventListener('change', () => updateOvertimeCalculation(card, payment));
+                overtimeEnd.addEventListener('change', () => updateOvertimeCalculation(card, payment));
+            }
+
+            const approveStandby = card.querySelector('.approve-standby');
+            const approveWorkingAway = card.querySelector('.approve-working-away');
+            
+            if (approveStandby) {
+                approveStandby.addEventListener('change', () => updateTotalCalculation(card, payment));
+            }
+            if (approveWorkingAway) {
+                approveWorkingAway.addEventListener('change', () => updateTotalCalculation(card, payment));
+            }
+
+            // Approve button
+            card.querySelector('.approve-btn').addEventListener('click', () => approvePayment(payment, card));
+
+            // Deny button
+            card.querySelector('.deny-btn').addEventListener('click', () => denyPayment(payment, card));
+
+            return card;
+        }
+
+        // Update overtime calculation
+        function updateOvertimeCalculation(card, payment) {
+            const startTime = card.querySelector('.overtime-start').value;
+            const endTime = card.querySelector('.overtime-end').value;
+
+            if (startTime && endTime) {
+                const hours = calculateHoursDifference(startTime, endTime);
+                const amount = hours * payment.overtimeRate;
+
+                card.querySelector('.overtime-hours').textContent = `${hours.toFixed(2)} hrs`;
+                
+                // Update payment object
+                payment.overtimeStart = startTime;
+                payment.overtimeEnd = endTime;
+                payment.overtimeHours = hours;
+                payment.overtimeAmount = amount;
+
+                updateTotalCalculation(card, payment);
+            }
+        }
+
+        // Update total calculation
+        function updateTotalCalculation(card, payment) {
+            let total = 0;
+
+            // Add standby if approved
+            const approveStandby = card.querySelector('.approve-standby');
+            if (approveStandby && approveStandby.checked && payment.standby) {
+                total += payment.standbyAmount;
+            }
+
+            // Working away doesn't have a value in this implementation
+            
+            // Add overtime
+            if (payment.overtime) {
+                total += payment.overtimeAmount;
+            }
+
+            card.querySelector('.calculated-total').textContent = `£${total.toFixed(2)}`;
+            payment.calculatedTotal = total;
+        }
+
+        // Calculate hours difference
+        function calculateHoursDifference(start, end) {
+            const [startHours, startMinutes] = start.split(':').map(Number);
+            const [endHours, endMinutes] = end.split(':').map(Number);
+            
+            const startTotal = startHours * 60 + startMinutes;
+            let endTotal = endHours * 60 + endMinutes;
+            
+            if (endTotal < startTotal) {
+                endTotal += 24 * 60;
+            }
+            
+            return (endTotal - startTotal) / 60;
+        }
+
+        // Get day type
+        function getDayType(dateStr) {
+            const [day, month, year] = dateStr.split('/');
+            const date = new Date(year, month - 1, day);
+            const dayOfWeek = date.getDay();
+            
+            if (dayOfWeek === 0) return 'Sunday';
+            if (dayOfWeek === 6) return 'Saturday';
+            return 'Weekday';
+        }
+
+        // Approve payment
+        async function approvePayment(payment, card) {
+            if (!confirm(`Approve payment for ${payment.engineerName}?`)) {
+                return;
+            }
+
+            const approveStandby = card.querySelector('.approve-standby');
+            const approveWorkingAway = card.querySelector('.approve-working-away');
+
+            const updatedData = {
+                status: 'Approved',
+                approvedDate: new Date().toISOString(),
+                standby: approveStandby ? approveStandby.checked : payment.standby,
+                workingAway: approveWorkingAway ? approveWorkingAway.checked : payment.workingAway,
+            };
+
+            // Update overtime if changed
+            if (payment.overtime) {
+                updatedData.overtimeStart = payment.overtimeStart;
+                updatedData.overtimeEnd = payment.overtimeEnd;
+                updatedData.overtimeHours = payment.overtimeHours;
+                updatedData.overtimeAmount = payment.overtimeAmount;
+            }
+
+            // Update total
+            updatedData.totalAmount = payment.calculatedTotal || payment.totalAmount;
+
+            try {
+                const paymentRef = doc(db, 'SP Additional Payment', payment.id);
+                await updateDoc(paymentRef, updatedData);
+
+                card.style.opacity = '0.5';
+                card.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    card.remove();
+                    loadPayments(); // Reload to update stats
+                }, 500);
+
+                alert('Payment approved successfully!');
+
+            } catch (error) {
+                console.error('Error approving payment:', error);
+                alert('Error approving payment. Please try again.');
+            }
+        }
+
+        // Deny payment
+        async function denyPayment(payment, card) {
+            const reason = prompt(`Enter reason for denying ${payment.engineerName}'s payment:`);
+            
+            if (reason === null) return; // User cancelled
+
+            if (!reason.trim()) {
+                alert('Please provide a reason for denial');
+                return;
+            }
+
+            try {
+                const paymentRef = doc(db, 'SP Additional Payment', payment.id);
+                await updateDoc(paymentRef, {
+                    status: 'Denied',
+                    deniedDate: new Date().toISOString(),
+                    denialReason: reason
+                });
+
+                card.style.opacity = '0.5';
+                card.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    card.remove();
+                    loadPayments(); // Reload to update stats
+                }, 500);
+
+                alert('Payment denied successfully!');
+
+            } catch (error) {
+                console.error('Error denying payment:', error);
+                alert('Error denying payment. Please try again.');
+            }
+        }
+
+        // Format date for display
+        function formatDateDisplay(dateStr) {
+            const [day, month, year] = dateStr.split('/');
+            const date = new Date(year, month - 1, day);
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-GB', options);
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text || '';
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
