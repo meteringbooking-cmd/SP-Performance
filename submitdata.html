@@ -473,7 +473,6 @@
                                 <tr>
                                     <th>Job ID</th>
                                     <th>Job Type</th>
-                                    <th>Job Date</th>
                                     <th>Start Time</th>
                                     <th>Job Status</th>
                                     <th>Outcome Resource</th>
@@ -548,40 +547,6 @@
             checkInputs();
         });
 
-        // Convert Excel serial date to UK format DD/MM/YYYY
-        function convertExcelDate(serial) {
-            if (!serial) return '';
-            
-            // If it's already a string in UK format, return it as is
-            if (typeof serial === 'string') {
-                // Check if it's already in dd/mm/yyyy format
-                if (/^\d{2}\/\d{2}\/\d{4}$/.test(serial)) {
-                    return serial;
-                }
-                // Try to parse other string date formats
-                const parsed = new Date(serial);
-                if (!isNaN(parsed)) {
-                    const day = String(parsed.getDate()).padStart(2, '0');
-                    const month = String(parsed.getMonth() + 1).padStart(2, '0');
-                    const year = parsed.getFullYear();
-                    return `${day}/${month}/${year}`;
-                }
-                return serial;
-            }
-            
-            // Handle Excel serial date number
-            // Excel serial date: January 1, 1900 = 1
-            // Note: Excel incorrectly treats 1900 as a leap year
-            const excelEpoch = new Date(1899, 11, 30); // December 30, 1899
-            const date = new Date(excelEpoch.getTime() + serial * 86400000);
-            
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            
-            return `${day}/${month}/${year}`;
-        }
-
         // Upload and preview
         uploadBtn.addEventListener('click', async () => {
             const file = fileInput.files[0];
@@ -622,14 +587,14 @@
                         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
                         const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
 
-                        // Map columns A, C, D, E, G, I (indices 0, 2, 3, 4, 6, 8)
+                        // Map columns A, C, E, G, I (indices 0, 2, 4, 6, 8)
+                        // Ignore column D (Job Date) - we'll use the selected date instead
                         const mappedData = jsonData.slice(1).map(row => {
                             if (!row[0]) return null; // Skip empty rows
                             
                             return {
                                 jobId: row[0] || '',
                                 jobType: row[2] || '',
-                                jobDate: convertExcelDate(row[3]),
                                 startTime: row[4] || '',
                                 jobStatus: row[6] || '',
                                 outcomeResource: row[8] || ''
@@ -673,7 +638,6 @@
                 row.innerHTML = `
                     <td>${escapeHtml(item.jobId)}</td>
                     <td>${escapeHtml(item.jobType)}</td>
-                    <td>${escapeHtml(item.jobDate)}</td>
                     <td>${escapeHtml(item.startTime)}</td>
                     <td>${escapeHtml(item.jobStatus)}</td>
                     <td>${escapeHtml(item.outcomeResource)}</td>
@@ -707,15 +671,20 @@
 
             try {
                 const selectedDate = dateInput.value;
+                
+                // Convert selected date from YYYY-MM-DD to DD/MM/YYYY (UK format)
+                const [year, month, day] = selectedDate.split('-');
+                const ukFormattedDate = `${day}/${month}/${year}`;
+                
                 const collectionRef = collection(db, 'SP Submitted Data');
 
-                // Save each record to Firebase
+                // Save each record to Firebase using the selected date
                 const promises = parsedData.map(item => 
                     addDoc(collectionRef, {
                         submissionDate: selectedDate,
                         jobId: item.jobId,
                         jobType: item.jobType,
-                        jobDate: item.jobDate,
+                        jobDate: ukFormattedDate, // Use selected date in UK format
                         startTime: item.startTime,
                         jobStatus: item.jobStatus,
                         outcomeResource: item.outcomeResource,
