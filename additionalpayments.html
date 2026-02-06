@@ -325,6 +325,11 @@
             color: var(--warning);
         }
 
+        .status-approved-changes {
+            background: rgba(0, 163, 224, 0.2);
+            color: var(--accent);
+        }
+
         .payment-details {
             display: grid;
             gap: 1rem;
@@ -473,6 +478,17 @@
         .no-results-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
+        }
+
+        .changes-indicator {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background: rgba(0, 163, 224, 0.2);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-left: 0.5rem;
         }
 
         @media (max-width: 768px) {
@@ -709,6 +725,17 @@
             card.className = 'card payment-card';
             card.dataset.paymentId = payment.id;
 
+            // Store original values to detect changes
+            card.dataset.originalData = JSON.stringify({
+                standby: payment.standby,
+                workingAway: payment.workingAway,
+                overtimeStart: payment.overtimeStart,
+                overtimeEnd: payment.overtimeEnd,
+                overtimeHours: payment.overtimeHours,
+                overtimeAmount: payment.overtimeAmount,
+                totalAmount: payment.totalAmount
+            });
+
             let detailsHTML = '';
 
             // Standby section
@@ -721,7 +748,7 @@
                         </div>
                         <div class="detail-content">
                             <div class="checkbox-field">
-                                <input type="checkbox" class="approve-standby" checked>
+                                <input type="checkbox" class="approve-standby" checked data-original="true">
                                 <label>Approve standby payment (${getDayType(payment.paymentDate)})</label>
                             </div>
                         </div>
@@ -738,7 +765,7 @@
                         </div>
                         <div class="detail-content">
                             <div class="checkbox-field">
-                                <input type="checkbox" class="approve-working-away" checked>
+                                <input type="checkbox" class="approve-working-away" checked data-original="true">
                                 <label>Approve working away allowance</label>
                             </div>
                         </div>
@@ -752,19 +779,19 @@
                     <div class="detail-section">
                         <div class="detail-header">
                             <span class="detail-title">Overtime</span>
-                            <span class="detail-amount">£${payment.overtimeAmount.toFixed(2)}</span>
+                            <span class="detail-amount overtime-display-amount">£${payment.overtimeAmount.toFixed(2)}</span>
                         </div>
                         <div class="detail-content">
                             <div class="detail-row">
                                 <span>Start Time:</span>
                                 <span class="editable-field">
-                                    <input type="time" class="overtime-start" value="${payment.overtimeStart}">
+                                    <input type="time" class="overtime-start" value="${payment.overtimeStart}" data-original="${payment.overtimeStart}">
                                 </span>
                             </div>
                             <div class="detail-row">
                                 <span>End Time:</span>
                                 <span class="editable-field">
-                                    <input type="time" class="overtime-end" value="${payment.overtimeEnd}">
+                                    <input type="time" class="overtime-end" value="${payment.overtimeEnd}" data-original="${payment.overtimeEnd}">
                                 </span>
                             </div>
                             <div class="detail-row">
@@ -812,7 +839,10 @@
             card.innerHTML = `
                 <div class="payment-header">
                     <div class="payment-info">
-                        <div class="engineer-name">${escapeHtml(payment.engineerName)}</div>
+                        <div class="engineer-name">
+                            ${escapeHtml(payment.engineerName)}
+                            <span class="changes-indicator" style="display: none;">Modified</span>
+                        </div>
                         <div class="payment-date">Payment Date: ${formatDateDisplay(payment.paymentDate)}</div>
                     </div>
                     <span class="status-badge status-awaiting">Awaiting Approval</span>
@@ -838,18 +868,29 @@
             const overtimeEnd = card.querySelector('.overtime-end');
             
             if (overtimeStart && overtimeEnd) {
-                overtimeStart.addEventListener('change', () => updateOvertimeCalculation(card, payment));
-                overtimeEnd.addEventListener('change', () => updateOvertimeCalculation(card, payment));
+                overtimeStart.addEventListener('change', () => {
+                    updateOvertimeCalculation(card, payment);
+                    checkForChanges(card, payment);
+                });
+                overtimeEnd.addEventListener('change', () => {
+                    updateOvertimeCalculation(card, payment);
+                    checkForChanges(card, payment);
+                });
             }
 
             const approveStandby = card.querySelector('.approve-standby');
             const approveWorkingAway = card.querySelector('.approve-working-away');
             
             if (approveStandby) {
-                approveStandby.addEventListener('change', () => updateTotalCalculation(card, payment));
+                approveStandby.addEventListener('change', () => {
+                    updateTotalCalculation(card, payment);
+                    checkForChanges(card, payment);
+                });
             }
             if (approveWorkingAway) {
-                approveWorkingAway.addEventListener('change', () => updateTotalCalculation(card, payment));
+                approveWorkingAway.addEventListener('change', () => {
+                    checkForChanges(card, payment);
+                });
             }
 
             // Approve button
@@ -859,6 +900,43 @@
             card.querySelector('.deny-btn').addEventListener('click', () => denyPayment(payment, card));
 
             return card;
+        }
+
+        // Check if any changes were made
+        function checkForChanges(card, payment) {
+            const originalData = JSON.parse(card.dataset.originalData);
+            const changesIndicator = card.querySelector('.changes-indicator');
+            
+            let hasChanges = false;
+
+            // Check standby
+            const approveStandby = card.querySelector('.approve-standby');
+            if (approveStandby && approveStandby.checked !== (originalData.standby === true)) {
+                hasChanges = true;
+            }
+
+            // Check working away
+            const approveWorkingAway = card.querySelector('.approve-working-away');
+            if (approveWorkingAway && approveWorkingAway.checked !== (originalData.workingAway === true)) {
+                hasChanges = true;
+            }
+
+            // Check overtime times
+            const overtimeStart = card.querySelector('.overtime-start');
+            const overtimeEnd = card.querySelector('.overtime-end');
+            if (overtimeStart && overtimeStart.value !== originalData.overtimeStart) {
+                hasChanges = true;
+            }
+            if (overtimeEnd && overtimeEnd.value !== originalData.overtimeEnd) {
+                hasChanges = true;
+            }
+
+            // Show/hide changes indicator
+            if (hasChanges) {
+                changesIndicator.style.display = 'inline-block';
+            } else {
+                changesIndicator.style.display = 'none';
+            }
         }
 
         // Update overtime calculation
@@ -871,6 +949,7 @@
                 const amount = hours * payment.overtimeRate;
 
                 card.querySelector('.overtime-hours').textContent = `${hours.toFixed(2)} hrs`;
+                card.querySelector('.overtime-display-amount').textContent = `£${amount.toFixed(2)}`;
                 
                 // Update payment object
                 payment.overtimeStart = startTime;
@@ -931,19 +1010,72 @@
 
         // Approve payment
         async function approvePayment(payment, card) {
-            if (!confirm(`Approve payment for ${payment.engineerName}?`)) {
+            const originalData = JSON.parse(card.dataset.originalData);
+            const approveStandby = card.querySelector('.approve-standby');
+            const approveWorkingAway = card.querySelector('.approve-working-away');
+            const overtimeStart = card.querySelector('.overtime-start');
+            const overtimeEnd = card.querySelector('.overtime-end');
+
+            // Determine if there are changes
+            let hasChanges = false;
+            const changes = [];
+
+            // Check standby changes
+            if (approveStandby) {
+                const currentStandby = approveStandby.checked;
+                if (currentStandby !== (originalData.standby === true)) {
+                    hasChanges = true;
+                    changes.push(`Standby ${currentStandby ? 'approved' : 'removed'}`);
+                }
+            }
+
+            // Check working away changes
+            if (approveWorkingAway) {
+                const currentWorkingAway = approveWorkingAway.checked;
+                if (currentWorkingAway !== (originalData.workingAway === true)) {
+                    hasChanges = true;
+                    changes.push(`Working away ${currentWorkingAway ? 'approved' : 'removed'}`);
+                }
+            }
+
+            // Check overtime changes
+            if (overtimeStart && overtimeEnd) {
+                if (overtimeStart.value !== originalData.overtimeStart || overtimeEnd.value !== originalData.overtimeEnd) {
+                    hasChanges = true;
+                    changes.push(`Overtime hours adjusted from ${originalData.overtimeHours.toFixed(2)} to ${payment.overtimeHours.toFixed(2)}`);
+                }
+            }
+
+            // Check total amount changes
+            const currentTotal = payment.calculatedTotal || payment.totalAmount;
+            if (Math.abs(currentTotal - originalData.totalAmount) > 0.01) {
+                hasChanges = true;
+            }
+
+            // Determine status
+            const status = hasChanges ? 'Approved with Changes' : 'Approved';
+            
+            // Create confirmation message
+            let confirmMessage = hasChanges 
+                ? `Approve payment for ${payment.engineerName} WITH CHANGES?\n\nChanges made:\n${changes.join('\n')}\n\nOriginal amount: £${originalData.totalAmount.toFixed(2)}\nNew amount: £${currentTotal.toFixed(2)}`
+                : `Approve payment for ${payment.engineerName}?\n\nAmount: £${currentTotal.toFixed(2)}`;
+
+            if (!confirm(confirmMessage)) {
                 return;
             }
 
-            const approveStandby = card.querySelector('.approve-standby');
-            const approveWorkingAway = card.querySelector('.approve-working-away');
-
             const updatedData = {
-                status: 'Approved',
+                status: status,
                 approvedDate: new Date().toISOString(),
                 standby: approveStandby ? approveStandby.checked : payment.standby,
                 workingAway: approveWorkingAway ? approveWorkingAway.checked : payment.workingAway,
             };
+
+            // Add changes log if there are changes
+            if (hasChanges) {
+                updatedData.changesLog = changes;
+                updatedData.originalAmount = originalData.totalAmount;
+            }
 
             // Update overtime if changed
             if (payment.overtime) {
@@ -954,7 +1086,7 @@
             }
 
             // Update total
-            updatedData.totalAmount = payment.calculatedTotal || payment.totalAmount;
+            updatedData.totalAmount = currentTotal;
 
             try {
                 const paymentRef = doc(db, 'SP Additional Payment', payment.id);
@@ -968,7 +1100,10 @@
                     loadPayments(); // Reload to update stats
                 }, 500);
 
-                alert('Payment approved successfully!');
+                const successMessage = hasChanges 
+                    ? 'Payment approved with changes successfully!' 
+                    : 'Payment approved successfully!';
+                alert(successMessage);
 
             } catch (error) {
                 console.error('Error approving payment:', error);
