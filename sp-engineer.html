@@ -672,23 +672,59 @@
             color: var(--success);
         }
 
-        .pending-badge {
+        /* Payment Status Badges */
+        .status-badge-payment {
             display: inline-block;
-            padding: 0.3rem 0.7rem;
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--warning);
+            padding: 0.4rem 0.8rem;
             border-radius: 6px;
             font-size: 0.85rem;
             font-weight: 600;
-            margin-left: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-awaiting-payment {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .status-approved-payment {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .status-approved-changes-payment {
+            background: rgba(0, 163, 224, 0.2);
+            color: var(--accent);
+        }
+
+        .status-denied-payment {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
         }
 
         .additional-payment-card {
             margin-bottom: 1rem;
             padding: 1.5rem;
             background: var(--bg-dark);
-            border: 2px solid var(--warning);
             border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .additional-payment-card.awaiting {
+            border: 2px solid var(--warning);
+        }
+
+        .additional-payment-card.approved {
+            border: 2px solid var(--success);
+        }
+
+        .additional-payment-card.approved-changes {
+            border: 2px solid var(--accent);
+        }
+
+        .additional-payment-card.denied {
+            border: 2px solid var(--error);
         }
 
         .additional-payment-header {
@@ -696,11 +732,12 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
         }
 
         .additional-payment-title {
             font-weight: 700;
-            color: var(--warning);
             font-size: 1.05rem;
         }
 
@@ -718,6 +755,47 @@
 
         .payment-detail-row:last-child {
             border-bottom: none;
+        }
+
+        .denial-reason {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid var(--error);
+            border-radius: 8px;
+        }
+
+        .denial-reason-title {
+            font-weight: 600;
+            color: var(--error);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .denial-reason-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .changes-log {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 163, 224, 0.1);
+            border-left: 3px solid var(--accent);
+            border-radius: 8px;
+        }
+
+        .changes-log-title {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .changes-log-item {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
         }
 
         @media (max-width: 768px) {
@@ -1103,7 +1181,7 @@
                 const q = query(dataCollection, where('outcomeResource', '==', currentUser.name));
                 const querySnapshot = await getDocs(q);
 
-                // Also get additional payments
+                // Get ALL additional payments (not filtered by status)
                 const paymentsCollection = collection(db, 'SP Additional Payment');
                 const paymentsQuery = query(paymentsCollection, where('engineerName', '==', currentUser.name));
                 const paymentsSnapshot = await getDocs(paymentsQuery);
@@ -1259,6 +1337,24 @@
         function createAdditionalPaymentCard(payment) {
             const card = document.createElement('div');
             card.className = 'additional-payment-card';
+            
+            // Determine status and styling
+            const status = payment.status || 'Awaiting Approval';
+            let statusClass = 'awaiting';
+            let statusBadgeClass = 'status-awaiting-payment';
+            
+            if (status === 'Approved') {
+                statusClass = 'approved';
+                statusBadgeClass = 'status-approved-payment';
+            } else if (status === 'Approved with Changes') {
+                statusClass = 'approved-changes';
+                statusBadgeClass = 'status-approved-changes-payment';
+            } else if (status === 'Denied') {
+                statusClass = 'denied';
+                statusBadgeClass = 'status-denied-payment';
+            }
+            
+            card.className += ` ${statusClass}`;
 
             let detailsHTML = '';
             
@@ -1309,10 +1405,39 @@
                 });
             }
 
+            // Add changes log if approved with changes
+            let changesLogHTML = '';
+            if (status === 'Approved with Changes' && payment.changesLog && payment.changesLog.length > 0) {
+                changesLogHTML = `
+                    <div class="changes-log">
+                        <div class="changes-log-title">Changes Made:</div>
+                        ${payment.changesLog.map(change => `
+                            <div class="changes-log-item">• ${change}</div>
+                        `).join('')}
+                        ${payment.originalAmount ? `
+                            <div class="changes-log-item" style="margin-top: 0.5rem; font-weight: 600;">
+                                Original amount: £${payment.originalAmount.toFixed(2)} → New amount: £${payment.totalAmount.toFixed(2)}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            // Add denial reason if denied
+            let denialReasonHTML = '';
+            if (status === 'Denied' && payment.denialReason) {
+                denialReasonHTML = `
+                    <div class="denial-reason">
+                        <div class="denial-reason-title">Reason for Denial:</div>
+                        <div class="denial-reason-text">${escapeHtml(payment.denialReason)}</div>
+                    </div>
+                `;
+            }
+
             card.innerHTML = `
                 <div class="additional-payment-header">
                     <span class="additional-payment-title">Additional Payment Submission</span>
-                    <span class="pending-badge">Awaiting Approval</span>
+                    <span class="status-badge-payment ${statusBadgeClass}">${status}</span>
                 </div>
                 <div class="payment-details">
                     ${detailsHTML}
@@ -1323,6 +1448,8 @@
                     </div>
                     ` : ''}
                 </div>
+                ${changesLogHTML}
+                ${denialReasonHTML}
             `;
 
             return card;
