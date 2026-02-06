@@ -20,6 +20,7 @@
             --success: #10B981;
             --warning: #F59E0B;
             --error: #EF4444;
+            --bonus: #F59E0B;
         }
 
         * {
@@ -432,6 +433,121 @@
             color: var(--error);
         }
 
+        /* Bonus Summary Styles */
+        .bonus-summary {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border: 2px solid var(--bonus);
+            border-radius: 12px;
+        }
+
+        .bonus-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .bonus-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--bonus);
+        }
+
+        .bonus-total-points {
+            font-family: 'DM Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--bonus);
+        }
+
+        .bonus-jobs-list {
+            display: grid;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .bonus-job-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border-left: 3px solid var(--success);
+            font-size: 0.9rem;
+        }
+
+        .bonus-job-ref {
+            font-family: 'DM Mono', monospace;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .bonus-job-desc {
+            color: var(--text-muted);
+        }
+
+        .bonus-job-points {
+            font-family: 'DM Mono', monospace;
+            font-weight: 700;
+            color: var(--success);
+            white-space: nowrap;
+        }
+
+        .bonus-calculation {
+            padding: 1.25rem;
+            background: var(--bg-dark);
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .bonus-calc-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .bonus-calc-row.highlight {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-top: 0.75rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border);
+        }
+
+        .bonus-calc-row.total {
+            color: var(--success);
+            font-size: 1.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .bonus-threshold-message {
+            padding: 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error);
+            border-radius: 8px;
+            color: var(--error);
+            text-align: center;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .bonus-unlocked-message {
+            padding: 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            border-radius: 8px;
+            color: var(--success);
+            text-align: center;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
         .no-results {
             text-align: center;
             padding: 3rem;
@@ -467,7 +583,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Modal Styles */
+        /* Modal and other styles remain the same... */
         .modal {
             display: none;
             position: fixed;
@@ -873,6 +989,11 @@
             .time-inputs {
                 grid-template-columns: 1fr;
             }
+
+            .bonus-job-item {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -958,7 +1079,7 @@
         </div>
     </div>
 
-    <!-- Additional Payments Modal -->
+    <!-- Additional Payments Modal (keeping the existing modal) -->
     <div id="paymentsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1099,6 +1220,83 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Job Points Mapping
+        const JOB_POINTS = {
+            'SX1-1 - Electricity Meter Multi Rate': 2,
+            'SX1-1 - Electricity Meter Exchange  Legacy to Smart': 1.5,
+            'SX1-2 - Gas Meter Exchange  Legacy to Smart': 1.5,
+            'SX1-3 -Dual Fuel Multi Rate': 2,
+            'SX1-3 - Dual Fuel Exchange  Legacy to Smart': 2,
+            'SR1-1 - Remove Metering System (Electricity)': 1.5,
+            'SR1-2 - Remove Metering System (Gas)': 1.5,
+            'SR1-3 - Remove Metering System (Dual Fuel)': 2,
+            'SD1-1 - Remove Metering System (Electricity) and replace with Dumb Meter': 1.5,
+            'SD1-2 - Remove Metering System (Gas) and replace with Dumb Meter': 1.5,
+            'SD1-3 - Remove Metering System (Dual Fuel) and replace with Dumb Meter': 2,
+            'SI1-1 - Install New Electricity Metering System New Connection': 1.5,
+            'SI1-2 - Install New Gas Metering System New Connection': 1.5,
+            'SI1-3 - Install New Dual Fuel Metering System New Connection': 2,
+            'SM1-1 - Investigate Smart Metering System Fault  Electricity': 1,
+            'SM1-2 - Investigate Smart Metering System Fault  Gas': 1,
+            'SM1-3 - Investigate Smart Metering System Fault  Dual Fuel': 1,
+            'SM1-CH - Replace Communications Hub': 1,
+            'SE1-1 - Investigate Smart Metering System Fault  Electricity': 1,
+            'SE1-2 - Investigate Smart Metering System Fault  Gas': 1,
+            'SE1-3 - Investigate Smart Metering System Fault – Dual Fuel': 1,
+            'SM1-IH - Replace IHD': 1,
+            'SX1-1-SS - Electricity Meter Exchange  Smart to Smart': 1.5,
+            'SX1-2-SS - Gas Meter Exchange  Smart to Smart': 1.5,
+            'SX1-3-SS - Dual Fuel Exchange  Smart to Smart': 2,
+            'MIS-PP - Install PPMID': 1,
+            'SX1 - D2S CR Elec Twin Element': 2,
+            'SX1 - D2S CR Elec 3PH': 2,
+            'SX1 - D2S CR Elec Single Element with ALCS': 2,
+            'SX1 - D2S CR Elec 3PH with ALCS': 2,
+            'SX1 - D2S PP Elec Twin Element': 2,
+            'SX1 - D2S PP Elec 3PH': 2,
+            'SX1 - D2S PP Elec Single Element with ALCS': 2,
+            'SX1 - D2S PP Elec 3PH with ALCS': 2,
+            'SX1 - D2S DS Elec CR Twin Element, Gas CR': 2,
+            'SX1 - D2S DS Elec CR 3PH, Gas CR': 2.5,
+            'SX1 - D2S DS Elec CR Single Element with ALCS, Gas CR': 2,
+            'SX1 - D2S DS Elec CR 3PH with ALCS, Gas CR': 2.5,
+            'SX1 - D2S DS Elec CR Twin Element, Gas PP': 2,
+            'SX1 - D2S DS Elec CR 3PH, Gas PP': 2.5,
+            'SX1 - D2S DS Elec CR Single Element with ALCS, Gas PP': 2,
+            'SX1 - D2S DS Elec CR 3PH with ALCS, Gas PP': 2.5,
+            'SX1 - D2S DS Elec PP Twin Element, Gas CR': 2,
+            'SX1 - D2S DS Elec PP 3PH, Gas CR': 2.5,
+            'SX1 - D2S DS Elec PP Single Element with ALCS, Gas CR': 2,
+            'SX1 - D2S DS Elec PP 3PH with ALCS, Gas CR': 2.5,
+            'SX1 - D2S DS Elec PP Twin Element, Gas PP': 2,
+            'SX1 - D2S DS Elec PP 3PH, Gas PP': 2.5,
+            'SX1 - D2S DS Elec PP Single Element with ALCS, Gas PP': 2,
+            'SX1 - D2S DS Elec PP 3PH with ALCS, Gas PP': 2.5,
+            'G4 - Exchange Metering System - like for like - Credit < 11 scmh': 1.5,
+            'E9 - Miscellaneous Site Visit - PrePayment Key/Card Meter': 1,
+            'E20 - Install Isolator Switch - Seperate Visit - Single Phase': 1,
+            'E9 - Miscellaneous Site Visit - Single Phase': 1,
+            'E23 - Service Engineer Hire - Half Day': 3.5,
+            'E24 - Service Engineer Hire - Full Day': 7,
+            'E13 - Remove Metering System - Single Phase': 1.5,
+            'E8 - Investigate Metering System Fault - Supply Not Interrupted - Single Phase': 1,
+            'G25 - Service Provider Service Engineer Hire - AM Hire': 3.5,
+            'G16 - Remove Metering System - Credit < 11 scmh': 1.5,
+            'E9 - Miscellaneous Site Visit - PolyPhase': 1,
+            'G31 - Miscellaneous - Group 2 - Credit < 11 scmh': 1.5,
+            'G16 - Remove Metering System - Prepayment': 1.5,
+            'E12 - Relocate Metering System - Single Phase': 1.5,
+            'E20 - Install Isolator Switch - Seperate Visit - PolyPhase': 1,
+            'Non Chargeable': 1.5,
+            'BAU Smart': 1,
+            'E7 - Investigate Metering System Fault - Supply Interrupted - Single Phase': 1,
+            'G21 - Callout  Customer with Credit Metering System - Gas Off - Call Out Faulty Credit Meter - Gas Off': 1
+        };
+
+        // Constants
+        const BONUS_THRESHOLD = 6;  // Points needed to unlock bonus
+        const BONUS_RATE = 20;      // £20 per 0.5 points above threshold
+
         // DOM elements
         const loginPage = document.getElementById('loginPage');
         const dashboardPage = document.getElementById('dashboardPage');
@@ -1212,6 +1410,24 @@
             resultsContainer.innerHTML = '';
 
             try {
+                // Query Firebase for Sureserve data
+                const sureserveCollection = collection(db, 'SP-SureserveData');
+                const sureserveQuery = query(sureserveCollection, where('resource', '==', currentUser.name));
+                const sureserveSnapshot = await getDocs(sureserveQuery);
+                
+                const sureserveDataByDate = {};
+                sureserveSnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const jobDate = data.dateOfAppointment;
+                    
+                    if (isDateInRange(jobDate, startDate, endDate)) {
+                        if (!sureserveDataByDate[jobDate]) {
+                            sureserveDataByDate[jobDate] = [];
+                        }
+                        sureserveDataByDate[jobDate].push(data);
+                    }
+                });
+
                 // Query Firebase for data matching the logged-in engineer's name
                 const dataCollection = collection(db, 'SP Submitted Data');
                 const q = query(dataCollection, where('outcomeResource', '==', currentUser.name));
@@ -1259,7 +1475,7 @@
                 });
 
                 // Display results
-                displayResults(dataByDate, totalJobs, startDate, endDate, attendanceData);
+                displayResults(dataByDate, totalJobs, startDate, endDate, attendanceData, sureserveDataByDate);
                 
                 loadingSection.classList.remove('show');
                 resultsSection.classList.add('show');
@@ -1271,15 +1487,23 @@
             }
         });
 
-        // Check if a date is within range
+        // Check if a date is within range - handles both DD/MM/YYYY and standard date formats
         function isDateInRange(dateStr, startStr, endStr) {
-            // Convert DD/MM/YYYY to YYYY-MM-DD for comparison
-            const dateParts = dateStr.split('/');
-            if (dateParts.length !== 3) return false;
+            let date;
             
-            const date = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+            // Check if it's DD/MM/YYYY format
+            if (dateStr.includes('/')) {
+                const dateParts = dateStr.split('/');
+                if (dateParts.length !== 3) return false;
+                date = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+            } else {
+                // Assume it's a standard date string
+                date = new Date(dateStr);
+            }
+            
             const start = new Date(startStr);
             const end = new Date(endStr);
+            end.setHours(23, 59, 59, 999);
 
             return date >= start && date <= end;
         }
@@ -1291,12 +1515,106 @@
             return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
         }
 
+        // Convert any date to DD/MM/YYYY format
+        function convertToDisplayDate(dateStr) {
+            if (dateStr.includes('/')) {
+                return dateStr; // Already in DD/MM/YYYY format
+            }
+            
+            const date = new Date(dateStr);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        // Check if status indicates completion
+        function isCompleted(status) {
+            if (!status) return false;
+            const statusLower = status.toLowerCase();
+            return statusLower.includes('complete') || statusLower.includes('done');
+        }
+
+        // Create bonus summary card
+        function createBonusSummary(date, sureserveJobs) {
+            const completedJobs = sureserveJobs.filter(job => isCompleted(job.status));
+            
+            if (completedJobs.length === 0) {
+                return null; // No completed jobs, no bonus summary
+            }
+
+            let totalPoints = 0;
+            const jobsWithPoints = [];
+
+            completedJobs.forEach(job => {
+                const points = JOB_POINTS[job.description] || 0;
+                if (points > 0) {
+                    totalPoints += points;
+                    jobsWithPoints.push({
+                        ref: job.ref,
+                        description: job.description,
+                        points: points
+                    });
+                }
+            });
+
+            const bonusDiv = document.createElement('div');
+            bonusDiv.className = 'bonus-summary';
+
+            let bonusHTML = `
+                <div class="bonus-header">
+                    <div class="bonus-title">💰 Bonus Summary</div>
+                    <div class="bonus-total-points">${totalPoints.toFixed(1)} pts</div>
+                </div>
+            `;
+
+            if (jobsWithPoints.length > 0) {
+                bonusHTML += '<div class="bonus-jobs-list">';
+                jobsWithPoints.forEach(job => {
+                    bonusHTML += `
+                        <div class="bonus-job-item">
+                            <div class="bonus-job-ref">${escapeHtml(job.ref)}</div>
+                            <div class="bonus-job-desc">${escapeHtml(job.description)}</div>
+                            <div class="bonus-job-points">${job.points.toFixed(1)} pts</div>
+                        </div>
+                    `;
+                });
+                bonusHTML += '</div>';
+            }
+
+            // Calculate bonus
+            bonusHTML += '<div class="bonus-calculation">';
+            bonusHTML += `<div class="bonus-calc-row"><span>Total Points Earned:</span><span>${totalPoints.toFixed(1)}</span></div>`;
+            bonusHTML += `<div class="bonus-calc-row"><span>Threshold Required:</span><span>${BONUS_THRESHOLD.toFixed(1)}</span></div>`;
+
+            if (totalPoints >= BONUS_THRESHOLD) {
+                const bonusPoints = totalPoints - BONUS_THRESHOLD;
+                const bonusUnits = Math.floor(bonusPoints / 0.5);
+                const bonusAmount = bonusUnits * BONUS_RATE;
+
+                bonusHTML += `<div class="bonus-calc-row highlight"><span>Bonus Points (Above Threshold):</span><span>${bonusPoints.toFixed(1)}</span></div>`;
+                bonusHTML += `<div class="bonus-calc-row"><span>Bonus Units (÷ 0.5):</span><span>${bonusUnits}</span></div>`;
+                bonusHTML += `<div class="bonus-calc-row"><span>Rate per Unit:</span><span>£${BONUS_RATE.toFixed(2)}</span></div>`;
+                bonusHTML += `<div class="bonus-calc-row total"><span>Bonus Earned:</span><span>£${bonusAmount.toFixed(2)}</span></div>`;
+                bonusHTML += '</div>';
+
+                bonusHTML += `<div class="bonus-unlocked-message">🎉 Bonus Unlocked! You've earned £${bonusAmount.toFixed(2)}</div>`;
+            } else {
+                const pointsNeeded = BONUS_THRESHOLD - totalPoints;
+                bonusHTML += '</div>';
+                bonusHTML += `<div class="bonus-threshold-message">⚠️ ${pointsNeeded.toFixed(1)} more point${pointsNeeded !== 1 ? 's' : ''} needed to unlock bonus</div>`;
+            }
+
+            bonusDiv.innerHTML = bonusHTML;
+            return bonusDiv;
+        }
+
         // Display results grouped by date
-        function displayResults(dataByDate, totalJobs, startDate, endDate, attendanceData) {
+        function displayResults(dataByDate, totalJobs, startDate, endDate, attendanceData, sureserveDataByDate) {
             resultsContainer.innerHTML = '';
             totalRecords.textContent = `${totalJobs} jobs`;
 
-            if (totalJobs === 0 && additionalPayments.length === 0) {
+            if (totalJobs === 0 && additionalPayments.length === 0 && Object.keys(sureserveDataByDate).length === 0) {
                 resultsContainer.innerHTML = `
                     <div class="no-results">
                         <div class="no-results-icon">📭</div>
@@ -1306,8 +1624,15 @@
                 return;
             }
 
+            // Get all unique dates from all sources
+            const allDates = new Set([
+                ...Object.keys(dataByDate),
+                ...Object.keys(sureserveDataByDate),
+                ...additionalPayments.filter(p => isDateInRange(p.paymentDate, startDate, endDate)).map(p => convertToDisplayDate(p.paymentDate))
+            ]);
+
             // Sort dates
-            const sortedDates = Object.keys(dataByDate).sort((a, b) => {
+            const sortedDates = Array.from(allDates).sort((a, b) => {
                 const [dayA, monthA, yearA] = a.split('/');
                 const [dayB, monthB, yearB] = b.split('/');
                 return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);
@@ -1315,14 +1640,8 @@
 
             // Create sections for each date
             sortedDates.forEach(date => {
-                const jobs = dataByDate[date];
-                
-                // Sort jobs by start time
-                jobs.sort((a, b) => {
-                    const timeA = a.startTime || '99:99';
-                    const timeB = b.startTime || '99:99';
-                    return timeA.localeCompare(timeB);
-                });
+                const jobs = dataByDate[date] || [];
+                const sureserveJobs = sureserveDataByDate[date] || [];
                 
                 const daySection = document.createElement('div');
                 daySection.className = 'day-section';
@@ -1334,46 +1653,66 @@
                 // Create day header with attendance badge
                 const dayHeader = document.createElement('div');
                 dayHeader.className = 'day-header';
+                const totalDayJobs = jobs.length + sureserveJobs.length;
                 dayHeader.innerHTML = `
-                    ${formatDateDisplay(date)} - ${jobs.length} job${jobs.length !== 1 ? 's' : ''}
+                    ${formatDateDisplay(date)} - ${totalDayJobs} job${totalDayJobs !== 1 ? 's' : ''}
                     ${getAttendanceBadgeHTML(attendance)}
                 `;
 
-                const jobGrid = document.createElement('div');
-                jobGrid.className = 'job-grid';
-
-                jobs.forEach(job => {
-                    const jobCard = document.createElement('div');
-                    jobCard.className = 'job-card';
-                    jobCard.innerHTML = `
-                        <div class="job-detail">
-                            <span class="job-label">Job Reference</span>
-                            <span class="job-value">${escapeHtml(job.jobId)}</span>
-                        </div>
-                        <div class="job-detail">
-                            <span class="job-label">Job Type</span>
-                            <span class="job-value">${escapeHtml(job.jobType)}</span>
-                        </div>
-                        <div class="job-detail">
-                            <span class="job-label">Status</span>
-                            <span class="status-badge ${getStatusClass(job.jobStatus)}">${escapeHtml(job.jobStatus)}</span>
-                        </div>
-                        ${job.startTime ? `
-                        <div class="job-detail">
-                            <span class="job-label">Start Time</span>
-                            <span class="job-value">${escapeHtml(job.startTime)}</span>
-                        </div>
-                        ` : ''}
-                    `;
-                    jobGrid.appendChild(jobCard);
-                });
-
                 daySection.appendChild(dayHeader);
-                daySection.appendChild(jobGrid);
+
+                // Add regular jobs if any
+                if (jobs.length > 0) {
+                    jobs.sort((a, b) => {
+                        const timeA = a.startTime || '99:99';
+                        const timeB = b.startTime || '99:99';
+                        return timeA.localeCompare(timeB);
+                    });
+
+                    const jobGrid = document.createElement('div');
+                    jobGrid.className = 'job-grid';
+
+                    jobs.forEach(job => {
+                        const jobCard = document.createElement('div');
+                        jobCard.className = 'job-card';
+                        jobCard.innerHTML = `
+                            <div class="job-detail">
+                                <span class="job-label">Job Reference</span>
+                                <span class="job-value">${escapeHtml(job.jobId)}</span>
+                            </div>
+                            <div class="job-detail">
+                                <span class="job-label">Job Type</span>
+                                <span class="job-value">${escapeHtml(job.jobType)}</span>
+                            </div>
+                            <div class="job-detail">
+                                <span class="job-label">Status</span>
+                                <span class="status-badge ${getStatusClass(job.jobStatus)}">${escapeHtml(job.jobStatus)}</span>
+                            </div>
+                            ${job.startTime ? `
+                            <div class="job-detail">
+                                <span class="job-label">Start Time</span>
+                                <span class="job-value">${escapeHtml(job.startTime)}</span>
+                            </div>
+                            ` : ''}
+                        `;
+                        jobGrid.appendChild(jobCard);
+                    });
+
+                    daySection.appendChild(jobGrid);
+                }
+
+                // Add bonus summary if there are Sureserve jobs
+                if (sureserveJobs.length > 0) {
+                    const bonusSummary = createBonusSummary(date, sureserveJobs);
+                    if (bonusSummary) {
+                        daySection.appendChild(bonusSummary);
+                    }
+                }
 
                 // Check for additional payments on this date
+                const displayDate = convertToDisplayDate(date);
                 const datePayments = additionalPayments.filter(payment => 
-                    isDateInRange(payment.paymentDate, startDate, endDate) && payment.paymentDate === date
+                    convertToDisplayDate(payment.paymentDate) === displayDate
                 );
 
                 if (datePayments.length > 0) {
@@ -1384,31 +1723,6 @@
                 }
 
                 resultsContainer.appendChild(daySection);
-            });
-
-            // Show additional payments for dates without jobs
-            additionalPayments.forEach(payment => {
-                if (isDateInRange(payment.paymentDate, startDate, endDate) && !dataByDate[payment.paymentDate]) {
-                    const daySection = document.createElement('div');
-                    daySection.className = 'day-section';
-
-                    // Get attendance status for this date
-                    const standardDate = convertToStandardDate(payment.paymentDate);
-                    const attendance = standardDate ? attendanceData[standardDate] : null;
-                    
-                    const dayHeader = document.createElement('div');
-                    dayHeader.className = 'day-header';
-                    dayHeader.innerHTML = `
-                        ${formatDateDisplay(payment.paymentDate)}
-                        ${getAttendanceBadgeHTML(attendance)}
-                    `;
-
-                    const paymentCard = createAdditionalPaymentCard(payment);
-
-                    daySection.appendChild(dayHeader);
-                    daySection.appendChild(paymentCard);
-                    resultsContainer.appendChild(daySection);
-                }
             });
         }
 
