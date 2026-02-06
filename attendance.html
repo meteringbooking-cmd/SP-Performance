@@ -580,29 +580,30 @@
             </div>
         </div>
 
-        <!-- Bulk Input Card -->
+        <!-- CSV Upload Card -->
         <div class="card">
             <div class="card-header">
-                <div class="card-icon">📋</div>
-                <h2 class="card-title">Bulk Import</h2>
+                <div class="card-icon">📁</div>
+                <h2 class="card-title">Upload CSV File</h2>
             </div>
 
             <div class="info-box">
-                <h3>Paste Attendance Data</h3>
+                <h3>CSV Format</h3>
                 <ul>
-                    <li>Format: Name, Status (one per line)</li>
-                    <li>Example: John Smith, X</li>
-                    <li>Statuses: X (Present), H (Holiday), H/H (Half Day), Sick, AAUP, TOFD, AAP</li>
+                    <li>Column A: Engineer Name</li>
+                    <li>Column B: Status (X, H, H/H, Sick, AAUP, TOFD, AAP)</li>
+                    <li>No headers required - data starts from row 1</li>
                 </ul>
             </div>
 
             <div class="form-group">
-                <label for="bulkData">Paste Data (Name, Status per line)</label>
-                <textarea id="bulkData" placeholder="John Smith, X&#10;Jane Doe, H&#10;Bob Wilson, Sick"></textarea>
+                <label for="csvFile">Select CSV File</label>
+                <input type="file" id="csvFile" accept=".csv" onchange="handleCSVUpload(event)" 
+                       style="width: 100%; padding: 1rem 1.25rem; background: var(--bg-dark); border: 2px solid var(--border); border-radius: 12px; color: var(--text-light); font-family: 'Rajdhani', sans-serif; font-size: 1.05rem; cursor: pointer;">
             </div>
 
-            <button class="btn btn-secondary" onclick="parseBulkData()">
-                Parse Data
+            <button class="btn btn-secondary" onclick="document.getElementById('csvFile').click()">
+                📂 Choose CSV File
             </button>
         </div>
 
@@ -743,40 +744,75 @@
             document.getElementById('absenceCount').textContent = absences;
         }
 
-        // Parse bulk data
-        window.parseBulkData = function() {
-            const bulkData = document.getElementById('bulkData').value;
+        // Handle CSV file upload
+        window.handleCSVUpload = function(event) {
+            const file = event.target.files[0];
             
-            if (!bulkData.trim()) {
-                showAlert('Please paste some data first', 'error');
+            if (!file) {
                 return;
             }
 
-            const lines = bulkData.split('\n').filter(line => line.trim());
-            let parsed = 0;
+            if (!file.name.endsWith('.csv')) {
+                showAlert('Please upload a CSV file', 'error');
+                return;
+            }
 
-            lines.forEach(line => {
-                const parts = line.split(',').map(p => p.trim());
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const text = e.target.result;
+                parseCSV(text);
+            };
+
+            reader.onerror = function() {
+                showAlert('Error reading file', 'error');
+            };
+
+            reader.readAsText(file);
+        };
+
+        // Parse CSV content
+        function parseCSV(csvText) {
+            const lines = csvText.split('\n').filter(line => line.trim());
+            let parsed = 0;
+            let skipped = 0;
+
+            lines.forEach((line, index) => {
+                // Split by comma, but handle quoted values
+                const parts = line.split(',').map(p => p.trim().replace(/^"|"$/g, ''));
+                
                 if (parts.length >= 2) {
                     const name = parts[0];
-                    const status = parts[1].toUpperCase();
+                    let status = parts[1].toUpperCase();
+                    
+                    // Handle common variations
+                    if (status === 'SICK') {
+                        status = 'Sick';
+                    }
                     
                     // Validate status
-                    const validStatuses = ['X', 'H', 'H/H', 'SICK', 'AAUP', 'TOFD', 'AAP'];
-                    if (validStatuses.includes(status)) {
-                        addEngineer(name, status === 'SICK' ? 'Sick' : status);
+                    const validStatuses = ['X', 'H', 'H/H', 'Sick', 'AAUP', 'TOFD', 'AAP'];
+                    
+                    if (name && validStatuses.includes(status)) {
+                        addEngineer(name, status);
                         parsed++;
+                    } else {
+                        console.warn(`Skipped row ${index + 1}: Invalid data - "${name}", "${status}"`);
+                        skipped++;
                     }
+                } else {
+                    skipped++;
                 }
             });
 
             if (parsed > 0) {
-                showAlert(`Successfully parsed ${parsed} engineer(s)`, 'success');
-                document.getElementById('bulkData').value = '';
+                showAlert(`✅ Successfully imported ${parsed} engineer(s)${skipped > 0 ? ` (${skipped} skipped)` : ''}`, 'success');
+                // Clear the file input
+                document.getElementById('csvFile').value = '';
             } else {
-                showAlert('No valid data found. Check format: Name, Status', 'error');
+                showAlert('No valid data found in CSV. Check format: Column A = Name, Column B = Status', 'error');
             }
-        };
+        }
 
         // Save attendance to Firebase
         window.saveAttendance = async function() {
@@ -832,7 +868,6 @@
                 engineers = [];
                 renderEngineers();
                 updateStats();
-                document.getElementById('bulkData').value = '';
 
             } catch (error) {
                 console.error('Error saving attendance:', error);
