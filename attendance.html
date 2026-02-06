@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Manager - Scottish Power</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #005EB8;
+            --primary-dark: #003d7a;
+            --accent: #00A3E0;
+            --bg-dark: #0A1628;
+            --bg-card: #1a2942;
+            --text-light: #E8EDF2;
+            --text-muted: #8B9AAE;
+            --border: #2a3f5f;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+            --holiday: #8B5CF6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #0d1f3a 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 163, 224, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 94, 184, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 163, 224, 0.4);
+            margin: 0 auto 2rem;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 10px 30px rgba(0, 163, 224, 0.4);
+            }
+            50% {
+                box-shadow: 0 10px 50px rgba(0, 163, 224, 0.6);
+            }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text-light) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 1rem;
+            letter-spacing: 0.02em;
+        }
+
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-light);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.15);
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2300A3E0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 20px;
+            padding-right: 3rem;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .engineer-entry {
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .engineer-entry:hover {
+            border-color: var(--accent);
+            box-shadow: 0 5px 20px rgba(0, 163, 224, 0.2);
+        }
+
+        .engineer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .engineer-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--accent);
+        }
+
+        .status-select-wrapper {
+            position: relative;
+        }
+
+        .remove-btn {
+            padding: 0.75rem 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--error);
+            border-radius: 8px;
+            color: var(--error);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .remove-btn:hover {
+            background: var(--error);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .btn {
+            padding: 1.25rem 2.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Rajdhani', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 163, 224, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 163, 224, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--bg-dark);
+            color: var(--text-light);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            background: var(--bg-card);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.5);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .alert {
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            display: none;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.15);
+            border: 2px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 2px solid var(--error);
+            color: var(--error);
+        }
+
+        .alert-info {
+            background: rgba(0, 163, 224, 0.15);
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 163, 224, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.5rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .info-box {
+            background: rgba(0, 163, 224, 0.1);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-box h3 {
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-box li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-muted);
+        }
+
+        .info-box li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .engineer-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .remove-btn {
+                width: 100%;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Status color coding in selects */
+        select option[value="X"] {
+            background-color: rgba(16, 185, 129, 0.2);
+        }
+
+        select option[value="H"],
+        select option[value="H/H"] {
+            background-color: rgba(139, 92, 246, 0.2);
+        }
+
+        select option[value="Sick"] {
+            background-color: rgba(239, 68, 68, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">SP</div>
+            <h1>Attendance Manager</h1>
+            <p class="subtitle">Scottish Power Engineering Team</p>
+        </header>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalEngineers">0</div>
+                <div class="stat-label">Engineers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="presentCount">0</div>
+                <div class="stat-label">Present</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="absenceCount">0</div>
+                <div class="stat-label">Absences</div>
+            </div>
+        </div>
+
+        <!-- Alert Messages -->
+        <div id="alertBox" class="alert"></div>
+
+        <!-- Date Selection Card -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">📅</div>
+                <h2 class="card-title">Select Date</h2>
+            </div>
+
+            <div class="form-group">
+                <label for="attendanceDate">Attendance Date</label>
+                <input type="date" id="attendanceDate" required>
+            </div>
+        </div>
+
+        <!-- Bulk Input Card -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">📋</div>
+                <h2 class="card-title">Bulk Import</h2>
+            </div>
+
+            <div class="info-box">
+                <h3>Paste Attendance Data</h3>
+                <ul>
+                    <li>Format: Name, Status (one per line)</li>
+                    <li>Example: John Smith, X</li>
+                    <li>Statuses: X (Present), H (Holiday), H/H (Half Day), Sick, AAUP, TOFD, AAP</li>
+                </ul>
+            </div>
+
+            <div class="form-group">
+                <label for="bulkData">Paste Data (Name, Status per line)</label>
+                <textarea id="bulkData" placeholder="John Smith, X&#10;Jane Doe, H&#10;Bob Wilson, Sick"></textarea>
+            </div>
+
+            <button class="btn btn-secondary" onclick="parseBulkData()">
+                Parse Data
+            </button>
+        </div>
+
+        <!-- Engineers List Card -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">👥</div>
+                <h2 class="card-title">Engineers Attendance</h2>
+            </div>
+
+            <div id="engineersContainer"></div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="addEngineer()">
+                    + Add Engineer
+                </button>
+                <button class="btn btn-success" onclick="saveAttendance()" id="saveBtn">
+                    💾 Save Attendance
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="loading">
+            <div class="spinner"></div>
+            <p>Saving attendance data...</p>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, doc, setDoc, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCMmUOdW2uEIGVd6XQfWXKF8eaFmwEog1g",
+            authDomain: "oesperformance-a54c0.firebaseapp.com",
+            projectId: "oesperformance-a54c0",
+            storageBucket: "oesperformance-a54c0.firebasestorage.app",
+            messagingSenderId: "484894102454",
+            appId: "1:484894102454:web:17535ee497eac2d90d6717",
+            measurementId: "G-R56BGZYV8N"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        window.db = db;
+
+        // Global state
+        let engineers = [];
+
+        // Set default date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('attendanceDate').value = today;
+
+        // Add engineer entry
+        window.addEngineer = function(name = '', status = 'X') {
+            const entry = {
+                id: Date.now() + Math.random(),
+                name: name,
+                status: status
+            };
+            engineers.push(entry);
+            renderEngineers();
+            updateStats();
+        };
+
+        // Remove engineer entry
+        window.removeEngineer = function(id) {
+            engineers = engineers.filter(e => e.id !== id);
+            renderEngineers();
+            updateStats();
+        };
+
+        // Update engineer
+        window.updateEngineer = function(id, field, value) {
+            const engineer = engineers.find(e => e.id === id);
+            if (engineer) {
+                engineer[field] = value;
+                updateStats();
+            }
+        };
+
+        // Render engineers list
+        function renderEngineers() {
+            const container = document.getElementById('engineersContainer');
+            
+            if (engineers.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">👤</div>
+                        <p>No engineers added yet. Click "Add Engineer" or paste bulk data.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = engineers.map(engineer => `
+                <div class="engineer-entry">
+                    <div class="engineer-grid">
+                        <div>
+                            <input type="text" 
+                                   value="${engineer.name}" 
+                                   onchange="updateEngineer(${engineer.id}, 'name', this.value)"
+                                   placeholder="Engineer Name"
+                                   style="width: 100%; padding: 0.75rem; background: var(--bg-card); border: 2px solid var(--border); border-radius: 8px; color: var(--text-light); font-size: 1rem;">
+                        </div>
+                        <div class="status-select-wrapper">
+                            <select onchange="updateEngineer(${engineer.id}, 'status', this.value)" 
+                                    style="width: 100%; padding: 0.75rem;">
+                                <option value="X" ${engineer.status === 'X' ? 'selected' : ''}>✅ Present (X)</option>
+                                <option value="H" ${engineer.status === 'H' ? 'selected' : ''}>🏖️ Holiday (H)</option>
+                                <option value="H/H" ${engineer.status === 'H/H' ? 'selected' : ''}>🏖️ Half Day (H/H)</option>
+                                <option value="Sick" ${engineer.status === 'Sick' ? 'selected' : ''}>🤒 Sick</option>
+                                <option value="AAUP" ${engineer.status === 'AAUP' ? 'selected' : ''}>📋 AAUP</option>
+                                <option value="TOFD" ${engineer.status === 'TOFD' ? 'selected' : ''}>📋 TOFD</option>
+                                <option value="AAP" ${engineer.status === 'AAP' ? 'selected' : ''}>📋 AAP</option>
+                            </select>
+                        </div>
+                        <button class="remove-btn" onclick="removeEngineer(${engineer.id})">
+                            🗑️ Remove
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update statistics
+        function updateStats() {
+            const total = engineers.length;
+            const present = engineers.filter(e => e.status === 'X').length;
+            const absences = total - present;
+
+            document.getElementById('totalEngineers').textContent = total;
+            document.getElementById('presentCount').textContent = present;
+            document.getElementById('absenceCount').textContent = absences;
+        }
+
+        // Parse bulk data
+        window.parseBulkData = function() {
+            const bulkData = document.getElementById('bulkData').value;
+            
+            if (!bulkData.trim()) {
+                showAlert('Please paste some data first', 'error');
+                return;
+            }
+
+            const lines = bulkData.split('\n').filter(line => line.trim());
+            let parsed = 0;
+
+            lines.forEach(line => {
+                const parts = line.split(',').map(p => p.trim());
+                if (parts.length >= 2) {
+                    const name = parts[0];
+                    const status = parts[1].toUpperCase();
+                    
+                    // Validate status
+                    const validStatuses = ['X', 'H', 'H/H', 'SICK', 'AAUP', 'TOFD', 'AAP'];
+                    if (validStatuses.includes(status)) {
+                        addEngineer(name, status === 'SICK' ? 'Sick' : status);
+                        parsed++;
+                    }
+                }
+            });
+
+            if (parsed > 0) {
+                showAlert(`Successfully parsed ${parsed} engineer(s)`, 'success');
+                document.getElementById('bulkData').value = '';
+            } else {
+                showAlert('No valid data found. Check format: Name, Status', 'error');
+            }
+        };
+
+        // Save attendance to Firebase
+        window.saveAttendance = async function() {
+            const date = document.getElementById('attendanceDate').value;
+
+            if (!date) {
+                showAlert('Please select a date', 'error');
+                return;
+            }
+
+            if (engineers.length === 0) {
+                showAlert('Please add at least one engineer', 'error');
+                return;
+            }
+
+            // Validate all engineers have names
+            const missingNames = engineers.filter(e => !e.name.trim());
+            if (missingNames.length > 0) {
+                showAlert('Please fill in all engineer names', 'error');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loadingIndicator').classList.add('show');
+            document.getElementById('saveBtn').disabled = true;
+
+            try {
+                const attendanceCollection = collection(db, 'SP Attendance');
+                let savedCount = 0;
+
+                for (const engineer of engineers) {
+                    // Create document ID from engineer name and date
+                    const docId = `${engineer.name}_${date}`;
+                    
+                    const attendanceData = {
+                        engineerName: engineer.name.trim(),
+                        date: date,
+                        attendance: engineer.status,
+                        updatedAt: new Date().toISOString()
+                    };
+
+                    await setDoc(doc(attendanceCollection, docId), attendanceData);
+                    savedCount++;
+                }
+
+                // Hide loading
+                document.getElementById('loadingIndicator').classList.remove('show');
+                document.getElementById('saveBtn').disabled = false;
+
+                showAlert(`✅ Successfully saved attendance for ${savedCount} engineer(s) on ${formatDate(date)}`, 'success');
+
+                // Clear the form
+                engineers = [];
+                renderEngineers();
+                updateStats();
+                document.getElementById('bulkData').value = '';
+
+            } catch (error) {
+                console.error('Error saving attendance:', error);
+                document.getElementById('loadingIndicator').classList.remove('show');
+                document.getElementById('saveBtn').disabled = false;
+                showAlert('Error saving attendance: ' + error.message, 'error');
+            }
+        };
+
+        // Show alert message
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type} show`;
+
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        // Format date for display
+        function formatDate(dateStr) {
+            const date = new Date(dateStr + 'T00:00:00');
+            return date.toLocaleDateString('en-GB', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+
+        // Initialize
+        updateStats();
+        renderEngineers();
+    </script>
+</body>
+</html>
