@@ -332,6 +332,74 @@
             color: var(--accent);
         }
 
+        /* Attendance Section Styles */
+        .attendance-section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid;
+        }
+
+        .attendance-section.present {
+            background: rgba(16, 185, 129, 0.1);
+            border-left-color: var(--success);
+        }
+
+        .attendance-section.absent {
+            background: rgba(245, 158, 11, 0.1);
+            border-left-color: var(--warning);
+        }
+
+        .attendance-section.holiday {
+            background: rgba(0, 163, 224, 0.1);
+            border-left-color: var(--accent);
+        }
+
+        .attendance-section.sick {
+            background: rgba(239, 68, 68, 0.1);
+            border-left-color: var(--error);
+        }
+
+        .attendance-title {
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .attendance-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .attendance-badge.present {
+            background: var(--success);
+            color: white;
+        }
+
+        .attendance-badge.holiday {
+            background: var(--accent);
+            color: white;
+        }
+
+        .attendance-badge.sick {
+            background: var(--error);
+            color: white;
+        }
+
+        .attendance-badge.other {
+            background: var(--warning);
+            color: white;
+        }
+
         .job-grid {
             display: grid;
             gap: 1rem;
@@ -1191,6 +1259,19 @@
                     additionalPayments.push(doc.data());
                 });
 
+                // Load attendance data
+                const attendanceCollection = collection(db, 'SP Attendance');
+                const attendanceQuery = query(attendanceCollection, where('engineerName', '==', currentUser.name));
+                const attendanceSnapshot = await getDocs(attendanceQuery);
+                
+                const attendanceData = {};
+                attendanceSnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if (data.date) {
+                        attendanceData[data.date] = data.attendance;
+                    }
+                });
+
                 // Filter and organize data by date
                 const dataByDate = {};
                 let totalJobs = 0;
@@ -1210,7 +1291,7 @@
                 });
 
                 // Display results
-                displayResults(dataByDate, totalJobs, startDate, endDate);
+                displayResults(dataByDate, totalJobs, startDate, endDate, attendanceData);
                 
                 loadingSection.classList.remove('show');
                 resultsSection.classList.add('show');
@@ -1235,8 +1316,15 @@
             return date >= start && date <= end;
         }
 
+        // Convert DD/MM/YYYY to YYYY-MM-DD
+        function convertToStandardDate(ddmmyyyy) {
+            const parts = ddmmyyyy.split('/');
+            if (parts.length !== 3) return null;
+            return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+        }
+
         // Display results grouped by date
-        function displayResults(dataByDate, totalJobs, startDate, endDate) {
+        function displayResults(dataByDate, totalJobs, startDate, endDate, attendanceData) {
             resultsContainer.innerHTML = '';
             totalRecords.textContent = `${totalJobs} jobs`;
 
@@ -1275,6 +1363,13 @@
                 dayHeader.className = 'day-header';
                 dayHeader.textContent = `${formatDateDisplay(date)} - ${jobs.length} job${jobs.length !== 1 ? 's' : ''}`;
 
+                // Get attendance status for this date
+                const standardDate = convertToStandardDate(date);
+                const attendance = standardDate ? attendanceData[standardDate] : null;
+                
+                // Create attendance section
+                const attendanceSection = createAttendanceSection(attendance);
+
                 const jobGrid = document.createElement('div');
                 jobGrid.className = 'job-grid';
 
@@ -1305,6 +1400,9 @@
                 });
 
                 daySection.appendChild(dayHeader);
+                if (attendanceSection) {
+                    daySection.appendChild(attendanceSection);
+                }
                 daySection.appendChild(jobGrid);
 
                 // Check for additional payments on this date
@@ -1332,13 +1430,76 @@
                     dayHeader.className = 'day-header';
                     dayHeader.textContent = formatDateDisplay(payment.paymentDate);
 
+                    // Get attendance status for this date
+                    const standardDate = convertToStandardDate(payment.paymentDate);
+                    const attendance = standardDate ? attendanceData[standardDate] : null;
+                    
+                    // Create attendance section
+                    const attendanceSection = createAttendanceSection(attendance);
+
                     const paymentCard = createAdditionalPaymentCard(payment);
 
                     daySection.appendChild(dayHeader);
+                    if (attendanceSection) {
+                        daySection.appendChild(attendanceSection);
+                    }
                     daySection.appendChild(paymentCard);
                     resultsContainer.appendChild(daySection);
                 }
             });
+        }
+
+        // Create attendance status section
+        function createAttendanceSection(attendanceStatus) {
+            if (!attendanceStatus) return null;
+
+            const section = document.createElement('div');
+            
+            const absenceLabels = {
+                'H': 'Holiday',
+                'H/H': 'Half Day Holiday',
+                'Sick': 'Sick Leave',
+                'AAUP': 'Authorised Absence Unpaid',
+                'TOFD': 'Time Off For Dependants',
+                'AAP': 'Authorised Absence Paid',
+                'X': 'Present'
+            };
+
+            let sectionClass = 'attendance-section';
+            let badgeClass = 'attendance-badge';
+            let icon = '✅';
+            let label = 'Present';
+
+            if (attendanceStatus === 'X') {
+                sectionClass += ' present';
+                badgeClass += ' present';
+            } else if (attendanceStatus === 'H' || attendanceStatus === 'H/H') {
+                sectionClass += ' holiday';
+                badgeClass += ' holiday';
+                icon = '🏖️';
+                label = absenceLabels[attendanceStatus] || attendanceStatus;
+            } else if (attendanceStatus === 'Sick') {
+                sectionClass += ' sick';
+                badgeClass += ' sick';
+                icon = '🤒';
+                label = 'Sick Leave';
+            } else {
+                sectionClass += ' absent';
+                badgeClass += ' other';
+                icon = '📋';
+                label = absenceLabels[attendanceStatus] || attendanceStatus;
+            }
+
+            section.className = sectionClass;
+            section.innerHTML = `
+                <div class="attendance-title">
+                    <span>${icon}</span>
+                    <span>Attendance:</span>
+                    <span class="${badgeClass}">${label}</span>
+                </div>
+            `;
+
+            return section;
         }
 
         // Create additional payment card
