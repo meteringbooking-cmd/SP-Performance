@@ -330,54 +330,22 @@
             font-weight: 600;
             margin-bottom: 1rem;
             color: var(--accent);
-        }
-
-        /* Attendance Section Styles */
-        .attendance-section {
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-            border-radius: 10px;
-            border-left: 4px solid;
-        }
-
-        .attendance-section.present {
-            background: rgba(16, 185, 129, 0.1);
-            border-left-color: var(--success);
-        }
-
-        .attendance-section.absent {
-            background: rgba(245, 158, 11, 0.1);
-            border-left-color: var(--warning);
-        }
-
-        .attendance-section.holiday {
-            background: rgba(0, 163, 224, 0.1);
-            border-left-color: var(--accent);
-        }
-
-        .attendance-section.sick {
-            background: rgba(239, 68, 68, 0.1);
-            border-left-color: var(--error);
-        }
-
-        .attendance-title {
-            font-weight: 600;
-            color: var(--text-light);
-            margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
             gap: 0.5rem;
-            font-size: 0.95rem;
         }
 
+        /* Attendance Badge Styles - Inline */
         .attendance-badge {
             display: inline-block;
-            padding: 0.25rem 0.75rem;
+            padding: 0.35rem 0.85rem;
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            white-space: nowrap;
         }
 
         .attendance-badge.present {
@@ -1359,16 +1327,17 @@
                 const daySection = document.createElement('div');
                 daySection.className = 'day-section';
 
-                const dayHeader = document.createElement('div');
-                dayHeader.className = 'day-header';
-                dayHeader.textContent = `${formatDateDisplay(date)} - ${jobs.length} job${jobs.length !== 1 ? 's' : ''}`;
-
                 // Get attendance status for this date
                 const standardDate = convertToStandardDate(date);
                 const attendance = standardDate ? attendanceData[standardDate] : null;
                 
-                // Create attendance section
-                const attendanceSection = createAttendanceSection(attendance);
+                // Create day header with attendance badge
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'day-header';
+                dayHeader.innerHTML = `
+                    ${formatDateDisplay(date)} - ${jobs.length} job${jobs.length !== 1 ? 's' : ''}
+                    ${getAttendanceBadgeHTML(attendance)}
+                `;
 
                 const jobGrid = document.createElement('div');
                 jobGrid.className = 'job-grid';
@@ -1400,9 +1369,6 @@
                 });
 
                 daySection.appendChild(dayHeader);
-                if (attendanceSection) {
-                    daySection.appendChild(attendanceSection);
-                }
                 daySection.appendChild(jobGrid);
 
                 // Check for additional payments on this date
@@ -1426,35 +1392,30 @@
                     const daySection = document.createElement('div');
                     daySection.className = 'day-section';
 
-                    const dayHeader = document.createElement('div');
-                    dayHeader.className = 'day-header';
-                    dayHeader.textContent = formatDateDisplay(payment.paymentDate);
-
                     // Get attendance status for this date
                     const standardDate = convertToStandardDate(payment.paymentDate);
                     const attendance = standardDate ? attendanceData[standardDate] : null;
                     
-                    // Create attendance section
-                    const attendanceSection = createAttendanceSection(attendance);
+                    const dayHeader = document.createElement('div');
+                    dayHeader.className = 'day-header';
+                    dayHeader.innerHTML = `
+                        ${formatDateDisplay(payment.paymentDate)}
+                        ${getAttendanceBadgeHTML(attendance)}
+                    `;
 
                     const paymentCard = createAdditionalPaymentCard(payment);
 
                     daySection.appendChild(dayHeader);
-                    if (attendanceSection) {
-                        daySection.appendChild(attendanceSection);
-                    }
                     daySection.appendChild(paymentCard);
                     resultsContainer.appendChild(daySection);
                 }
             });
         }
 
-        // Create attendance status section
-        function createAttendanceSection(attendanceStatus) {
-            if (!attendanceStatus) return null;
+        // Get attendance badge HTML for inline display
+        function getAttendanceBadgeHTML(attendanceStatus) {
+            if (!attendanceStatus) return '';
 
-            const section = document.createElement('div');
-            
             const absenceLabels = {
                 'H': 'Holiday',
                 'H/H': 'Half Day Holiday',
@@ -1465,41 +1426,27 @@
                 'X': 'Present'
             };
 
-            let sectionClass = 'attendance-section';
             let badgeClass = 'attendance-badge';
             let icon = '✅';
             let label = 'Present';
 
             if (attendanceStatus === 'X') {
-                sectionClass += ' present';
                 badgeClass += ' present';
             } else if (attendanceStatus === 'H' || attendanceStatus === 'H/H') {
-                sectionClass += ' holiday';
                 badgeClass += ' holiday';
                 icon = '🏖️';
                 label = absenceLabels[attendanceStatus] || attendanceStatus;
             } else if (attendanceStatus === 'Sick') {
-                sectionClass += ' sick';
                 badgeClass += ' sick';
                 icon = '🤒';
                 label = 'Sick Leave';
             } else {
-                sectionClass += ' absent';
                 badgeClass += ' other';
                 icon = '📋';
                 label = absenceLabels[attendanceStatus] || attendanceStatus;
             }
 
-            section.className = sectionClass;
-            section.innerHTML = `
-                <div class="attendance-title">
-                    <span>${icon}</span>
-                    <span>Attendance:</span>
-                    <span class="${badgeClass}">${label}</span>
-                </div>
-            `;
-
-            return section;
+            return `<span class="${badgeClass}" style="margin-left: 1rem;">${icon} ${label}</span>`;
         }
 
         // Create additional payment card
