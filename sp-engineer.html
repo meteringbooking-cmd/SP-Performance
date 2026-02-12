@@ -233,6 +233,17 @@
             gap: 1.5rem;
         }
 
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .ngu-logo {
+            height: 50px;
+            width: auto;
+        }
+
         h1 {
             font-size: 2.25rem;
             font-weight: 700;
@@ -581,6 +592,16 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* Footer Styles */
+        footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
         }
 
         /* Modal and other styles remain the same... */
@@ -978,8 +999,17 @@
                 gap: 1rem;
             }
 
+            .header-right {
+                width: 100%;
+                flex-direction: column-reverse;
+            }
+
             .logout-btn {
                 width: 100%;
+            }
+
+            .ngu-logo {
+                align-self: center;
             }
 
             .modal-content {
@@ -1035,7 +1065,10 @@
                     <div class="welcome-section">
                         <h1>Welcome, <span id="engineerName"></span></h1>
                     </div>
-                    <button id="logoutBtn" class="logout-btn">Logout</button>
+                    <div class="header-right">
+                        <button id="logoutBtn" class="logout-btn">Logout</button>
+                        <img src="https://www.dropbox.com/scl/fi/kkujm1u6y7vvnp7luq8d7/ngu-main-white.png?rlkey=kgq2uh48qh4xssh4vlbz868lr&st=6cy1lbvp&dl=1" alt="NGU Logo" class="ngu-logo">
+                    </div>
                 </div>
                 <p class="subtitle">ENGINEER DASHBOARD</p>
             </header>
@@ -1092,6 +1125,10 @@
                     </div>
                 </div>
             </main>
+
+            <footer>
+                NGU - Scottish Power - Engineer Dashboard - Barry Dixon
+            </footer>
         </div>
     </div>
 
