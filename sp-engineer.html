@@ -1066,6 +1066,22 @@
                 </div>
 
                 <div id="resultsSection" class="results-section">
+                    <!-- Period Summary Card -->
+                    <div class="card" id="periodSummaryCard" style="margin-bottom: 1.5rem;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                            <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%); border: 2px solid var(--bonus); border-radius: 12px;">
+                                <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Period Bonus Total</div>
+                                <div style="font-size: 2rem; font-weight: 700; color: var(--bonus); font-family: 'DM Mono', monospace;" id="periodBonusTotal">£0.00</div>
+                                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;" id="periodBonusPoints">0 total points</div>
+                            </div>
+                            <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); border: 2px solid var(--success); border-radius: 12px;">
+                                <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Approved Additional Payments</div>
+                                <div style="font-size: 2rem; font-weight: 700; color: var(--success); font-family: 'DM Mono', monospace;" id="periodApprovedPayments">£0.00</div>
+                                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;" id="periodApprovedCount">0 submissions</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="card">
                         <div class="results-header">
                             <h2 class="results-title">Daily Breakdown</h2>
@@ -1319,6 +1335,12 @@
         const cancelPayment = document.getElementById('cancelPayment');
         const paymentsForm = document.getElementById('paymentsForm');
 
+        // Period summary elements
+        const periodBonusTotal = document.getElementById('periodBonusTotal');
+        const periodBonusPoints = document.getElementById('periodBonusPoints');
+        const periodApprovedPayments = document.getElementById('periodApprovedPayments');
+        const periodApprovedCount = document.getElementById('periodApprovedCount');
+
         // Current user data
         let currentUser = null;
         let additionalPayments = [];
@@ -1474,8 +1496,14 @@
                     }
                 });
 
+                // Calculate period totals
+                const periodTotals = calculatePeriodTotals(sureserveDataByDate, additionalPayments, startDate, endDate);
+
                 // Display results
                 displayResults(dataByDate, totalJobs, startDate, endDate, attendanceData, sureserveDataByDate);
+                
+                // Update period summary
+                updatePeriodSummary(periodTotals);
                 
                 loadingSection.classList.remove('show');
                 resultsSection.classList.add('show');
@@ -1486,6 +1514,61 @@
                 loadingSection.classList.remove('show');
             }
         });
+
+        // Calculate period totals
+        function calculatePeriodTotals(sureserveDataByDate, additionalPayments, startDate, endDate) {
+            let totalBonusAmount = 0;
+            let totalBonusPoints = 0;
+            let totalApprovedPayments = 0;
+            let approvedPaymentsCount = 0;
+
+            // Calculate bonus totals from Sureserve data
+            Object.values(sureserveDataByDate).forEach(dayJobs => {
+                const completedJobs = dayJobs.filter(job => isCompleted(job.status));
+                let dayPoints = 0;
+
+                completedJobs.forEach(job => {
+                    const points = JOB_POINTS[job.description] || 0;
+                    dayPoints += points;
+                });
+
+                totalBonusPoints += dayPoints;
+
+                // Calculate bonus for this day
+                if (dayPoints >= BONUS_THRESHOLD) {
+                    const bonusPoints = dayPoints - BONUS_THRESHOLD;
+                    const bonusUnits = Math.floor(bonusPoints / 0.5);
+                    const bonusAmount = bonusUnits * BONUS_RATE;
+                    totalBonusAmount += bonusAmount;
+                }
+            });
+
+            // Calculate approved additional payments
+            additionalPayments.forEach(payment => {
+                if (isDateInRange(payment.paymentDate, startDate, endDate)) {
+                    const status = payment.status || 'Awaiting Approval';
+                    if (status === 'Approved' || status === 'Approved with Changes') {
+                        totalApprovedPayments += payment.totalAmount || 0;
+                        approvedPaymentsCount++;
+                    }
+                }
+            });
+
+            return {
+                totalBonusAmount,
+                totalBonusPoints,
+                totalApprovedPayments,
+                approvedPaymentsCount
+            };
+        }
+
+        // Update period summary display
+        function updatePeriodSummary(totals) {
+            periodBonusTotal.textContent = `£${totals.totalBonusAmount.toFixed(2)}`;
+            periodBonusPoints.textContent = `${totals.totalBonusPoints.toFixed(1)} total points`;
+            periodApprovedPayments.textContent = `£${totals.totalApprovedPayments.toFixed(2)}`;
+            periodApprovedCount.textContent = `${totals.approvedPaymentsCount} submission${totals.approvedPaymentsCount !== 1 ? 's' : ''}`;
+        }
 
         // Check if a date is within range - handles both DD/MM/YYYY and standard date formats
         function isDateInRange(dateStr, startStr, endStr) {
