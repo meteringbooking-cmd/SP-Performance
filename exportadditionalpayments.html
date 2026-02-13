@@ -292,6 +292,16 @@
             box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
         }
 
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+            color: white;
+        }
+
+        .btn-warning:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);
+        }
+
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -529,9 +539,13 @@
                         <span>👁️</span>
                         Preview Data
                     </button>
-                    <button id="exportBtn" class="btn btn-success">
+                    <button id="exportPaymentsBtn" class="btn btn-success">
                         <span>📥</span>
-                        Export to CSV
+                        Export Payments
+                    </button>
+                    <button id="exportBonusBtn" class="btn btn-warning">
+                        <span>💰</span>
+                        Export Period Bonus
                     </button>
                 </div>
             </div>
@@ -593,12 +607,89 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Job Points Mapping
+        const JOB_POINTS = {
+            'SX1-1 - Electricity Meter Multi Rate': 2,
+            'SX1-1 - Electricity Meter Exchange  Legacy to Smart': 1.5,
+            'SX1-2 - Gas Meter Exchange  Legacy to Smart': 1.5,
+            'SX1-3 -Dual Fuel Multi Rate': 2,
+            'SX1-3 - Dual Fuel Exchange  Legacy to Smart': 2,
+            'SR1-1 - Remove Metering System (Electricity)': 1.5,
+            'SR1-2 - Remove Metering System (Gas)': 1.5,
+            'SR1-3 - Remove Metering System (Dual Fuel)': 2,
+            'SD1-1 - Remove Metering System (Electricity) and replace with Dumb Meter': 1.5,
+            'SD1-2 - Remove Metering System (Gas) and replace with Dumb Meter': 1.5,
+            'SD1-3 - Remove Metering System (Dual Fuel) and replace with Dumb Meter': 2,
+            'SI1-1 - Install New Electricity Metering System New Connection': 1.5,
+            'SI1-2 - Install New Gas Metering System New Connection': 1.5,
+            'SI1-3 - Install New Dual Fuel Metering System New Connection': 2,
+            'SM1-1 - Investigate Smart Metering System Fault  Electricity': 1,
+            'SM1-2 - Investigate Smart Metering System Fault  Gas': 1,
+            'SM1-3 - Investigate Smart Metering System Fault  Dual Fuel': 1,
+            'SM1-CH - Replace Communications Hub': 1,
+            'SE1-1 - Investigate Smart Metering System Fault  Electricity': 1,
+            'SE1-2 - Investigate Smart Metering System Fault  Gas': 1,
+            'SE1-3 - Investigate Smart Metering System Fault – Dual Fuel': 1,
+            'SM1-IH - Replace IHD': 1,
+            'SX1-1-SS - Electricity Meter Exchange  Smart to Smart': 1.5,
+            'SX1-2-SS - Gas Meter Exchange  Smart to Smart': 1.5,
+            'SX1-3-SS - Dual Fuel Exchange  Smart to Smart': 2,
+            'MIS-PP - Install PPMID': 1,
+            'SX1 - D2S CR Elec Twin Element': 2,
+            'SX1 - D2S CR Elec 3PH': 2,
+            'SX1 - D2S CR Elec Single Element with ALCS': 2,
+            'SX1 - D2S CR Elec 3PH with ALCS': 2,
+            'SX1 - D2S PP Elec Twin Element': 2,
+            'SX1 - D2S PP Elec 3PH': 2,
+            'SX1 - D2S PP Elec Single Element with ALCS': 2,
+            'SX1 - D2S PP Elec 3PH with ALCS': 2,
+            'SX1 - D2S DS Elec CR Twin Element, Gas CR': 2,
+            'SX1 - D2S DS Elec CR 3PH, Gas CR': 2.5,
+            'SX1 - D2S DS Elec CR Single Element with ALCS, Gas CR': 2,
+            'SX1 - D2S DS Elec CR 3PH with ALCS, Gas CR': 2.5,
+            'SX1 - D2S DS Elec CR Twin Element, Gas PP': 2,
+            'SX1 - D2S DS Elec CR 3PH, Gas PP': 2.5,
+            'SX1 - D2S DS Elec CR Single Element with ALCS, Gas PP': 2,
+            'SX1 - D2S DS Elec CR 3PH with ALCS, Gas PP': 2.5,
+            'SX1 - D2S DS Elec PP Twin Element, Gas CR': 2,
+            'SX1 - D2S DS Elec PP 3PH, Gas CR': 2.5,
+            'SX1 - D2S DS Elec PP Single Element with ALCS, Gas CR': 2,
+            'SX1 - D2S DS Elec PP 3PH with ALCS, Gas CR': 2.5,
+            'SX1 - D2S DS Elec PP Twin Element, Gas PP': 2,
+            'SX1 - D2S DS Elec PP 3PH, Gas PP': 2.5,
+            'SX1 - D2S DS Elec PP Single Element with ALCS, Gas PP': 2,
+            'SX1 - D2S DS Elec PP 3PH with ALCS, Gas PP': 2.5,
+            'G4 - Exchange Metering System - like for like - Credit < 11 scmh': 1.5,
+            'E9 - Miscellaneous Site Visit - PrePayment Key/Card Meter': 1,
+            'E20 - Install Isolator Switch - Seperate Visit - Single Phase': 1,
+            'E9 - Miscellaneous Site Visit - Single Phase': 1,
+            'E23 - Service Engineer Hire - Half Day': 3.5,
+            'E24 - Service Engineer Hire - Full Day': 7,
+            'E13 - Remove Metering System - Single Phase': 1.5,
+            'E8 - Investigate Metering System Fault - Supply Not Interrupted - Single Phase': 1,
+            'G25 - Service Provider Service Engineer Hire - AM Hire': 3.5,
+            'G16 - Remove Metering System - Credit < 11 scmh': 1.5,
+            'E9 - Miscellaneous Site Visit - PolyPhase': 1,
+            'G31 - Miscellaneous - Group 2 - Credit < 11 scmh': 1.5,
+            'G16 - Remove Metering System - Prepayment': 1.5,
+            'E12 - Relocate Metering System - Single Phase': 1.5,
+            'E20 - Install Isolator Switch - Seperate Visit - PolyPhase': 1,
+            'Non Chargeable': 1.5,
+            'BAU Smart': 1,
+            'E7 - Investigate Metering System Fault - Supply Interrupted - Single Phase': 1,
+            'G21 - Callout  Customer with Credit Metering System - Gas Off - Call Out Faulty Credit Meter - Gas Off': 1
+        };
+
+        const BONUS_THRESHOLD = 6;
+        const BONUS_RATE = 20;
+
         // DOM elements
         const startDateInput = document.getElementById('startDate');
         const endDateInput = document.getElementById('endDate');
         const statusFilter = document.getElementById('statusFilter');
         const previewBtn = document.getElementById('previewBtn');
-        const exportBtn = document.getElementById('exportBtn');
+        const exportPaymentsBtn = document.getElementById('exportPaymentsBtn');
+        const exportBonusBtn = document.getElementById('exportBonusBtn');
         const loadingSection = document.getElementById('loadingSection');
         const statsSection = document.getElementById('statsSection');
         const previewSection = document.getElementById('previewSection');
@@ -611,12 +702,14 @@
         startDateInput.valueAsDate = thirtyDaysAgo;
 
         let currentPaymentsData = [];
+        let currentSureserveData = {};
 
         // Preview button
         previewBtn.addEventListener('click', previewData);
 
-        // Export button
-        exportBtn.addEventListener('click', exportToCSV);
+        // Export buttons
+        exportPaymentsBtn.addEventListener('click', () => exportToCSV('payments'));
+        exportBonusBtn.addEventListener('click', () => exportToCSV('bonus'));
 
         // Preview data
         async function previewData() {
@@ -629,7 +722,10 @@
 
             try {
                 const payments = await fetchPayments();
+                const sureserveData = await fetchSureserveData();
+                
                 currentPaymentsData = payments;
+                currentSureserveData = sureserveData;
 
                 if (payments.length === 0) {
                     alert('No payments found for the selected date range and status.');
@@ -651,8 +747,36 @@
             }
         }
 
+        // Fetch Sureserve data for bonus calculation
+        async function fetchSureserveData() {
+            const sureserveCollection = collection(db, 'SP-SureserveData');
+            const querySnapshot = await getDocs(sureserveCollection);
+
+            const dataByEngineerAndDate = {};
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                if (isDateInRange(data.dateOfAppointment, startDate, endDate)) {
+                    const engineer = data.resource;
+                    const date = data.dateOfAppointment;
+                    
+                    if (!dataByEngineerAndDate[engineer]) {
+                        dataByEngineerAndDate[engineer] = {};
+                    }
+                    if (!dataByEngineerAndDate[engineer][date]) {
+                        dataByEngineerAndDate[engineer][date] = [];
+                    }
+                    dataByEngineerAndDate[engineer][date].push(data);
+                }
+            });
+
+            return dataByEngineerAndDate;
+        }
+
         // Export to CSV
-        async function exportToCSV() {
+        async function exportToCSV(exportType) {
             if (!validateDates()) return;
 
             loadingSection.classList.add('show');
@@ -660,20 +784,35 @@
 
             try {
                 let payments = currentPaymentsData;
+                let sureserveData = currentSureserveData;
                 
                 // If no preview data, fetch fresh
                 if (payments.length === 0) {
                     payments = await fetchPayments();
+                    sureserveData = await fetchSureserveData();
                 }
 
-                if (payments.length === 0) {
-                    alert('No payments found for the selected date range and status.');
-                    loadingSection.classList.remove('show');
-                    return;
+                let csv;
+                let filename;
+
+                if (exportType === 'bonus') {
+                    csv = generateBonusCSV(sureserveData);
+                    const startDate = new Date(startDateInput.value).toISOString().split('T')[0];
+                    const endDate = new Date(endDateInput.value).toISOString().split('T')[0];
+                    filename = `period_bonus_${startDate}_to_${endDate}.csv`;
+                } else {
+                    if (payments.length === 0) {
+                        alert('No payments found for the selected date range and status.');
+                        loadingSection.classList.remove('show');
+                        return;
+                    }
+                    csv = generatePaymentsCSV(payments);
+                    const startDate = new Date(startDateInput.value).toISOString().split('T')[0];
+                    const endDate = new Date(endDateInput.value).toISOString().split('T')[0];
+                    filename = `additional_payments_${startDate}_to_${endDate}.csv`;
                 }
 
-                const csv = generateCSV(payments);
-                downloadCSV(csv);
+                downloadCSV(csv, filename);
 
                 loadingSection.classList.remove('show');
                 successMessage.classList.add('show');
@@ -684,7 +823,7 @@
                 }, 5000);
 
             } catch (error) {
-                console.error('Error exporting payments:', error);
+                console.error('Error exporting data:', error);
                 alert('Error exporting data. Please try again.');
                 loadingSection.classList.remove('show');
             }
@@ -772,12 +911,13 @@
             document.getElementById('previewTableContainer').innerHTML = tableHTML;
         }
 
-        // Generate CSV
-        function generateCSV(payments) {
+        // Generate Payments CSV
+        function generatePaymentsCSV(payments) {
             const selectedFields = getSelectedFields();
 
-            // CSV Header
-            let csv = selectedFields.map(f => escapeCSV(f.label)).join(',') + '\n';
+            // CSV Header - using UTF-8 BOM to ensure proper encoding
+            let csv = '\uFEFF';
+            csv += selectedFields.map(f => escapeCSV(f.label)).join(',') + '\n';
 
             // CSV Rows
             payments.forEach(payment => {
@@ -786,6 +926,44 @@
                     return escapeCSV(value);
                 });
                 csv += row.join(',') + '\n';
+            });
+
+            return csv;
+        }
+
+        // Generate Bonus CSV
+        function generateBonusCSV(sureserveData) {
+            // CSV Header with UTF-8 BOM
+            let csv = '\uFEFF';
+            csv += 'Engineer Name,Date,Total Points,Bonus Points (Above Threshold),Bonus Units,Bonus Amount\n';
+
+            // Process each engineer
+            Object.keys(sureserveData).sort().forEach(engineerName => {
+                const engineerDates = sureserveData[engineerName];
+                
+                // Process each date
+                Object.keys(engineerDates).sort().forEach(date => {
+                    const jobs = engineerDates[date];
+                    const completedJobs = jobs.filter(job => isCompleted(job.status));
+                    
+                    let totalPoints = 0;
+                    completedJobs.forEach(job => {
+                        const points = JOB_POINTS[job.description] || 0;
+                        totalPoints += points;
+                    });
+
+                    let bonusPoints = 0;
+                    let bonusUnits = 0;
+                    let bonusAmount = 0;
+
+                    if (totalPoints >= BONUS_THRESHOLD) {
+                        bonusPoints = totalPoints - BONUS_THRESHOLD;
+                        bonusUnits = Math.floor(bonusPoints / 0.5);
+                        bonusAmount = bonusUnits * BONUS_RATE;
+                    }
+
+                    csv += `${escapeCSV(engineerName)},${escapeCSV(date)},${totalPoints.toFixed(1)},${bonusPoints.toFixed(1)},${bonusUnits},${bonusAmount.toFixed(2)}\n`;
+                });
             });
 
             return csv;
@@ -823,7 +1001,7 @@
                 });
                 fields.push({
                     label: 'Standby Amount',
-                    getValue: (p) => p.standby ? `£${(p.standbyAmount || 0).toFixed(2)}` : ''
+                    getValue: (p) => p.standby ? (p.standbyAmount || 0).toFixed(2) : ''
                 });
             }
 
@@ -853,11 +1031,11 @@
                 });
                 fields.push({
                     label: 'Overtime Rate',
-                    getValue: (p) => p.overtime ? `£${(p.overtimeRate || 0).toFixed(2)}` : ''
+                    getValue: (p) => p.overtime ? (p.overtimeRate || 0).toFixed(2) : ''
                 });
                 fields.push({
                     label: 'Overtime Amount',
-                    getValue: (p) => p.overtime ? `£${(p.overtimeAmount || 0).toFixed(2)}` : ''
+                    getValue: (p) => p.overtime ? (p.overtimeAmount || 0).toFixed(2) : ''
                 });
                 fields.push({
                     label: 'Overtime Reason',
@@ -887,7 +1065,7 @@
             if (document.getElementById('field_totalAmount').checked) {
                 fields.push({
                     label: 'Total Amount',
-                    getValue: (p) => `£${(p.totalAmount || 0).toFixed(2)}`
+                    getValue: (p) => (p.totalAmount || 0).toFixed(2)
                 });
             }
 
@@ -910,7 +1088,7 @@
                 });
                 fields.push({
                     label: 'Original Amount',
-                    getValue: (p) => p.originalAmount ? `£${p.originalAmount.toFixed(2)}` : ''
+                    getValue: (p) => p.originalAmount ? p.originalAmount.toFixed(2) : ''
                 });
             }
 
@@ -918,14 +1096,10 @@
         }
 
         // Download CSV
-        function downloadCSV(csv) {
+        function downloadCSV(csv, filename) {
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
-            
-            const startDate = new Date(startDateInput.value).toISOString().split('T')[0];
-            const endDate = new Date(endDateInput.value).toISOString().split('T')[0];
-            const filename = `additional_payments_${startDate}_to_${endDate}.csv`;
             
             link.setAttribute('href', url);
             link.setAttribute('download', filename);
@@ -948,6 +1122,13 @@
             }
             
             return stringValue;
+        }
+
+        // Check if status indicates completion
+        function isCompleted(status) {
+            if (!status) return false;
+            const statusLower = status.toLowerCase();
+            return statusLower.includes('complete') || statusLower.includes('done');
         }
 
         // Validate dates
