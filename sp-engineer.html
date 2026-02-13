@@ -1644,18 +1644,45 @@
             console.log('Sureserve data dates:', Object.keys(sureserveDataByDate));
             console.log('Attendance data:', attendanceData);
 
+            // First, check ALL attendance dates for holidays (not just Sureserve dates)
+            Object.entries(attendanceData).forEach(([standardDate, attendance]) => {
+                // Only process dates within the selected range
+                if (isDateInRange(standardDate, startDate, endDate)) {
+                    // Convert YYYY-MM-DD to DD/MM/YYYY for display and lookup
+                    const displayDate = convertToDisplayDate(standardDate);
+                    
+                    // Check if it's a holiday
+                    if (attendance === 'H' || attendance === 'H/H') {
+                        // Only add holiday bonus if there's NO Sureserve data for this day
+                        // (if there is Sureserve data, it will be handled below)
+                        if (!sureserveDataByDate[displayDate]) {
+                            const avgBonus = getAverageBonusForDate(currentUser.name, displayDate);
+                            console.log(`Holiday without Sureserve data - Date: ${displayDate}, Attendance: ${attendance}, Bonus: ${avgBonus}`);
+                            
+                            if (avgBonus > 0) {
+                                // For half day holidays, use half the bonus
+                                const bonusAmount = attendance === 'H/H' ? avgBonus / 2 : avgBonus;
+                                totalHolidayBonus += bonusAmount;
+                                totalBonusAmount += bonusAmount;
+                                console.log(`Added holiday bonus: £${bonusAmount.toFixed(2)}`);
+                            }
+                        }
+                    }
+                }
+            });
+
             // Calculate bonus totals from Sureserve data
             Object.entries(sureserveDataByDate).forEach(([date, dayJobs]) => {
                 // Convert DD/MM/YYYY to YYYY-MM-DD for attendance lookup
                 const standardDate = convertToStandardDate(date);
                 const attendance = standardDate ? attendanceData[standardDate] : null;
                 
-                console.log(`Date: ${date} (${standardDate}), Attendance: ${attendance}`);
+                console.log(`Sureserve Date: ${date} (${standardDate}), Attendance: ${attendance}`);
                 
                 // Check if it's a holiday
                 if (attendance && (attendance === 'H' || attendance === 'H/H')) {
                     const avgBonus = getAverageBonusForDate(currentUser.name, date);
-                    console.log(`Holiday detected! Average bonus: ${avgBonus}`);
+                    console.log(`Holiday with Sureserve data detected! Average bonus: ${avgBonus}`);
                     
                     if (avgBonus > 0) {
                         // For half day holidays, use half the bonus
