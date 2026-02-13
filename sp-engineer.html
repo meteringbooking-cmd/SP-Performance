@@ -640,7 +640,7 @@
             font-size: 0.9rem;
         }
 
-        /* Modal styles omitted for brevity - keep from original */
+        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
@@ -1436,16 +1436,29 @@
             }
         }
 
-        // Get average bonus for engineer and month
+        // Get average bonus for engineer and month - FIXED VERSION
         function getAverageBonusForDate(engineerName, dateStr) {
-            const date = new Date(dateStr);
+            // Handle both YYYY-MM-DD and DD/MM/YYYY formats
+            let date;
+            if (dateStr.includes('/')) {
+                const [day, month, year] = dateStr.split('/');
+                date = new Date(year, month - 1, day);
+            } else {
+                date = new Date(dateStr);
+            }
+            
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
                               'July', 'August', 'September', 'October', 'November', 'December'];
             const month = monthNames[date.getMonth()];
             
+            console.log('Looking up bonus for:', engineerName, 'month:', month, 'date:', dateStr);
+            
             if (averageBonuses[engineerName] && averageBonuses[engineerName][month]) {
-                return averageBonuses[engineerName][month];
+                const bonus = averageBonuses[engineerName][month];
+                console.log('Found bonus:', bonus);
+                return bonus;
             }
+            console.log('No bonus found for', engineerName, month);
             return 0;
         }
 
@@ -1581,6 +1594,8 @@
                     }
                 });
 
+                console.log('Attendance data loaded:', attendanceData);
+
                 // Filter and organize data by date
                 const dataByDate = {};
                 let totalJobs = 0;
@@ -1598,7 +1613,7 @@
                     }
                 });
 
-                // Calculate period totals
+                // Calculate period totals - FIXED VERSION
                 const periodTotals = calculatePeriodTotals(sureserveDataByDate, additionalPayments, startDate, endDate, attendanceData);
 
                 // Display results
@@ -1617,7 +1632,7 @@
             }
         });
 
-        // Calculate period totals
+        // Calculate period totals - FIXED VERSION
         function calculatePeriodTotals(sureserveDataByDate, additionalPayments, startDate, endDate, attendanceData) {
             let totalBonusAmount = 0;
             let totalBonusPoints = 0;
@@ -1625,17 +1640,29 @@
             let approvedPaymentsCount = 0;
             let totalHolidayBonus = 0;
 
+            console.log('Calculating period totals...');
+            console.log('Sureserve data dates:', Object.keys(sureserveDataByDate));
+            console.log('Attendance data:', attendanceData);
+
             // Calculate bonus totals from Sureserve data
             Object.entries(sureserveDataByDate).forEach(([date, dayJobs]) => {
+                // Convert DD/MM/YYYY to YYYY-MM-DD for attendance lookup
                 const standardDate = convertToStandardDate(date);
                 const attendance = standardDate ? attendanceData[standardDate] : null;
                 
+                console.log(`Date: ${date} (${standardDate}), Attendance: ${attendance}`);
+                
                 // Check if it's a holiday
                 if (attendance && (attendance === 'H' || attendance === 'H/H')) {
-                    const avgBonus = getAverageBonusForDate(currentUser.name, standardDate);
+                    const avgBonus = getAverageBonusForDate(currentUser.name, date);
+                    console.log(`Holiday detected! Average bonus: ${avgBonus}`);
+                    
                     if (avgBonus > 0) {
-                        totalHolidayBonus += avgBonus;
-                        totalBonusAmount += avgBonus;
+                        // For half day holidays, use half the bonus
+                        const bonusAmount = attendance === 'H/H' ? avgBonus / 2 : avgBonus;
+                        totalHolidayBonus += bonusAmount;
+                        totalBonusAmount += bonusAmount;
+                        console.log(`Added holiday bonus: £${bonusAmount.toFixed(2)}`);
                     }
                 } else {
                     // Regular working day - calculate from completed jobs
@@ -1654,9 +1681,13 @@
                         const bonusUnits = Math.floor(bonusPoints / 0.5);
                         const bonusAmount = bonusUnits * BONUS_RATE;
                         totalBonusAmount += bonusAmount;
+                        console.log(`Regular day bonus: £${bonusAmount.toFixed(2)} from ${dayPoints} points`);
                     }
                 }
             });
+
+            console.log(`Total holiday bonus: £${totalHolidayBonus.toFixed(2)}`);
+            console.log(`Total bonus amount: £${totalBonusAmount.toFixed(2)}`);
 
             // Calculate approved additional payments
             additionalPayments.forEach(payment => {
@@ -1732,16 +1763,20 @@
             return statusLower.includes('complete') || statusLower.includes('done');
         }
 
-        // Create holiday bonus summary
+        // Create holiday bonus summary - FIXED VERSION
         function createHolidayBonusSummary(date, attendance) {
-            const standardDate = convertToStandardDate(date);
-            if (!standardDate) return null;
+            // Use the DD/MM/YYYY date directly for lookup
+            const avgBonus = getAverageBonusForDate(currentUser.name, date);
             
-            const avgBonus = getAverageBonusForDate(currentUser.name, standardDate);
+            console.log(`Creating holiday bonus display for ${date}, attendance: ${attendance}, bonus: ${avgBonus}`);
             
             if (avgBonus === 0) {
+                console.log('No bonus found, not displaying holiday bonus card');
                 return null;
             }
+
+            // For half day holidays, show half the bonus
+            const displayBonus = attendance === 'H/H' ? avgBonus / 2 : avgBonus;
 
             const bonusDiv = document.createElement('div');
             bonusDiv.className = 'holiday-bonus-summary';
@@ -1749,7 +1784,7 @@
             bonusDiv.innerHTML = `
                 <div class="holiday-bonus-header">
                     <div class="holiday-bonus-title">🏖️ Holiday Bonus</div>
-                    <div class="holiday-bonus-amount">£${avgBonus.toFixed(2)}</div>
+                    <div class="holiday-bonus-amount">£${displayBonus.toFixed(2)}</div>
                 </div>
                 <div class="holiday-bonus-note">
                     Average bonus applied for holiday (${attendance === 'H/H' ? 'Half Day' : 'Full Day'})
@@ -1869,6 +1904,8 @@
                 const standardDate = convertToStandardDate(date);
                 const attendance = standardDate ? attendanceData[standardDate] : null;
                 
+                console.log(`Displaying date: ${date}, standard: ${standardDate}, attendance: ${attendance}`);
+                
                 const dayHeader = document.createElement('div');
                 dayHeader.className = 'day-header';
                 const totalDayJobs = jobs.length + sureserveJobs.length;
@@ -1920,9 +1957,12 @@
 
                 // Check if it's a holiday and add holiday bonus
                 if (attendance && (attendance === 'H' || attendance === 'H/H')) {
+                    console.log(`Creating holiday bonus for ${date}`);
                     const holidayBonus = createHolidayBonusSummary(date, attendance);
                     if (holidayBonus) {
                         daySection.appendChild(holidayBonus);
+                    } else {
+                        console.log('Holiday bonus creation returned null');
                     }
                 } else if (sureserveJobs.length > 0) {
                     // Regular working day - show job-based bonus
