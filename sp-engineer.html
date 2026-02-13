@@ -21,6 +21,7 @@
             --warning: #F59E0B;
             --error: #EF4444;
             --bonus: #F59E0B;
+            --holiday: #8B5CF6;
         }
 
         * {
@@ -366,7 +367,7 @@
         }
 
         .attendance-badge.holiday {
-            background: var(--accent);
+            background: var(--holiday);
             color: white;
         }
 
@@ -442,6 +443,41 @@
         .status-cancelled {
             background: rgba(239, 68, 68, 0.2);
             color: var(--error);
+        }
+
+        /* Holiday Bonus Summary Styles */
+        .holiday-bonus-summary {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border: 2px solid var(--holiday);
+            border-radius: 12px;
+        }
+
+        .holiday-bonus-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .holiday-bonus-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--holiday);
+        }
+
+        .holiday-bonus-amount {
+            font-family: 'DM Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--holiday);
+        }
+
+        .holiday-bonus-note {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
         }
 
         /* Bonus Summary Styles */
@@ -604,7 +640,7 @@
             font-size: 0.9rem;
         }
 
-        /* Modal and other styles remain the same... */
+        /* Modal styles omitted for brevity - keep from original */
         .modal {
             display: none;
             position: fixed;
@@ -1132,7 +1168,7 @@
         </div>
     </div>
 
-    <!-- Additional Payments Modal (keeping the existing modal) -->
+    <!-- Additional Payments Modal (keeping the existing modal structure) -->
     <div id="paymentsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1141,13 +1177,11 @@
             </div>
 
             <form id="paymentsForm">
-                <!-- Date Selection -->
                 <div class="form-group">
                     <label for="paymentDate">Payment Date</label>
                     <input type="date" id="paymentDate" required>
                 </div>
 
-                <!-- Standby Payment -->
                 <div class="question-group">
                     <span class="question-label">Are you claiming Standby payment?</span>
                     <div class="radio-group">
@@ -1162,7 +1196,6 @@
                     </div>
                 </div>
 
-                <!-- Working Away Allowance -->
                 <div class="question-group">
                     <span class="question-label">Are you claiming a working away allowance?</span>
                     <div class="radio-group">
@@ -1177,7 +1210,6 @@
                     </div>
                 </div>
 
-                <!-- Overtime -->
                 <div class="question-group">
                     <span class="question-label">Are you claiming overtime?</span>
                     <div class="radio-group">
@@ -1218,7 +1250,6 @@
                     </div>
                 </div>
 
-                <!-- Jobs -->
                 <div class="question-group">
                     <span class="question-label">Did you carry out any jobs?</span>
                     <div class="radio-group">
@@ -1241,10 +1272,8 @@
                     </div>
                 </div>
 
-                <!-- Payment Summary -->
                 <div id="paymentSummary" class="payment-summary"></div>
 
-                <!-- Actions -->
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" id="cancelPayment">Cancel</button>
                     <button type="submit" class="btn btn-primary">Submit Payment</button>
@@ -1347,8 +1376,8 @@
         };
 
         // Constants
-        const BONUS_THRESHOLD = 6;  // Points needed to unlock bonus
-        const BONUS_RATE = 20;      // £20 per 0.5 points above threshold
+        const BONUS_THRESHOLD = 6;
+        const BONUS_RATE = 20;
 
         // DOM elements
         const loginPage = document.getElementById('loginPage');
@@ -1381,6 +1410,44 @@
         // Current user data
         let currentUser = null;
         let additionalPayments = [];
+        let averageBonuses = {};
+
+        // Load average bonuses from Firebase
+        async function loadAverageBonuses() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "Average Bonuses"));
+                averageBonuses = {};
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const name = data.name;
+                    const month = data.month;
+                    const fullDay = parseFloat(data.fullDay) || 0;
+                    
+                    if (!averageBonuses[name]) {
+                        averageBonuses[name] = {};
+                    }
+                    averageBonuses[name][month] = fullDay;
+                });
+                
+                console.log('Average bonuses loaded:', averageBonuses);
+            } catch (error) {
+                console.error('Error loading average bonuses:', error);
+            }
+        }
+
+        // Get average bonus for engineer and month
+        function getAverageBonusForDate(engineerName, dateStr) {
+            const date = new Date(dateStr);
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            const month = monthNames[date.getMonth()];
+            
+            if (averageBonuses[engineerName] && averageBonuses[engineerName][month]) {
+                return averageBonuses[engineerName][month];
+            }
+            return 0;
+        }
 
         // Handle login
         loginForm.addEventListener('submit', async (e) => {
@@ -1390,7 +1457,6 @@
             const password = passwordInput.value;
 
             try {
-                // Query Firebase for engineer credentials
                 const engineersCollection = collection(db, 'SP Engineers');
                 const q = query(engineersCollection, where('name', '==', username));
                 const querySnapshot = await getDocs(q);
@@ -1401,7 +1467,6 @@
                     return;
                 }
 
-                // Check password
                 let authenticated = false;
                 let engineerData = null;
 
@@ -1420,12 +1485,13 @@
                         email: engineerData.email
                     };
 
-                    // Switch to dashboard
+                    // Load average bonuses
+                    await loadAverageBonuses();
+
                     loginPage.classList.remove('active');
                     dashboardPage.classList.add('active');
                     engineerNameSpan.textContent = currentUser.name;
                     
-                    // Clear form
                     loginForm.reset();
                     loginError.classList.remove('show');
                 } else {
@@ -1492,7 +1558,7 @@
                 const q = query(dataCollection, where('outcomeResource', '==', currentUser.name));
                 const querySnapshot = await getDocs(q);
 
-                // Get ALL additional payments (not filtered by status)
+                // Get ALL additional payments
                 const paymentsCollection = collection(db, 'SP Additional Payment');
                 const paymentsQuery = query(paymentsCollection, where('engineerName', '==', currentUser.name));
                 const paymentsSnapshot = await getDocs(paymentsQuery);
@@ -1523,7 +1589,6 @@
                     const data = doc.data();
                     const jobDate = data.jobDate;
 
-                    // Check if job date is within selected range
                     if (isDateInRange(jobDate, startDate, endDate)) {
                         if (!dataByDate[jobDate]) {
                             dataByDate[jobDate] = [];
@@ -1534,7 +1599,7 @@
                 });
 
                 // Calculate period totals
-                const periodTotals = calculatePeriodTotals(sureserveDataByDate, additionalPayments, startDate, endDate);
+                const periodTotals = calculatePeriodTotals(sureserveDataByDate, additionalPayments, startDate, endDate, attendanceData);
 
                 // Display results
                 displayResults(dataByDate, totalJobs, startDate, endDate, attendanceData, sureserveDataByDate);
@@ -1553,30 +1618,43 @@
         });
 
         // Calculate period totals
-        function calculatePeriodTotals(sureserveDataByDate, additionalPayments, startDate, endDate) {
+        function calculatePeriodTotals(sureserveDataByDate, additionalPayments, startDate, endDate, attendanceData) {
             let totalBonusAmount = 0;
             let totalBonusPoints = 0;
             let totalApprovedPayments = 0;
             let approvedPaymentsCount = 0;
+            let totalHolidayBonus = 0;
 
             // Calculate bonus totals from Sureserve data
-            Object.values(sureserveDataByDate).forEach(dayJobs => {
-                const completedJobs = dayJobs.filter(job => isCompleted(job.status));
-                let dayPoints = 0;
+            Object.entries(sureserveDataByDate).forEach(([date, dayJobs]) => {
+                const standardDate = convertToStandardDate(date);
+                const attendance = standardDate ? attendanceData[standardDate] : null;
+                
+                // Check if it's a holiday
+                if (attendance && (attendance === 'H' || attendance === 'H/H')) {
+                    const avgBonus = getAverageBonusForDate(currentUser.name, standardDate);
+                    if (avgBonus > 0) {
+                        totalHolidayBonus += avgBonus;
+                        totalBonusAmount += avgBonus;
+                    }
+                } else {
+                    // Regular working day - calculate from completed jobs
+                    const completedJobs = dayJobs.filter(job => isCompleted(job.status));
+                    let dayPoints = 0;
 
-                completedJobs.forEach(job => {
-                    const points = JOB_POINTS[job.description] || 0;
-                    dayPoints += points;
-                });
+                    completedJobs.forEach(job => {
+                        const points = JOB_POINTS[job.description] || 0;
+                        dayPoints += points;
+                    });
 
-                totalBonusPoints += dayPoints;
+                    totalBonusPoints += dayPoints;
 
-                // Calculate bonus for this day
-                if (dayPoints >= BONUS_THRESHOLD) {
-                    const bonusPoints = dayPoints - BONUS_THRESHOLD;
-                    const bonusUnits = Math.floor(bonusPoints / 0.5);
-                    const bonusAmount = bonusUnits * BONUS_RATE;
-                    totalBonusAmount += bonusAmount;
+                    if (dayPoints >= BONUS_THRESHOLD) {
+                        const bonusPoints = dayPoints - BONUS_THRESHOLD;
+                        const bonusUnits = Math.floor(bonusPoints / 0.5);
+                        const bonusAmount = bonusUnits * BONUS_RATE;
+                        totalBonusAmount += bonusAmount;
+                    }
                 }
             });
 
@@ -1595,7 +1673,8 @@
                 totalBonusAmount,
                 totalBonusPoints,
                 totalApprovedPayments,
-                approvedPaymentsCount
+                approvedPaymentsCount,
+                totalHolidayBonus
             };
         }
 
@@ -1607,17 +1686,15 @@
             periodApprovedCount.textContent = `${totals.approvedPaymentsCount} submission${totals.approvedPaymentsCount !== 1 ? 's' : ''}`;
         }
 
-        // Check if a date is within range - handles both DD/MM/YYYY and standard date formats
+        // Check if a date is within range
         function isDateInRange(dateStr, startStr, endStr) {
             let date;
             
-            // Check if it's DD/MM/YYYY format
             if (dateStr.includes('/')) {
                 const dateParts = dateStr.split('/');
                 if (dateParts.length !== 3) return false;
                 date = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
             } else {
-                // Assume it's a standard date string
                 date = new Date(dateStr);
             }
             
@@ -1638,7 +1715,7 @@
         // Convert any date to DD/MM/YYYY format
         function convertToDisplayDate(dateStr) {
             if (dateStr.includes('/')) {
-                return dateStr; // Already in DD/MM/YYYY format
+                return dateStr;
             }
             
             const date = new Date(dateStr);
@@ -1655,12 +1732,39 @@
             return statusLower.includes('complete') || statusLower.includes('done');
         }
 
+        // Create holiday bonus summary
+        function createHolidayBonusSummary(date, attendance) {
+            const standardDate = convertToStandardDate(date);
+            if (!standardDate) return null;
+            
+            const avgBonus = getAverageBonusForDate(currentUser.name, standardDate);
+            
+            if (avgBonus === 0) {
+                return null;
+            }
+
+            const bonusDiv = document.createElement('div');
+            bonusDiv.className = 'holiday-bonus-summary';
+
+            bonusDiv.innerHTML = `
+                <div class="holiday-bonus-header">
+                    <div class="holiday-bonus-title">🏖️ Holiday Bonus</div>
+                    <div class="holiday-bonus-amount">£${avgBonus.toFixed(2)}</div>
+                </div>
+                <div class="holiday-bonus-note">
+                    Average bonus applied for holiday (${attendance === 'H/H' ? 'Half Day' : 'Full Day'})
+                </div>
+            `;
+
+            return bonusDiv;
+        }
+
         // Create bonus summary card
         function createBonusSummary(date, sureserveJobs) {
             const completedJobs = sureserveJobs.filter(job => isCompleted(job.status));
             
             if (completedJobs.length === 0) {
-                return null; // No completed jobs, no bonus summary
+                return null;
             }
 
             let totalPoints = 0;
@@ -1702,7 +1806,6 @@
                 bonusHTML += '</div>';
             }
 
-            // Calculate bonus
             bonusHTML += '<div class="bonus-calculation">';
             bonusHTML += `<div class="bonus-calc-row"><span>Total Points Earned:</span><span>${totalPoints.toFixed(1)}</span></div>`;
             bonusHTML += `<div class="bonus-calc-row"><span>Threshold Required:</span><span>${BONUS_THRESHOLD.toFixed(1)}</span></div>`;
@@ -1744,21 +1847,18 @@
                 return;
             }
 
-            // Get all unique dates from all sources
             const allDates = new Set([
                 ...Object.keys(dataByDate),
                 ...Object.keys(sureserveDataByDate),
                 ...additionalPayments.filter(p => isDateInRange(p.paymentDate, startDate, endDate)).map(p => convertToDisplayDate(p.paymentDate))
             ]);
 
-            // Sort dates
             const sortedDates = Array.from(allDates).sort((a, b) => {
                 const [dayA, monthA, yearA] = a.split('/');
                 const [dayB, monthB, yearB] = b.split('/');
                 return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);
             });
 
-            // Create sections for each date
             sortedDates.forEach(date => {
                 const jobs = dataByDate[date] || [];
                 const sureserveJobs = sureserveDataByDate[date] || [];
@@ -1766,11 +1866,9 @@
                 const daySection = document.createElement('div');
                 daySection.className = 'day-section';
 
-                // Get attendance status for this date
                 const standardDate = convertToStandardDate(date);
                 const attendance = standardDate ? attendanceData[standardDate] : null;
                 
-                // Create day header with attendance badge
                 const dayHeader = document.createElement('div');
                 dayHeader.className = 'day-header';
                 const totalDayJobs = jobs.length + sureserveJobs.length;
@@ -1781,7 +1879,6 @@
 
                 daySection.appendChild(dayHeader);
 
-                // Add regular jobs if any
                 if (jobs.length > 0) {
                     jobs.sort((a, b) => {
                         const timeA = a.startTime || '99:99';
@@ -1821,15 +1918,20 @@
                     daySection.appendChild(jobGrid);
                 }
 
-                // Add bonus summary if there are Sureserve jobs
-                if (sureserveJobs.length > 0) {
+                // Check if it's a holiday and add holiday bonus
+                if (attendance && (attendance === 'H' || attendance === 'H/H')) {
+                    const holidayBonus = createHolidayBonusSummary(date, attendance);
+                    if (holidayBonus) {
+                        daySection.appendChild(holidayBonus);
+                    }
+                } else if (sureserveJobs.length > 0) {
+                    // Regular working day - show job-based bonus
                     const bonusSummary = createBonusSummary(date, sureserveJobs);
                     if (bonusSummary) {
                         daySection.appendChild(bonusSummary);
                     }
                 }
 
-                // Check for additional payments on this date
                 const displayDate = convertToDisplayDate(date);
                 const datePayments = additionalPayments.filter(payment => 
                     convertToDisplayDate(payment.paymentDate) === displayDate
@@ -1888,7 +1990,6 @@
             const card = document.createElement('div');
             card.className = 'additional-payment-card';
             
-            // Determine status and styling
             const status = payment.status || 'Awaiting Approval';
             let statusClass = 'awaiting';
             let statusBadgeClass = 'status-awaiting-payment';
@@ -1955,7 +2056,6 @@
                 });
             }
 
-            // Add changes log if approved with changes
             let changesLogHTML = '';
             if (status === 'Approved with Changes' && payment.changesLog && payment.changesLog.length > 0) {
                 changesLogHTML = `
@@ -1973,7 +2073,6 @@
                 `;
             }
 
-            // Add denial reason if denied
             let denialReasonHTML = '';
             if (status === 'Denied' && payment.denialReason) {
                 denialReasonHTML = `
@@ -2134,12 +2233,11 @@
             if (!paymentDate) return;
 
             const date = new Date(paymentDate);
-            const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
+            const dayOfWeek = date.getDay();
 
             let total = 0;
             let summaryHTML = '<div class="payment-summary-title">Payment Summary</div>';
 
-            // Standby
             const standby = document.querySelector('input[name="standby"]:checked').value === 'yes';
             if (standby) {
                 const standbyAmount = (dayOfWeek === 0 || dayOfWeek === 6) ? 100 : 20;
@@ -2147,13 +2245,11 @@
                 total += standbyAmount;
             }
 
-            // Working Away
             const workingAway = document.querySelector('input[name="workingAway"]:checked').value === 'yes';
             if (workingAway) {
                 summaryHTML += `<div class="payment-line"><span>Working Away Allowance</span><span>TBD</span></div>`;
             }
 
-            // Overtime
             const overtime = document.querySelector('input[name="overtime"]:checked').value === 'yes';
             if (overtime) {
                 const startTime = document.getElementById('overtimeStart').value;
@@ -2161,9 +2257,9 @@
 
                 if (startTime && endTime) {
                     const hours = calculateHoursDifference(startTime, endTime);
-                    let rate = 24.94; // Weekday
-                    if (dayOfWeek === 6) rate = 28.13; // Saturday
-                    if (dayOfWeek === 0) rate = 37.50; // Sunday
+                    let rate = 24.94;
+                    if (dayOfWeek === 6) rate = 28.13;
+                    if (dayOfWeek === 0) rate = 37.50;
 
                     const overtimeAmount = hours * rate;
                     const dayName = dayOfWeek === 0 ? 'Sunday' : dayOfWeek === 6 ? 'Saturday' : 'Weekday';
@@ -2188,7 +2284,6 @@
             const startTotal = startHours * 60 + startMinutes;
             let endTotal = endHours * 60 + endMinutes;
             
-            // Handle overnight shifts
             if (endTotal < startTotal) {
                 endTotal += 24 * 60;
             }
@@ -2204,7 +2299,6 @@
             const date = new Date(paymentDate);
             const dayOfWeek = date.getDay();
 
-            // Convert to UK format
             const [year, month, day] = paymentDate.split('-');
             const ukFormattedDate = `${day}/${month}/${year}`;
 
@@ -2221,13 +2315,11 @@
 
             let totalAmount = 0;
 
-            // Add standby details
             if (paymentData.standby) {
                 paymentData.standbyAmount = (dayOfWeek === 0 || dayOfWeek === 6) ? 100 : 20;
                 totalAmount += paymentData.standbyAmount;
             }
 
-            // Add overtime details
             if (paymentData.overtime) {
                 const startTime = document.getElementById('overtimeStart').value;
                 const endTime = document.getElementById('overtimeEnd').value;
@@ -2247,7 +2339,6 @@
                 totalAmount += paymentData.overtimeAmount;
             }
 
-            // Add job details
             const hasJobs = document.querySelector('input[name="jobs"]:checked').value === 'yes';
             if (hasJobs) {
                 const jobs = [];
@@ -2267,7 +2358,6 @@
             paymentData.totalAmount = totalAmount;
 
             try {
-                // Save to Firebase
                 const paymentsCollection = collection(db, 'SP Additional Payment');
                 await addDoc(paymentsCollection, paymentData);
 
@@ -2279,7 +2369,6 @@
                 document.getElementById('jobsContainer').classList.remove('show');
                 document.getElementById('paymentSummary').classList.remove('show');
 
-                // Refresh data if showing breakdown
                 if (resultsSection.classList.contains('show')) {
                     showBreakdownBtn.click();
                 }
