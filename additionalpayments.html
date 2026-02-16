@@ -836,6 +836,20 @@
                 `;
             }
 
+            // Notes section
+            if (payment.notes && payment.notes.trim()) {
+                detailsHTML += `
+                    <div class="detail-section" style="border-left-color: var(--warning);">
+                        <div class="detail-header">
+                            <span class="detail-title">📝 Additional Notes</span>
+                        </div>
+                        <div class="detail-content" style="white-space: pre-wrap; line-height: 1.6;">
+                            ${escapeHtml(payment.notes)}
+                        </div>
+                    </div>
+                `;
+            }
+
             card.innerHTML = `
                 <div class="payment-header">
                     <div class="payment-info">
