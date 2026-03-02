@@ -20,13 +20,10 @@
             --success: #10B981;
             --warning: #F59E0B;
             --error: #EF4444;
+            --purple: #8B5CF6;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Work Sans', sans-serif;
@@ -41,10 +38,7 @@
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: 
                 radial-gradient(circle at 20% 30%, rgba(0, 163, 224, 0.08) 0%, transparent 50%),
                 radial-gradient(circle at 80% 70%, rgba(0, 94, 184, 0.06) 0%, transparent 50%);
@@ -52,75 +46,36 @@
             z-index: 0;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
+        .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
 
-        header {
-            margin-bottom: 3rem;
-            animation: slideDown 0.6s ease-out;
-        }
+        header { margin-bottom: 3rem; animation: slideDown 0.6s ease-out; }
 
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .header-content {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 1rem;
-        }
+        .header-content { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1rem; }
 
         .back-btn {
-            width: 48px;
-            height: 48px;
+            width: 48px; height: 48px;
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: var(--text-light);
-            font-size: 1.25rem;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease;
+            text-decoration: none; color: var(--text-light); font-size: 1.25rem;
         }
 
-        .back-btn:hover {
-            background: var(--primary);
-            border-color: var(--accent);
-            transform: translateX(-4px);
-        }
+        .back-btn:hover { background: var(--primary); border-color: var(--accent); transform: translateX(-4px); }
 
         h1 {
-            font-size: 2.25rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
+            font-size: 2.25rem; font-weight: 700; letter-spacing: -0.02em;
             background: linear-gradient(135deg, var(--text-light) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
 
-        .subtitle {
-            font-family: 'DM Mono', monospace;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-left: 64px;
-            letter-spacing: 0.05em;
-        }
+        .subtitle { font-family: 'DM Mono', monospace; color: var(--text-muted); font-size: 0.95rem; margin-left: 64px; letter-spacing: 0.05em; }
 
         .card {
             background: var(--bg-card);
@@ -132,399 +87,345 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .filters {
-            display: grid;
-            grid-template-columns: 1fr 1fr auto;
-            gap: 1rem;
-            margin-bottom: 2rem;
+        .filters { display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; margin-bottom: 2rem; }
+
+        .form-group { display: flex; flex-direction: column; }
+
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-light); font-size: 0.95rem; }
+
+        input[type="date"], input[type="text"], input[type="time"], input[type="number"], select {
+            width: 100%; padding: 0.875rem;
+            background: var(--bg-dark); border: 2px solid var(--border);
+            border-radius: 12px; color: var(--text-light);
+            font-family: 'Work Sans', sans-serif; font-size: 1rem; transition: all 0.3s ease;
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--text-light);
-            font-size: 0.95rem;
-        }
-
-        input[type="date"],
-        input[type="text"],
-        input[type="time"],
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 0.875rem;
-            background: var(--bg-dark);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            color: var(--text-light);
-            font-family: 'Work Sans', sans-serif;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.1);
-        }
+        input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.1); }
 
         .btn {
-            padding: 0.875rem 2rem;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Work Sans', sans-serif;
-            align-self: flex-end;
+            padding: 0.875rem 2rem; border: none; border-radius: 12px;
+            font-weight: 600; font-size: 1rem; cursor: pointer;
+            transition: all 0.3s ease; font-family: 'Work Sans', sans-serif; align-self: flex-end;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white;
-        }
+        .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0, 163, 224, 0.3); }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(0, 163, 224, 0.3);
-        }
+        .btn-success { background: linear-gradient(135deg, var(--success) 0%, #059669 100%); color: white; }
+        .btn-success:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3); }
 
-        .btn-success {
-            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-            color: white;
-        }
+        .btn-danger { background: linear-gradient(135deg, var(--error) 0%, #dc2626 100%); color: white; }
+        .btn-danger:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(239, 68, 68, 0.3); }
 
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
-        }
+        .btn-warning { background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%); color: #0A1628; }
+        .btn-warning:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3); }
 
-        .btn-danger {
-            background: linear-gradient(135deg, var(--error) 0%, #dc2626 100%);
-            color: white;
-        }
+        .btn-secondary { background: var(--bg-dark); color: var(--text-light); border: 2px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--accent); background: var(--bg-card); }
 
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(239, 68, 68, 0.3);
-        }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        .btn-secondary {
-            background: var(--bg-dark);
-            color: var(--text-light);
-            border: 2px solid var(--border);
-        }
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
 
-        .btn-secondary:hover {
-            border-color: var(--accent);
-            background: var(--bg-card);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            padding: 1.5rem;
-            background: var(--bg-dark);
-            border-radius: 12px;
-            border-left: 4px solid var(--accent);
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-light);
-        }
+        .stat-card { padding: 1.5rem; background: var(--bg-dark); border-radius: 12px; border-left: 4px solid var(--accent); }
+        .stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: var(--text-light); }
 
         .payment-card {
-            background: var(--bg-dark);
-            border: 2px solid var(--warning);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            transition: all 0.3s ease;
+            background: var(--bg-dark); border: 2px solid var(--warning);
+            border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; transition: all 0.3s ease;
         }
+        .payment-card:hover { border-color: var(--accent); transform: translateX(4px); }
 
-        .payment-card:hover {
-            border-color: var(--accent);
-            transform: translateX(4px);
-        }
+        .payment-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
+        .payment-info { flex: 1; }
+        .engineer-name { font-size: 1.25rem; font-weight: 700; color: var(--text-light); margin-bottom: 0.5rem; }
+        .payment-date { font-family: 'DM Mono', monospace; color: var(--text-muted); font-size: 0.9rem; }
 
-        .payment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border);
-        }
+        .status-badge { padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .status-awaiting { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
 
-        .payment-info {
-            flex: 1;
-        }
+        .payment-details { display: grid; gap: 1rem; margin-bottom: 1.5rem; }
 
-        .engineer-name {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-light);
-            margin-bottom: 0.5rem;
-        }
+        .detail-section { padding: 1rem; background: var(--bg-card); border-radius: 10px; border-left: 3px solid var(--accent); }
+        .detail-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+        .detail-title { font-weight: 600; color: var(--accent); font-size: 0.95rem; }
+        .detail-amount { font-family: 'DM Mono', monospace; font-weight: 700; color: var(--success); font-size: 1rem; }
+        .detail-content { color: var(--text-muted); font-size: 0.9rem; }
+        .detail-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+        .detail-row:last-child { border-bottom: none; }
 
-        .payment-date {
-            font-family: 'DM Mono', monospace;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
+        .jobs-list { margin-top: 0.5rem; }
+        .job-item { padding: 0.75rem; background: var(--bg-dark); border-radius: 8px; margin-bottom: 0.5rem; font-size: 0.85rem; }
 
-        .status-badge {
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
+        .total-row { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .total-label { font-size: 1.25rem; font-weight: 700; color: var(--text-light); }
+        .total-amount { font-size: 1.75rem; font-weight: 700; color: var(--success); font-family: 'DM Mono', monospace; }
 
-        .status-awaiting {
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--warning);
-        }
+        .payment-actions { display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem; }
 
-        .status-approved-changes {
-            background: rgba(0, 163, 224, 0.2);
-            color: var(--accent);
-        }
+        .loading { display: none; text-align: center; padding: 3rem; }
+        .loading.show { display: block; }
+        .spinner { width: 48px; height: 48px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        .payment-details {
-            display: grid;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
+        .no-results { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .no-results-icon { font-size: 3rem; margin-bottom: 1rem; }
 
-        .detail-section {
-            padding: 1rem;
-            background: var(--bg-card);
-            border-radius: 10px;
-            border-left: 3px solid var(--accent);
-        }
-
-        .detail-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.75rem;
-        }
-
-        .detail-title {
-            font-weight: 600;
-            color: var(--accent);
-            font-size: 0.95rem;
-        }
-
-        .detail-amount {
-            font-family: 'DM Mono', monospace;
-            font-weight: 700;
-            color: var(--success);
-            font-size: 1rem;
-        }
-
-        .detail-content {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .detail-row:last-child {
-            border-bottom: none;
-        }
-
-        .editable-field {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .editable-field input {
-            width: auto;
-            min-width: 80px;
-            padding: 0.25rem 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .checkbox-field {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .checkbox-field input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            accent-color: var(--accent);
-            cursor: pointer;
-        }
-
-        .payment-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
-        }
-
-        .jobs-list {
-            margin-top: 0.5rem;
-        }
-
-        .job-item {
-            padding: 0.75rem;
-            background: var(--bg-dark);
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            font-size: 0.85rem;
-        }
-
-        .total-row {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 2px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .total-label {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-light);
-        }
-
-        .total-amount {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--success);
-            font-family: 'DM Mono', monospace;
-        }
-
-        .loading {
+        /* ===== MODAL STYLES ===== */
+        .modal-overlay {
             display: none;
-            text-align: center;
-            padding: 3rem;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
         }
 
-        .loading.show {
-            display: block;
+        .modal-overlay.show {
+            display: flex;
         }
 
-        .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 680px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        .no-results {
-            text-align: center;
-            padding: 3rem;
+        .modal-header {
+            padding: 1.75rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            border-radius: 20px 20px 0 0;
+            z-index: 10;
+        }
+
+        .modal-title-block h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .modal-subtitle {
+            font-size: 0.85rem;
             color: var(--text-muted);
+            font-family: 'DM Mono', monospace;
         }
 
-        .no-results-icon {
-            font-size: 3rem;
+        .modal-close {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .modal-close:hover { color: var(--text-light); border-color: var(--error); background: rgba(239,68,68,0.1); }
+
+        .modal-body { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
+
+        .modal-section {
+            background: var(--bg-dark);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+        }
+
+        .modal-section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
             margin-bottom: 1rem;
         }
 
-        .changes-indicator {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            background: rgba(0, 163, 224, 0.2);
-            border: 1px solid var(--accent);
-            border-radius: 6px;
-            font-size: 0.75rem;
-            color: var(--accent);
-            margin-left: 0.5rem;
+        .modal-section-icon { font-size: 1.1rem; }
+
+        .modal-section-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-light);
         }
 
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .toggle-row:last-child { border-bottom: none; }
+
+        .toggle-label { font-size: 0.9rem; color: var(--text-muted); }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--border);
+            border-radius: 26px;
+            transition: 0.3s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: '';
+            height: 18px; width: 18px;
+            left: 4px; bottom: 4px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .toggle-switch input:checked + .toggle-slider { background: var(--success); }
+        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(22px); }
+
+        .modal-field-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 0.75rem;
+        }
+
+        .modal-field { display: flex; flex-direction: column; gap: 0.4rem; }
+
+        .modal-field label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0;
+        }
+
+        .modal-field input, .modal-field select, .modal-field textarea {
+            padding: 0.65rem 0.85rem;
+            font-size: 0.9rem;
+            border-radius: 8px;
+        }
+
+        .modal-field textarea {
+            min-height: 80px;
+            resize: vertical;
+            font-family: 'Work Sans', sans-serif;
+        }
+
+        .modal-field.full-width { grid-column: 1 / -1; }
+
+        .calc-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 163, 224, 0.08);
+            border: 1px solid rgba(0, 163, 224, 0.2);
+            border-radius: 8px;
+            padding: 0.65rem 0.85rem;
+            margin-top: 0.75rem;
+        }
+
+        .calc-label { font-size: 0.85rem; color: var(--text-muted); }
+        .calc-value { font-family: 'DM Mono', monospace; font-weight: 700; color: var(--success); font-size: 1rem; }
+
+        .changes-log-area {
+            width: 100%;
+        }
+
+        .changes-log-area textarea {
+            width: 100%;
+            min-height: 70px;
+            padding: 0.75rem;
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 0.9rem;
+            resize: vertical;
+        }
+
+        .changes-log-area textarea:focus { outline: none; border-color: var(--warning); }
+
+        .modal-total {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+        }
+
+        .modal-total-label { font-weight: 700; font-size: 1rem; color: var(--text-light); }
+        .modal-total-value { font-family: 'DM Mono', monospace; font-weight: 700; font-size: 1.5rem; color: var(--success); }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            position: sticky;
+            bottom: 0;
+            background: var(--bg-card);
+            border-radius: 0 0 20px 20px;
+        }
+
+        .modal-footer .btn { align-self: auto; }
+
+        .jobs-modal-list { display: flex; flex-direction: column; gap: 0.5rem; }
+        .job-modal-item { display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.75rem; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border); font-size: 0.85rem; color: var(--text-muted); }
+        .job-num { font-weight: 700; color: var(--accent); flex-shrink: 0; }
+
         @media (max-width: 768px) {
-            body {
-                padding: 1.5rem;
-            }
-
-            .card {
-                padding: 1.5rem;
-            }
-
-            h1 {
-                font-size: 1.75rem;
-            }
-
-            .filters {
-                grid-template-columns: 1fr;
-            }
-
-            .stats-row {
-                grid-template-columns: 1fr;
-            }
-
-            .payment-header {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .payment-actions {
-                flex-direction: column;
-            }
-
-            .subtitle {
-                margin-left: 0;
-                margin-top: 0.5rem;
-            }
+            body { padding: 1.5rem; }
+            .card { padding: 1.5rem; }
+            h1 { font-size: 1.75rem; }
+            .filters { grid-template-columns: 1fr; }
+            .stats-row { grid-template-columns: 1fr; }
+            .payment-header { flex-direction: column; gap: 1rem; }
+            .payment-actions { flex-direction: column; }
+            .subtitle { margin-left: 0; margin-top: 0.5rem; }
+            .modal-field-grid { grid-template-columns: 1fr; }
+            .modal { max-width: 100%; margin: 0; max-height: 100vh; border-radius: 16px 16px 0 0; }
+            .modal-overlay { align-items: flex-end; padding: 0; }
         }
     </style>
 </head>
@@ -554,7 +455,6 @@
                         <div class="stat-value" id="engineersCount">0</div>
                     </div>
                 </div>
-
                 <div class="filters">
                     <div class="form-group">
                         <label for="startDate">Start Date</label>
@@ -577,12 +477,115 @@
         </main>
     </div>
 
+    <!-- APPROVE WITH CHANGES MODAL -->
+    <div class="modal-overlay" id="changesModal">
+        <div class="modal" id="changesModalInner">
+            <div class="modal-header">
+                <div class="modal-title-block">
+                    <h2>✏️ Approve with Changes</h2>
+                    <div class="modal-subtitle" id="modalSubtitle">Engineer Name · Payment Date</div>
+                </div>
+                <button class="modal-close" id="modalClose">✕</button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- Standby -->
+                <div class="modal-section" id="modalStandbySection">
+                    <div class="modal-section-header">
+                        <span class="modal-section-icon">🏠</span>
+                        <span class="modal-section-title">Standby Payment</span>
+                    </div>
+                    <div class="toggle-row">
+                        <span class="toggle-label">Include standby payment</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="modalStandby" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="calc-display" id="modalStandbyAmount">
+                        <span class="calc-label">Standby amount</span>
+                        <span class="calc-value" id="modalStandbyAmtVal">£0.00</span>
+                    </div>
+                </div>
+
+                <!-- Working Away -->
+                <div class="modal-section" id="modalWorkingAwaySection">
+                    <div class="modal-section-header">
+                        <span class="modal-section-icon">🚗</span>
+                        <span class="modal-section-title">Working Away Allowance</span>
+                    </div>
+                    <div class="toggle-row">
+                        <span class="toggle-label">Include working away allowance</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="modalWorkingAway" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Overtime -->
+                <div class="modal-section" id="modalOvertimeSection">
+                    <div class="modal-section-header">
+                        <span class="modal-section-icon">⏱️</span>
+                        <span class="modal-section-title">Overtime</span>
+                    </div>
+                    <div class="toggle-row">
+                        <span class="toggle-label">Include overtime payment</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="modalOvertimeToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div id="modalOvertimeFields">
+                        <div class="modal-field-grid">
+                            <div class="modal-field">
+                                <label>Start Time</label>
+                                <input type="time" id="modalOvertimeStart">
+                            </div>
+                            <div class="modal-field">
+                                <label>End Time</label>
+                                <input type="time" id="modalOvertimeEnd">
+                            </div>
+                        </div>
+                        <div class="calc-display" style="margin-top: 0.75rem;">
+                            <span class="calc-label">Calculated: <span id="modalOvertimeHrs">0.00 hrs</span> × £<span id="modalOvertimeRate">0.00</span>/hr</span>
+                            <span class="calc-value" id="modalOvertimeAmt">£0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notes / Reason for Changes -->
+                <div class="modal-section">
+                    <div class="modal-section-header">
+                        <span class="modal-section-icon">📝</span>
+                        <span class="modal-section-title">Reason for Changes</span>
+                    </div>
+                    <div class="changes-log-area">
+                        <textarea id="modalChangeReason" placeholder="Briefly explain what was changed and why (e.g. 'Overtime start adjusted from 18:00 to 17:30 per shift logs')..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Totals -->
+                <div class="modal-total">
+                    <span class="modal-total-label">Approved Total</span>
+                    <span class="modal-total-value" id="modalGrandTotal">£0.00</span>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modalCancelBtn">Cancel</button>
+                <button class="btn btn-warning" id="modalConfirmBtn">✓ Confirm Approval with Changes</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCMmUOdW2uEIGVd6XQfWXKF8eaFmwEog1g",
             authDomain: "oesperformance-a54c0.firebaseapp.com",
@@ -593,11 +596,9 @@
             measurementId: "G-R56BGZYV8N"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // DOM elements
         const startDateInput = document.getElementById('startDate');
         const endDateInput = document.getElementById('endDate');
         const filterBtn = document.getElementById('filterBtn');
@@ -607,19 +608,230 @@
         const totalValue = document.getElementById('totalValue');
         const engineersCount = document.getElementById('engineersCount');
 
-        // Set default date range (last 30 days)
+        // Modal elements
+        const modal = document.getElementById('changesModal');
+        const modalClose = document.getElementById('modalClose');
+        const modalCancelBtn = document.getElementById('modalCancelBtn');
+        const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+        const modalSubtitle = document.getElementById('modalSubtitle');
+        const modalStandbySection = document.getElementById('modalStandbySection');
+        const modalWorkingAwaySection = document.getElementById('modalWorkingAwaySection');
+        const modalOvertimeSection = document.getElementById('modalOvertimeSection');
+        const modalStandby = document.getElementById('modalStandby');
+        const modalWorkingAway = document.getElementById('modalWorkingAway');
+        const modalOvertimeToggle = document.getElementById('modalOvertimeToggle');
+        const modalOvertimeFields = document.getElementById('modalOvertimeFields');
+        const modalOvertimeStart = document.getElementById('modalOvertimeStart');
+        const modalOvertimeEnd = document.getElementById('modalOvertimeEnd');
+        const modalOvertimeHrs = document.getElementById('modalOvertimeHrs');
+        const modalOvertimeRate = document.getElementById('modalOvertimeRate');
+        const modalOvertimeAmt = document.getElementById('modalOvertimeAmt');
+        const modalStandbyAmtVal = document.getElementById('modalStandbyAmtVal');
+        const modalGrandTotal = document.getElementById('modalGrandTotal');
+        const modalChangeReason = document.getElementById('modalChangeReason');
+
+        let currentModalPayment = null;
+        let currentModalCard = null;
+
+        // Default date range
         const today = new Date();
         const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
         endDateInput.valueAsDate = today;
         startDateInput.valueAsDate = thirtyDaysAgo;
 
-        // Load payments on page load
         loadPayments();
-
-        // Filter button
         filterBtn.addEventListener('click', loadPayments);
 
-        // Load payments from Firebase
+        // Modal close handlers
+        modalClose.addEventListener('click', closeModal);
+        modalCancelBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+        // Modal toggle handlers
+        modalOvertimeToggle.addEventListener('change', () => {
+            modalOvertimeFields.style.display = modalOvertimeToggle.checked ? 'block' : 'none';
+            recalcModalTotal();
+        });
+
+        modalStandby.addEventListener('change', recalcModalTotal);
+        modalWorkingAway.addEventListener('change', recalcModalTotal);
+        modalOvertimeStart.addEventListener('change', recalcModalOvertime);
+        modalOvertimeEnd.addEventListener('change', recalcModalOvertime);
+
+        modalConfirmBtn.addEventListener('click', submitApproveWithChanges);
+
+        function openChangesModal(payment, card) {
+            currentModalPayment = payment;
+            currentModalCard = card;
+
+            // Set subtitle
+            modalSubtitle.textContent = `${payment.engineerName} · ${formatDateDisplay(payment.paymentDate)}`;
+
+            // Show/hide sections based on payment
+            modalStandbySection.style.display = payment.standby ? 'block' : 'none';
+            modalWorkingAwaySection.style.display = payment.workingAway ? 'block' : 'none';
+            modalOvertimeSection.style.display = payment.overtime ? 'block' : 'none';
+
+            // Populate values
+            if (payment.standby) {
+                modalStandby.checked = true;
+                modalStandbyAmtVal.textContent = `£${payment.standbyAmount.toFixed(2)}`;
+            }
+
+            if (payment.workingAway) {
+                modalWorkingAway.checked = true;
+            }
+
+            if (payment.overtime) {
+                modalOvertimeToggle.checked = true;
+                modalOvertimeFields.style.display = 'block';
+                modalOvertimeStart.value = payment.overtimeStart;
+                modalOvertimeEnd.value = payment.overtimeEnd;
+                modalOvertimeRate.textContent = payment.overtimeRate.toFixed(2);
+                recalcModalOvertime();
+            }
+
+            modalChangeReason.value = '';
+            recalcModalTotal();
+
+            modal.classList.add('show');
+        }
+
+        function closeModal() {
+            modal.classList.remove('show');
+            currentModalPayment = null;
+            currentModalCard = null;
+        }
+
+        function recalcModalOvertime() {
+            const payment = currentModalPayment;
+            if (!payment || !payment.overtime) return;
+
+            const start = modalOvertimeStart.value;
+            const end = modalOvertimeEnd.value;
+
+            if (start && end) {
+                const hours = calculateHoursDifference(start, end);
+                const amount = hours * payment.overtimeRate;
+                modalOvertimeHrs.textContent = `${hours.toFixed(2)} hrs`;
+                modalOvertimeAmt.textContent = `£${amount.toFixed(2)}`;
+            }
+
+            recalcModalTotal();
+        }
+
+        function recalcModalTotal() {
+            const payment = currentModalPayment;
+            if (!payment) return;
+
+            let total = 0;
+
+            if (payment.standby && modalStandby.checked) {
+                total += payment.standbyAmount;
+            }
+
+            if (payment.overtime && modalOvertimeToggle.checked) {
+                const start = modalOvertimeStart.value;
+                const end = modalOvertimeEnd.value;
+                if (start && end) {
+                    const hours = calculateHoursDifference(start, end);
+                    total += hours * payment.overtimeRate;
+                }
+            }
+
+            modalGrandTotal.textContent = `£${total.toFixed(2)}`;
+        }
+
+        async function submitApproveWithChanges() {
+            const payment = currentModalPayment;
+            const card = currentModalCard;
+            if (!payment) return;
+
+            const reason = modalChangeReason.value.trim();
+            if (!reason) {
+                modalChangeReason.focus();
+                modalChangeReason.style.borderColor = 'var(--error)';
+                setTimeout(() => { modalChangeReason.style.borderColor = ''; }, 2000);
+                alert('Please enter a reason for the changes before submitting.');
+                return;
+            }
+
+            // Build changes log
+            const changes = [];
+
+            if (payment.standby) {
+                if (!modalStandby.checked) changes.push('Standby payment removed');
+            }
+            if (payment.workingAway) {
+                if (!modalWorkingAway.checked) changes.push('Working away allowance removed');
+            }
+            if (payment.overtime) {
+                if (!modalOvertimeToggle.checked) {
+                    changes.push('Overtime removed');
+                } else {
+                    if (modalOvertimeStart.value !== payment.overtimeStart)
+                        changes.push(`Overtime start changed from ${payment.overtimeStart} to ${modalOvertimeStart.value}`);
+                    if (modalOvertimeEnd.value !== payment.overtimeEnd)
+                        changes.push(`Overtime end changed from ${payment.overtimeEnd} to ${modalOvertimeEnd.value}`);
+                }
+            }
+
+            // Calculate final total
+            let newTotal = 0;
+            const newStandby = payment.standby ? modalStandby.checked : false;
+            const newWorkingAway = payment.workingAway ? modalWorkingAway.checked : false;
+            let newOvertimeHours = 0;
+            let newOvertimeAmount = 0;
+
+            if (newStandby) newTotal += payment.standbyAmount;
+
+            if (payment.overtime && modalOvertimeToggle.checked) {
+                newOvertimeHours = calculateHoursDifference(modalOvertimeStart.value, modalOvertimeEnd.value);
+                newOvertimeAmount = newOvertimeHours * payment.overtimeRate;
+                newTotal += newOvertimeAmount;
+            }
+
+            if (Math.abs(newTotal - payment.totalAmount) > 0.01) {
+                changes.push(`Total adjusted from £${payment.totalAmount.toFixed(2)} to £${newTotal.toFixed(2)}`);
+            }
+
+            const updatedData = {
+                status: 'Approved with Changes',
+                approvedDate: new Date().toISOString(),
+                standby: newStandby,
+                workingAway: newWorkingAway,
+                totalAmount: newTotal,
+                originalAmount: payment.totalAmount,
+                changesLog: changes,
+                changesReason: reason,
+            };
+
+            if (payment.overtime) {
+                updatedData.overtime = modalOvertimeToggle.checked;
+                if (modalOvertimeToggle.checked) {
+                    updatedData.overtimeStart = modalOvertimeStart.value;
+                    updatedData.overtimeEnd = modalOvertimeEnd.value;
+                    updatedData.overtimeHours = newOvertimeHours;
+                    updatedData.overtimeAmount = newOvertimeAmount;
+                }
+            }
+
+            try {
+                const paymentRef = doc(db, 'SP Additional Payment', payment.id);
+                await updateDoc(paymentRef, updatedData);
+
+                closeModal();
+                card.style.opacity = '0.5';
+                card.style.pointerEvents = 'none';
+                setTimeout(() => { card.remove(); loadPayments(); }, 500);
+
+                alert(`Payment for ${payment.engineerName} approved with changes.\n\nChanges:\n${changes.length > 0 ? changes.join('\n') : 'No structural changes — reason logged only.'}`);
+            } catch (error) {
+                console.error('Error approving payment with changes:', error);
+                alert('Error saving changes. Please try again.');
+            }
+        }
+
         async function loadPayments() {
             loadingSection.classList.add('show');
             paymentsContainer.innerHTML = '';
@@ -630,115 +842,61 @@
                 const querySnapshot = await getDocs(q);
 
                 const payments = [];
-                querySnapshot.forEach((doc) => {
-                    payments.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
-                });
+                querySnapshot.forEach((d) => { payments.push({ id: d.id, ...d.data() }); });
 
-                // Filter by date range
                 const startDate = startDateInput.value;
                 const endDate = endDateInput.value;
 
                 const filteredPayments = payments.filter(payment => {
-                    if (startDate && endDate) {
-                        return isDateInRange(payment.paymentDate, startDate, endDate);
-                    }
+                    if (startDate && endDate) return isDateInRange(payment.paymentDate, startDate, endDate);
                     return true;
                 });
 
-                // Sort by date (newest first)
                 filteredPayments.sort((a, b) => {
                     const [dayA, monthA, yearA] = a.paymentDate.split('/');
                     const [dayB, monthB, yearB] = b.paymentDate.split('/');
-                    const dateA = new Date(yearA, monthA - 1, dayA);
-                    const dateB = new Date(yearB, monthB - 1, dayB);
-                    return dateB - dateA;
+                    return new Date(yearB, monthB - 1, dayB) - new Date(yearA, monthA - 1, dayA);
                 });
 
-                // Update stats
                 updateStats(filteredPayments);
-
-                // Display payments
                 displayPayments(filteredPayments);
-
                 loadingSection.classList.remove('show');
 
             } catch (error) {
                 console.error('Error loading payments:', error);
                 loadingSection.classList.remove('show');
-                paymentsContainer.innerHTML = `
-                    <div class="card">
-                        <div class="no-results">
-                            <div class="no-results-icon">⚠️</div>
-                            <p>Error loading payments. Please try again.</p>
-                        </div>
-                    </div>
-                `;
+                paymentsContainer.innerHTML = `<div class="card"><div class="no-results"><div class="no-results-icon">⚠️</div><p>Error loading payments. Please try again.</p></div></div>`;
             }
         }
 
-        // Check if date is in range
         function isDateInRange(dateStr, startStr, endStr) {
             const [day, month, year] = dateStr.split('/');
             const date = new Date(year, month - 1, day);
-            const start = new Date(startStr);
-            const end = new Date(endStr);
-            return date >= start && date <= end;
+            return date >= new Date(startStr) && date <= new Date(endStr);
         }
 
-        // Update statistics
         function updateStats(payments) {
             pendingCount.textContent = payments.length;
-            
-            const total = payments.reduce((sum, payment) => sum + (payment.totalAmount || 0), 0);
+            const total = payments.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
             totalValue.textContent = `£${total.toFixed(2)}`;
-
-            const uniqueEngineers = new Set(payments.map(p => p.engineerName));
-            engineersCount.textContent = uniqueEngineers.size;
+            engineersCount.textContent = new Set(payments.map(p => p.engineerName)).size;
         }
 
-        // Display payments
         function displayPayments(payments) {
             if (payments.length === 0) {
-                paymentsContainer.innerHTML = `
-                    <div class="card">
-                        <div class="no-results">
-                            <div class="no-results-icon">📭</div>
-                            <p>No pending payments found</p>
-                        </div>
-                    </div>
-                `;
+                paymentsContainer.innerHTML = `<div class="card"><div class="no-results"><div class="no-results-icon">📭</div><p>No pending payments found</p></div></div>`;
                 return;
             }
-
-            payments.forEach(payment => {
-                const paymentCard = createPaymentCard(payment);
-                paymentsContainer.appendChild(paymentCard);
-            });
+            payments.forEach(payment => paymentsContainer.appendChild(createPaymentCard(payment)));
         }
 
-        // Create payment card
         function createPaymentCard(payment) {
             const card = document.createElement('div');
             card.className = 'card payment-card';
             card.dataset.paymentId = payment.id;
 
-            // Store original values to detect changes
-            card.dataset.originalData = JSON.stringify({
-                standby: payment.standby,
-                workingAway: payment.workingAway,
-                overtimeStart: payment.overtimeStart,
-                overtimeEnd: payment.overtimeEnd,
-                overtimeHours: payment.overtimeHours,
-                overtimeAmount: payment.overtimeAmount,
-                totalAmount: payment.totalAmount
-            });
-
             let detailsHTML = '';
 
-            // Standby section
             if (payment.standby) {
                 detailsHTML += `
                     <div class="detail-section">
@@ -746,395 +904,109 @@
                             <span class="detail-title">Standby Payment</span>
                             <span class="detail-amount">£${payment.standbyAmount.toFixed(2)}</span>
                         </div>
-                        <div class="detail-content">
-                            <div class="checkbox-field">
-                                <input type="checkbox" class="approve-standby" checked data-original="true">
-                                <label>Approve standby payment (${getDayType(payment.paymentDate)})</label>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                        <div class="detail-content">Day type: ${getDayType(payment.paymentDate)}</div>
+                    </div>`;
             }
 
-            // Working away section
             if (payment.workingAway) {
                 detailsHTML += `
                     <div class="detail-section">
                         <div class="detail-header">
                             <span class="detail-title">Working Away Allowance</span>
                         </div>
-                        <div class="detail-content">
-                            <div class="checkbox-field">
-                                <input type="checkbox" class="approve-working-away" checked data-original="true">
-                                <label>Approve working away allowance</label>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                        <div class="detail-content">Approved</div>
+                    </div>`;
             }
 
-            // Overtime section
             if (payment.overtime) {
                 detailsHTML += `
                     <div class="detail-section">
                         <div class="detail-header">
                             <span class="detail-title">Overtime</span>
-                            <span class="detail-amount overtime-display-amount">£${payment.overtimeAmount.toFixed(2)}</span>
+                            <span class="detail-amount">£${payment.overtimeAmount.toFixed(2)}</span>
                         </div>
                         <div class="detail-content">
-                            <div class="detail-row">
-                                <span>Start Time:</span>
-                                <span class="editable-field">
-                                    <input type="time" class="overtime-start" value="${payment.overtimeStart}" data-original="${payment.overtimeStart}">
-                                </span>
-                            </div>
-                            <div class="detail-row">
-                                <span>End Time:</span>
-                                <span class="editable-field">
-                                    <input type="time" class="overtime-end" value="${payment.overtimeEnd}" data-original="${payment.overtimeEnd}">
-                                </span>
-                            </div>
-                            <div class="detail-row">
-                                <span>Hours:</span>
-                                <span class="overtime-hours">${payment.overtimeHours.toFixed(2)} hrs</span>
-                            </div>
-                            <div class="detail-row">
-                                <span>Rate:</span>
-                                <span>£${payment.overtimeRate.toFixed(2)}/hr (${getDayType(payment.paymentDate)})</span>
-                            </div>
-                            <div class="detail-row">
-                                <span>Reason:</span>
-                                <span>${payment.overtimeReason}</span>
-                            </div>
+                            <div class="detail-row"><span>Time:</span><span>${payment.overtimeStart} – ${payment.overtimeEnd}</span></div>
+                            <div class="detail-row"><span>Hours:</span><span>${payment.overtimeHours.toFixed(2)} hrs @ £${payment.overtimeRate.toFixed(2)}/hr (${getDayType(payment.paymentDate)})</span></div>
+                            <div class="detail-row"><span>Reason:</span><span>${payment.overtimeReason}</span></div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }
 
-            // Jobs section
             if (payment.jobs && payment.jobs.length > 0) {
                 let jobsHTML = '<div class="jobs-list">';
-                payment.jobs.forEach((job, index) => {
-                    jobsHTML += `
-                        <div class="job-item">
-                            <strong>Job ${index + 1}:</strong> ${job.jobNumber} | ${job.jobType} | ${job.postCode}
-                        </div>
-                    `;
+                payment.jobs.forEach((job, i) => {
+                    jobsHTML += `<div class="job-item"><strong>Job ${i + 1}:</strong> ${job.jobNumber} | ${job.jobType} | ${job.postCode}</div>`;
                 });
                 jobsHTML += '</div>';
-
                 detailsHTML += `
                     <div class="detail-section">
                         <div class="detail-header">
                             <span class="detail-title">Jobs Carried Out</span>
                             <span style="color: var(--accent);">${payment.jobs.length} job${payment.jobs.length !== 1 ? 's' : ''}</span>
                         </div>
-                        <div class="detail-content">
-                            ${jobsHTML}
-                        </div>
-                    </div>
-                `;
+                        <div class="detail-content">${jobsHTML}</div>
+                    </div>`;
             }
 
-            // Notes section
             if (payment.notes && payment.notes.trim()) {
                 detailsHTML += `
                     <div class="detail-section" style="border-left-color: var(--warning);">
-                        <div class="detail-header">
-                            <span class="detail-title">📝 Additional Notes</span>
-                        </div>
-                        <div class="detail-content" style="white-space: pre-wrap; line-height: 1.6;">
-                            ${escapeHtml(payment.notes)}
-                        </div>
-                    </div>
-                `;
+                        <div class="detail-header"><span class="detail-title">📝 Additional Notes</span></div>
+                        <div class="detail-content" style="white-space: pre-wrap; line-height: 1.6;">${escapeHtml(payment.notes)}</div>
+                    </div>`;
             }
 
             card.innerHTML = `
                 <div class="payment-header">
                     <div class="payment-info">
-                        <div class="engineer-name">
-                            ${escapeHtml(payment.engineerName)}
-                            <span class="changes-indicator" style="display: none;">Modified</span>
-                        </div>
+                        <div class="engineer-name">${escapeHtml(payment.engineerName)}</div>
                         <div class="payment-date">Payment Date: ${formatDateDisplay(payment.paymentDate)}</div>
                     </div>
                     <span class="status-badge status-awaiting">Awaiting Approval</span>
                 </div>
-
-                <div class="payment-details">
-                    ${detailsHTML}
-                </div>
-
+                <div class="payment-details">${detailsHTML}</div>
                 <div class="total-row">
                     <span class="total-label">Total Amount</span>
-                    <span class="total-amount calculated-total">£${payment.totalAmount.toFixed(2)}</span>
+                    <span class="total-amount">£${payment.totalAmount.toFixed(2)}</span>
                 </div>
-
                 <div class="payment-actions">
                     <button class="btn btn-danger deny-btn">Deny</button>
-                    <button class="btn btn-success approve-btn">Approve</button>
+                    <button class="btn btn-warning changes-btn">✏️ Approve with Changes</button>
+                    <button class="btn btn-success approve-btn">✓ Approve</button>
                 </div>
             `;
 
-            // Add event listeners for editable fields
-            const overtimeStart = card.querySelector('.overtime-start');
-            const overtimeEnd = card.querySelector('.overtime-end');
-            
-            if (overtimeStart && overtimeEnd) {
-                overtimeStart.addEventListener('change', () => {
-                    updateOvertimeCalculation(card, payment);
-                    checkForChanges(card, payment);
-                });
-                overtimeEnd.addEventListener('change', () => {
-                    updateOvertimeCalculation(card, payment);
-                    checkForChanges(card, payment);
-                });
-            }
-
-            const approveStandby = card.querySelector('.approve-standby');
-            const approveWorkingAway = card.querySelector('.approve-working-away');
-            
-            if (approveStandby) {
-                approveStandby.addEventListener('change', () => {
-                    updateTotalCalculation(card, payment);
-                    checkForChanges(card, payment);
-                });
-            }
-            if (approveWorkingAway) {
-                approveWorkingAway.addEventListener('change', () => {
-                    checkForChanges(card, payment);
-                });
-            }
-
-            // Approve button
             card.querySelector('.approve-btn').addEventListener('click', () => approvePayment(payment, card));
-
-            // Deny button
             card.querySelector('.deny-btn').addEventListener('click', () => denyPayment(payment, card));
+            card.querySelector('.changes-btn').addEventListener('click', () => openChangesModal(payment, card));
 
             return card;
         }
 
-        // Check if any changes were made
-        function checkForChanges(card, payment) {
-            const originalData = JSON.parse(card.dataset.originalData);
-            const changesIndicator = card.querySelector('.changes-indicator');
-            
-            let hasChanges = false;
-
-            // Check standby
-            const approveStandby = card.querySelector('.approve-standby');
-            if (approveStandby && approveStandby.checked !== (originalData.standby === true)) {
-                hasChanges = true;
-            }
-
-            // Check working away
-            const approveWorkingAway = card.querySelector('.approve-working-away');
-            if (approveWorkingAway && approveWorkingAway.checked !== (originalData.workingAway === true)) {
-                hasChanges = true;
-            }
-
-            // Check overtime times
-            const overtimeStart = card.querySelector('.overtime-start');
-            const overtimeEnd = card.querySelector('.overtime-end');
-            if (overtimeStart && overtimeStart.value !== originalData.overtimeStart) {
-                hasChanges = true;
-            }
-            if (overtimeEnd && overtimeEnd.value !== originalData.overtimeEnd) {
-                hasChanges = true;
-            }
-
-            // Show/hide changes indicator
-            if (hasChanges) {
-                changesIndicator.style.display = 'inline-block';
-            } else {
-                changesIndicator.style.display = 'none';
-            }
-        }
-
-        // Update overtime calculation
-        function updateOvertimeCalculation(card, payment) {
-            const startTime = card.querySelector('.overtime-start').value;
-            const endTime = card.querySelector('.overtime-end').value;
-
-            if (startTime && endTime) {
-                const hours = calculateHoursDifference(startTime, endTime);
-                const amount = hours * payment.overtimeRate;
-
-                card.querySelector('.overtime-hours').textContent = `${hours.toFixed(2)} hrs`;
-                card.querySelector('.overtime-display-amount').textContent = `£${amount.toFixed(2)}`;
-                
-                // Update payment object
-                payment.overtimeStart = startTime;
-                payment.overtimeEnd = endTime;
-                payment.overtimeHours = hours;
-                payment.overtimeAmount = amount;
-
-                updateTotalCalculation(card, payment);
-            }
-        }
-
-        // Update total calculation
-        function updateTotalCalculation(card, payment) {
-            let total = 0;
-
-            // Add standby if approved
-            const approveStandby = card.querySelector('.approve-standby');
-            if (approveStandby && approveStandby.checked && payment.standby) {
-                total += payment.standbyAmount;
-            }
-
-            // Working away doesn't have a value in this implementation
-            
-            // Add overtime
-            if (payment.overtime) {
-                total += payment.overtimeAmount;
-            }
-
-            card.querySelector('.calculated-total').textContent = `£${total.toFixed(2)}`;
-            payment.calculatedTotal = total;
-        }
-
-        // Calculate hours difference
-        function calculateHoursDifference(start, end) {
-            const [startHours, startMinutes] = start.split(':').map(Number);
-            const [endHours, endMinutes] = end.split(':').map(Number);
-            
-            const startTotal = startHours * 60 + startMinutes;
-            let endTotal = endHours * 60 + endMinutes;
-            
-            if (endTotal < startTotal) {
-                endTotal += 24 * 60;
-            }
-            
-            return (endTotal - startTotal) / 60;
-        }
-
-        // Get day type
-        function getDayType(dateStr) {
-            const [day, month, year] = dateStr.split('/');
-            const date = new Date(year, month - 1, day);
-            const dayOfWeek = date.getDay();
-            
-            if (dayOfWeek === 0) return 'Sunday';
-            if (dayOfWeek === 6) return 'Saturday';
-            return 'Weekday';
-        }
-
-        // Approve payment
         async function approvePayment(payment, card) {
-            const originalData = JSON.parse(card.dataset.originalData);
-            const approveStandby = card.querySelector('.approve-standby');
-            const approveWorkingAway = card.querySelector('.approve-working-away');
-            const overtimeStart = card.querySelector('.overtime-start');
-            const overtimeEnd = card.querySelector('.overtime-end');
-
-            // Determine if there are changes
-            let hasChanges = false;
-            const changes = [];
-
-            // Check standby changes
-            if (approveStandby) {
-                const currentStandby = approveStandby.checked;
-                if (currentStandby !== (originalData.standby === true)) {
-                    hasChanges = true;
-                    changes.push(`Standby ${currentStandby ? 'approved' : 'removed'}`);
-                }
-            }
-
-            // Check working away changes
-            if (approveWorkingAway) {
-                const currentWorkingAway = approveWorkingAway.checked;
-                if (currentWorkingAway !== (originalData.workingAway === true)) {
-                    hasChanges = true;
-                    changes.push(`Working away ${currentWorkingAway ? 'approved' : 'removed'}`);
-                }
-            }
-
-            // Check overtime changes
-            if (overtimeStart && overtimeEnd) {
-                if (overtimeStart.value !== originalData.overtimeStart || overtimeEnd.value !== originalData.overtimeEnd) {
-                    hasChanges = true;
-                    changes.push(`Overtime hours adjusted from ${originalData.overtimeHours.toFixed(2)} to ${payment.overtimeHours.toFixed(2)}`);
-                }
-            }
-
-            // Check total amount changes
-            const currentTotal = payment.calculatedTotal || payment.totalAmount;
-            if (Math.abs(currentTotal - originalData.totalAmount) > 0.01) {
-                hasChanges = true;
-            }
-
-            // Determine status
-            const status = hasChanges ? 'Approved with Changes' : 'Approved';
-            
-            // Create confirmation message
-            let confirmMessage = hasChanges 
-                ? `Approve payment for ${payment.engineerName} WITH CHANGES?\n\nChanges made:\n${changes.join('\n')}\n\nOriginal amount: £${originalData.totalAmount.toFixed(2)}\nNew amount: £${currentTotal.toFixed(2)}`
-                : `Approve payment for ${payment.engineerName}?\n\nAmount: £${currentTotal.toFixed(2)}`;
-
-            if (!confirm(confirmMessage)) {
-                return;
-            }
-
-            const updatedData = {
-                status: status,
-                approvedDate: new Date().toISOString(),
-                standby: approveStandby ? approveStandby.checked : payment.standby,
-                workingAway: approveWorkingAway ? approveWorkingAway.checked : payment.workingAway,
-            };
-
-            // Add changes log if there are changes
-            if (hasChanges) {
-                updatedData.changesLog = changes;
-                updatedData.originalAmount = originalData.totalAmount;
-            }
-
-            // Update overtime if changed
-            if (payment.overtime) {
-                updatedData.overtimeStart = payment.overtimeStart;
-                updatedData.overtimeEnd = payment.overtimeEnd;
-                updatedData.overtimeHours = payment.overtimeHours;
-                updatedData.overtimeAmount = payment.overtimeAmount;
-            }
-
-            // Update total
-            updatedData.totalAmount = currentTotal;
+            if (!confirm(`Approve payment for ${payment.engineerName}?\n\nAmount: £${payment.totalAmount.toFixed(2)}`)) return;
 
             try {
                 const paymentRef = doc(db, 'SP Additional Payment', payment.id);
-                await updateDoc(paymentRef, updatedData);
-
+                await updateDoc(paymentRef, {
+                    status: 'Approved',
+                    approvedDate: new Date().toISOString(),
+                });
                 card.style.opacity = '0.5';
                 card.style.pointerEvents = 'none';
-                
-                setTimeout(() => {
-                    card.remove();
-                    loadPayments(); // Reload to update stats
-                }, 500);
-
-                const successMessage = hasChanges 
-                    ? 'Payment approved with changes successfully!' 
-                    : 'Payment approved successfully!';
-                alert(successMessage);
-
+                setTimeout(() => { card.remove(); loadPayments(); }, 500);
+                alert('Payment approved successfully!');
             } catch (error) {
                 console.error('Error approving payment:', error);
                 alert('Error approving payment. Please try again.');
             }
         }
 
-        // Deny payment
         async function denyPayment(payment, card) {
             const reason = prompt(`Enter reason for denying ${payment.engineerName}'s payment:`);
-            
-            if (reason === null) return; // User cancelled
-
-            if (!reason.trim()) {
-                alert('Please provide a reason for denial');
-                return;
-            }
+            if (reason === null) return;
+            if (!reason.trim()) { alert('Please provide a reason for denial'); return; }
 
             try {
                 const paymentRef = doc(db, 'SP Additional Payment', payment.id);
@@ -1143,32 +1015,38 @@
                     deniedDate: new Date().toISOString(),
                     denialReason: reason
                 });
-
                 card.style.opacity = '0.5';
                 card.style.pointerEvents = 'none';
-                
-                setTimeout(() => {
-                    card.remove();
-                    loadPayments(); // Reload to update stats
-                }, 500);
-
+                setTimeout(() => { card.remove(); loadPayments(); }, 500);
                 alert('Payment denied successfully!');
-
             } catch (error) {
                 console.error('Error denying payment:', error);
                 alert('Error denying payment. Please try again.');
             }
         }
 
-        // Format date for display
-        function formatDateDisplay(dateStr) {
-            const [day, month, year] = dateStr.split('/');
-            const date = new Date(year, month - 1, day);
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            return date.toLocaleDateString('en-GB', options);
+        function calculateHoursDifference(start, end) {
+            const [sh, sm] = start.split(':').map(Number);
+            const [eh, em] = end.split(':').map(Number);
+            let endTotal = eh * 60 + em;
+            const startTotal = sh * 60 + sm;
+            if (endTotal < startTotal) endTotal += 24 * 60;
+            return (endTotal - startTotal) / 60;
         }
 
-        // Escape HTML
+        function getDayType(dateStr) {
+            const [day, month, year] = dateStr.split('/');
+            const d = new Date(year, month - 1, day).getDay();
+            if (d === 0) return 'Sunday';
+            if (d === 6) return 'Saturday';
+            return 'Weekday';
+        }
+
+        function formatDateDisplay(dateStr) {
+            const [day, month, year] = dateStr.split('/');
+            return new Date(year, month - 1, day).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text || '';
