@@ -43,10 +43,7 @@
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: 
                 radial-gradient(circle at 20% 30%, rgba(0, 163, 224, 0.08) 0%, transparent 50%),
                 radial-gradient(circle at 80% 70%, rgba(0, 94, 184, 0.06) 0%, transparent 50%);
@@ -61,27 +58,15 @@
             z-index: 1;
         }
 
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-            animation: fadeInUp 0.6s ease-out;
-        }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeInUp 0.6s ease-out; }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Login Page Styles */
+        /* ── Login ── */
         .login-wrapper {
             display: flex;
             align-items: center;
@@ -96,43 +81,26 @@
             padding: 3rem;
             width: 100%;
             max-width: 450px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
-        .login-header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
+        .login-header { text-align: center; margin-bottom: 2.5rem; }
 
         .logo {
-            width: 80px;
-            height: 80px;
+            width: 80px; height: 80px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-family: 'DM Mono', monospace;
-            font-weight: 500;
-            font-size: 2rem;
+            font-weight: 500; font-size: 2rem;
             box-shadow: 0 8px 24px rgba(0, 163, 224, 0.3);
             margin: 0 auto 1.5rem;
         }
 
-        .login-title {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
+        .login-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .login-subtitle { color: var(--text-muted); font-size: 0.95rem; }
 
-        .login-subtitle {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
+        .form-group { margin-bottom: 1.5rem; }
 
         label {
             display: block;
@@ -157,18 +125,8 @@
             transition: all 0.3s ease;
         }
 
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.1);
-        }
-
-        input:focus {
+        textarea { resize: vertical; min-height: 80px; }
+        textarea:focus, input:focus {
             outline: none;
             border-color: var(--accent);
             box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.1);
@@ -186,31 +144,11 @@
             font-family: 'Work Sans', sans-serif;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white;
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(0, 163, 224, 0.3);
-        }
-
-        .btn-secondary {
-            background: var(--bg-dark);
-            color: var(--text-light);
-            border: 2px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--accent);
-            background: var(--bg-card);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; }
+        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0, 163, 224, 0.3); }
+        .btn-secondary { background: var(--bg-dark); color: var(--text-light); border: 2px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--accent); background: var(--bg-card); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .error-message {
             display: none;
@@ -223,15 +161,10 @@
             font-size: 0.9rem;
             margin-bottom: 1rem;
         }
+        .error-message.show { display: block; }
 
-        .error-message.show {
-            display: block;
-        }
-
-        /* Dashboard Page Styles */
-        header {
-            margin-bottom: 3rem;
-        }
+        /* ── Dashboard ── */
+        header { margin-bottom: 3rem; }
 
         .header-content {
             display: flex;
@@ -240,22 +173,9 @@
             margin-bottom: 1rem;
         }
 
-        .welcome-section {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .ngu-logo {
-            height: 50px;
-            width: auto;
-        }
+        .welcome-section { display: flex; align-items: center; gap: 1.5rem; }
+        .header-right { display: flex; align-items: center; gap: 1.5rem; }
+        .ngu-logo { height: 50px; width: auto; }
 
         h1 {
             font-size: 2.25rem;
@@ -284,11 +204,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
-        .logout-btn:hover {
-            border-color: var(--error);
-            color: var(--error);
-        }
+        .logout-btn:hover { border-color: var(--error); color: var(--error); }
 
         .card {
             background: var(--bg-card);
@@ -298,26 +214,11 @@
             margin-bottom: 2rem;
         }
 
-        .date-range-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
+        .date-range-section { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+        .button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
-        .button-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .results-section {
-            display: none;
-        }
-
-        .results-section.show {
-            display: block;
-        }
+        .results-section { display: none; }
+        .results-section.show { display: block; }
 
         .results-header {
             display: flex;
@@ -328,10 +229,7 @@
             border-bottom: 2px solid var(--border);
         }
 
-        .results-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
+        .results-title { font-size: 1.5rem; font-weight: 600; }
 
         .record-count {
             font-family: 'DM Mono', monospace;
@@ -361,7 +259,6 @@
             gap: 0.5rem;
         }
 
-        /* Attendance Badge Styles - Inline */
         .attendance-badge {
             display: inline-block;
             padding: 0.35rem 0.85rem;
@@ -372,31 +269,12 @@
             letter-spacing: 0.05em;
             white-space: nowrap;
         }
+        .attendance-badge.present  { background: var(--success); color: white; }
+        .attendance-badge.holiday  { background: var(--holiday); color: white; }
+        .attendance-badge.sick     { background: var(--error);   color: white; }
+        .attendance-badge.other    { background: var(--warning); color: white; }
 
-        .attendance-badge.present {
-            background: var(--success);
-            color: white;
-        }
-
-        .attendance-badge.holiday {
-            background: var(--holiday);
-            color: white;
-        }
-
-        .attendance-badge.sick {
-            background: var(--error);
-            color: white;
-        }
-
-        .attendance-badge.other {
-            background: var(--warning);
-            color: white;
-        }
-
-        .job-grid {
-            display: grid;
-            gap: 1rem;
-        }
+        .job-grid { display: grid; gap: 1rem; }
 
         .job-card {
             padding: 1.25rem;
@@ -405,59 +283,19 @@
             border-radius: 10px;
             transition: all 0.3s ease;
         }
+        .job-card:hover { border-color: var(--accent); transform: translateX(4px); }
 
-        .job-card:hover {
-            border-color: var(--accent);
-            transform: translateX(4px);
-        }
+        .job-detail { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+        .job-detail:last-child { margin-bottom: 0; }
+        .job-label { font-weight: 600; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .job-value { font-size: 1rem; color: var(--text-light); }
 
-        .job-detail {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.75rem;
-        }
+        .status-badge { padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; }
+        .status-completed { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .status-pending   { background: rgba(245, 158, 11, 0.2);  color: var(--warning); }
+        .status-cancelled { background: rgba(239, 68, 68, 0.2);   color: var(--error); }
 
-        .job-detail:last-child {
-            margin-bottom: 0;
-        }
-
-        .job-label {
-            font-weight: 600;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .job-value {
-            font-size: 1rem;
-            color: var(--text-light);
-        }
-
-        .status-badge {
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .status-completed {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--success);
-        }
-
-        .status-pending {
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--warning);
-        }
-
-        .status-cancelled {
-            background: rgba(239, 68, 68, 0.2);
-            color: var(--error);
-        }
-
-        /* Holiday Bonus Summary Styles */
+        /* ── Holiday Bonus ── */
         .holiday-bonus-summary {
             margin-top: 1.5rem;
             padding: 1.5rem;
@@ -465,34 +303,12 @@
             border: 2px solid var(--holiday);
             border-radius: 12px;
         }
+        .holiday-bonus-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .holiday-bonus-title  { font-size: 1.1rem; font-weight: 700; color: var(--holiday); }
+        .holiday-bonus-amount { font-family: 'DM Mono', monospace; font-size: 1.5rem; font-weight: 700; color: var(--holiday); }
+        .holiday-bonus-note   { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem; }
 
-        .holiday-bonus-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .holiday-bonus-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--holiday);
-        }
-
-        .holiday-bonus-amount {
-            font-family: 'DM Mono', monospace;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--holiday);
-        }
-
-        .holiday-bonus-note {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
-
-        /* Bonus Summary Styles */
+        /* ── Bonus Summary ── */
         .bonus-summary {
             margin-top: 1.5rem;
             padding: 1.5rem;
@@ -509,25 +325,10 @@
             padding-bottom: 1rem;
             border-bottom: 2px solid var(--border);
         }
+        .bonus-title        { font-size: 1.1rem; font-weight: 700; color: var(--bonus); }
+        .bonus-total-points { font-family: 'DM Mono', monospace; font-size: 1.5rem; font-weight: 700; color: var(--bonus); }
 
-        .bonus-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--bonus);
-        }
-
-        .bonus-total-points {
-            font-family: 'DM Mono', monospace;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--bonus);
-        }
-
-        .bonus-jobs-list {
-            display: grid;
-            gap: 0.75rem;
-            margin-bottom: 1.25rem;
-        }
+        .bonus-jobs-list { display: grid; gap: 0.75rem; margin-bottom: 1.25rem; }
 
         .bonus-job-item {
             display: grid;
@@ -539,51 +340,30 @@
             border-left: 3px solid var(--success);
             font-size: 0.9rem;
         }
+        .bonus-job-item.no-points { border-left-color: var(--warning); }
 
-        .bonus-job-ref {
-            font-family: 'DM Mono', monospace;
-            font-weight: 600;
-            color: var(--text-light);
-        }
+        .bonus-job-ref    { font-family: 'DM Mono', monospace; font-weight: 600; color: var(--text-light); }
+        .bonus-job-desc   { color: var(--text-muted); }
+        .bonus-job-points { font-family: 'DM Mono', monospace; font-weight: 700; color: var(--success); white-space: nowrap; }
+        .bonus-job-points.unknown { color: var(--warning); }
 
-        .bonus-job-desc {
-            color: var(--text-muted);
-        }
-
-        .bonus-job-points {
-            font-family: 'DM Mono', monospace;
+        .bonus-unrecognised-header {
+            font-size: 0.85rem;
             font-weight: 700;
-            color: var(--success);
-            white-space: nowrap;
+            color: var(--warning);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 1rem 0 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 6px;
         }
 
-        .bonus-calculation {
-            padding: 1.25rem;
-            background: var(--bg-dark);
-            border-radius: 10px;
-            margin-top: 1rem;
-        }
+        .bonus-calculation { padding: 1.25rem; background: var(--bg-dark); border-radius: 10px; margin-top: 1rem; }
 
-        .bonus-calc-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            font-size: 0.95rem;
-        }
-
-        .bonus-calc-row.highlight {
-            font-weight: 700;
-            font-size: 1.05rem;
-            margin-top: 0.75rem;
-            padding-top: 1rem;
-            border-top: 2px solid var(--border);
-        }
-
-        .bonus-calc-row.total {
-            color: var(--success);
-            font-size: 1.25rem;
-            margin-top: 0.5rem;
-        }
+        .bonus-calc-row { display: flex; justify-content: space-between; padding: 0.5rem 0; font-size: 0.95rem; }
+        .bonus-calc-row.highlight { font-weight: 700; font-size: 1.05rem; margin-top: 0.75rem; padding-top: 1rem; border-top: 2px solid var(--border); }
+        .bonus-calc-row.total     { color: var(--success); font-size: 1.25rem; margin-top: 0.5rem; }
 
         .bonus-threshold-message {
             padding: 1rem;
@@ -607,42 +387,32 @@
             margin-top: 1rem;
         }
 
-        .no-results {
-            text-align: center;
-            padding: 3rem;
-            color: var(--text-muted);
+        .bonus-warning-message {
+            padding: 0.75rem 1rem;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--warning);
+            border-radius: 8px;
+            color: var(--warning);
+            font-size: 0.85rem;
+            margin-top: 0.75rem;
         }
 
-        .no-results-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
+        .no-results { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .no-results-icon { font-size: 3rem; margin-bottom: 1rem; }
 
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .loading.show {
-            display: block;
-        }
+        .loading { display: none; text-align: center; padding: 2rem; }
+        .loading.show { display: block; }
 
         .spinner {
-            width: 48px;
-            height: 48px;
+            width: 48px; height: 48px;
             border: 4px solid var(--border);
             border-top-color: var(--accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 1rem;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Footer Styles */
         footer {
             margin-top: 4rem;
             padding-top: 2rem;
@@ -652,31 +422,20 @@
             font-size: 0.9rem;
         }
 
-        /* Modal styles */
+        /* ── Modal ── */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
             z-index: 1000;
             align-items: center;
             justify-content: center;
             padding: 2rem;
             backdrop-filter: blur(4px);
         }
-
-        .modal.show {
-            display: flex;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        .modal.show { display: flex; animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .modal-content {
             background: var(--bg-card);
@@ -687,20 +446,10 @@
             max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
             animation: slideUp 0.4s ease-out;
         }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         .modal-header {
             display: flex;
@@ -710,15 +459,10 @@
             padding-bottom: 1rem;
             border-bottom: 2px solid var(--border);
         }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
+        .modal-title { font-size: 1.5rem; font-weight: 700; }
 
         .close-btn {
-            width: 36px;
-            height: 36px;
+            width: 36px; height: 36px;
             background: var(--bg-dark);
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -726,16 +470,10 @@
             font-size: 1.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             line-height: 1;
         }
-
-        .close-btn:hover {
-            border-color: var(--error);
-            color: var(--error);
-        }
+        .close-btn:hover { border-color: var(--error); color: var(--error); }
 
         .question-group {
             margin-bottom: 1.5rem;
@@ -744,58 +482,17 @@
             border-radius: 12px;
             border-left: 3px solid var(--accent);
         }
+        .question-label { display: block; margin-bottom: 0.75rem; font-weight: 600; color: var(--text-light); font-size: 1rem; }
 
-        .question-label {
-            display: block;
-            margin-bottom: 0.75rem;
-            font-weight: 600;
-            color: var(--text-light);
-            font-size: 1rem;
-        }
+        .radio-group { display: flex; gap: 1.5rem; margin-bottom: 1rem; }
+        .radio-option { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+        .radio-option input[type="radio"] { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; }
+        .radio-option label { margin: 0; cursor: pointer; font-weight: 500; }
 
-        .radio-group {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 1rem;
-        }
+        .conditional-section { display: none; margin-top: 1rem; padding: 1rem; background: var(--bg-card); border-radius: 8px; }
+        .conditional-section.show { display: block; }
 
-        .radio-option {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-        }
-
-        .radio-option input[type="radio"] {
-            width: 20px;
-            height: 20px;
-            accent-color: var(--accent);
-            cursor: pointer;
-        }
-
-        .radio-option label {
-            margin: 0;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .conditional-section {
-            display: none;
-            margin-top: 1rem;
-            padding: 1rem;
-            background: var(--bg-card);
-            border-radius: 8px;
-        }
-
-        .conditional-section.show {
-            display: block;
-        }
-
-        .time-inputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
+        .time-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
         input[type="time"],
         input[type="number"],
@@ -810,52 +507,21 @@
             font-size: 0.95rem;
             transition: all 0.3s ease;
         }
-
-        select {
-            cursor: pointer;
-        }
-
-        input[type="time"]:focus,
-        input[type="number"]:focus,
-        select:focus {
+        select { cursor: pointer; }
+        input[type="time"]:focus, input[type="number"]:focus, select:focus {
             outline: none;
             border-color: var(--accent);
             box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.1);
         }
 
-        .jobs-container {
-            display: none;
-        }
+        .jobs-container { display: none; }
+        .jobs-container.show { display: block; }
 
-        .jobs-container.show {
-            display: block;
-        }
+        .job-entry { padding: 1rem; background: var(--bg-dark); border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--border); }
+        .job-entry-header { font-weight: 600; color: var(--accent); margin-bottom: 0.75rem; font-size: 0.9rem; }
+        .job-inputs { display: grid; gap: 0.75rem; }
 
-        .job-entry {
-            padding: 1rem;
-            background: var(--bg-dark);
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            border: 1px solid var(--border);
-        }
-
-        .job-entry-header {
-            font-weight: 600;
-            color: var(--accent);
-            margin-bottom: 0.75rem;
-            font-size: 0.9rem;
-        }
-
-        .job-inputs {
-            display: grid;
-            gap: 0.75rem;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
+        .modal-actions { display: flex; gap: 1rem; margin-top: 2rem; }
 
         .payment-summary {
             margin-top: 1.5rem;
@@ -865,1485 +531,898 @@
             border-radius: 12px;
             display: none;
         }
+        .payment-summary.show { display: block; }
+        .payment-summary-title { font-weight: 700; color: var(--accent); margin-bottom: 1rem; font-size: 1.1rem; }
 
-        .payment-summary.show {
-            display: block;
-        }
+        .payment-line { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.95rem; }
+        .payment-line.total { margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--border); font-weight: 700; font-size: 1.1rem; color: var(--success); }
 
-        .payment-summary-title {
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
+        .status-badge-payment { display: inline-block; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .status-awaiting-payment        { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .status-approved-payment        { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .status-approved-changes-payment{ background: rgba(0, 163, 224, 0.2);  color: var(--accent); }
+        .status-denied-payment          { background: rgba(239, 68, 68, 0.2);  color: var(--error); }
 
-        .payment-line {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
+        .additional-payment-card { margin-bottom: 1rem; padding: 1.5rem; background: var(--bg-dark); border-radius: 12px; transition: all 0.3s ease; }
+        .additional-payment-card.awaiting          { border: 2px solid var(--warning); }
+        .additional-payment-card.approved          { border: 2px solid var(--success); }
+        .additional-payment-card.approved-changes  { border: 2px solid var(--accent); }
+        .additional-payment-card.denied            { border: 2px solid var(--error); }
 
-        .payment-line.total {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 2px solid var(--border);
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--success);
-        }
+        .additional-payment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
+        .additional-payment-title { font-weight: 700; font-size: 1.05rem; }
 
-        /* Payment Status Badges */
-        .status-badge-payment {
-            display: inline-block;
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
+        .payment-details { display: grid; gap: 0.5rem; }
+        .payment-detail-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+        .payment-detail-row:last-child { border-bottom: none; }
 
-        .status-awaiting-payment {
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--warning);
-        }
+        .payment-notes { margin-top: 1rem; padding: 1rem; background: rgba(0, 163, 224, 0.05); border-left: 3px solid var(--accent); border-radius: 8px; }
+        .payment-notes-title { font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .payment-notes-text { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; white-space: pre-wrap; }
 
-        .status-approved-payment {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--success);
-        }
+        .denial-reason { margin-top: 1rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-left: 3px solid var(--error); border-radius: 8px; }
+        .denial-reason-title { font-weight: 600; color: var(--error); margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .denial-reason-text { color: var(--text-muted); font-size: 0.9rem; }
 
-        .status-approved-changes-payment {
-            background: rgba(0, 163, 224, 0.2);
-            color: var(--accent);
-        }
-
-        .status-denied-payment {
-            background: rgba(239, 68, 68, 0.2);
-            color: var(--error);
-        }
-
-        .additional-payment-card {
-            margin-bottom: 1rem;
-            padding: 1.5rem;
-            background: var(--bg-dark);
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .additional-payment-card.awaiting {
-            border: 2px solid var(--warning);
-        }
-
-        .additional-payment-card.approved {
-            border: 2px solid var(--success);
-        }
-
-        .additional-payment-card.approved-changes {
-            border: 2px solid var(--accent);
-        }
-
-        .additional-payment-card.denied {
-            border: 2px solid var(--error);
-        }
-
-        .additional-payment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .additional-payment-title {
-            font-weight: 700;
-            font-size: 1.05rem;
-        }
-
-        .payment-details {
-            display: grid;
-            gap: 0.5rem;
-        }
-
-        .payment-detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .payment-detail-row:last-child {
-            border-bottom: none;
-        }
-
-        .payment-notes {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(0, 163, 224, 0.05);
-            border-left: 3px solid var(--accent);
-            border-radius: 8px;
-        }
-
-        .payment-notes-title {
-            font-weight: 600;
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .payment-notes-text {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            line-height: 1.5;
-            white-space: pre-wrap;
-        }
-
-        .denial-reason {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(239, 68, 68, 0.1);
-            border-left: 3px solid var(--error);
-            border-radius: 8px;
-        }
-
-        .denial-reason-title {
-            font-weight: 600;
-            color: var(--error);
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .denial-reason-text {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .changes-log {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(0, 163, 224, 0.1);
-            border-left: 3px solid var(--accent);
-            border-radius: 8px;
-        }
-
-        .changes-log-title {
-            font-weight: 600;
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .changes-log-item {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            margin-bottom: 0.25rem;
-        }
+        .changes-log { margin-top: 1rem; padding: 1rem; background: rgba(0, 163, 224, 0.1); border-left: 3px solid var(--accent); border-radius: 8px; }
+        .changes-log-title { font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .changes-log-item { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.25rem; }
 
         @media (max-width: 768px) {
-            body {
-                padding: 1.5rem;
-            }
-
-            .login-card {
-                padding: 2rem;
-            }
-
-            .card {
-                padding: 1.5rem;
-            }
-
-            h1 {
-                font-size: 1.75rem;
-            }
-
-            .date-range-section,
-            .button-group {
-                grid-template-columns: 1fr;
-            }
-
-            .header-content {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-
-            .header-right {
-                width: 100%;
-                flex-direction: column-reverse;
-            }
-
-            .logout-btn {
-                width: 100%;
-            }
-
-            .ngu-logo {
-                align-self: center;
-            }
-
-            .modal-content {
-                padding: 1.5rem;
-            }
-
-            .time-inputs {
-                grid-template-columns: 1fr;
-            }
-
-            .bonus-job-item {
-                grid-template-columns: 1fr;
-                gap: 0.5rem;
-            }
+            body { padding: 1.5rem; }
+            .login-card { padding: 2rem; }
+            .card { padding: 1.5rem; }
+            h1 { font-size: 1.75rem; }
+            .date-range-section, .button-group { grid-template-columns: 1fr; }
+            .header-content { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .header-right { width: 100%; flex-direction: column-reverse; }
+            .logout-btn { width: 100%; }
+            .ngu-logo { align-self: center; }
+            .modal-content { padding: 1.5rem; }
+            .time-inputs { grid-template-columns: 1fr; }
+            .bonus-job-item { grid-template-columns: 1fr; gap: 0.5rem; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Login Page -->
-        <div id="loginPage" class="page active">
-            <div class="login-wrapper">
-                <div class="login-card">
-                    <div class="login-header">
-                        <div class="logo">SP</div>
-                        <h2 class="login-title">Engineer Portal</h2>
-                        <p class="login-subtitle">Scottish Power Data System</p>
-                    </div>
+<div class="container">
 
-                    <div id="loginError" class="error-message"></div>
-
-                    <form id="loginForm">
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" id="username" required autocomplete="username">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" required autocomplete="current-password">
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Sign In</button>
-                    </form>
+    <!-- ── Login Page ── -->
+    <div id="loginPage" class="page active">
+        <div class="login-wrapper">
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="logo">SP</div>
+                    <h2 class="login-title">Engineer Portal</h2>
+                    <p class="login-subtitle">Scottish Power Data System</p>
                 </div>
+                <div id="loginError" class="error-message"></div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sign In</button>
+                </form>
             </div>
         </div>
+    </div>
 
-        <!-- Dashboard Page -->
-        <div id="dashboardPage" class="page">
-            <header>
-                <div class="header-content">
-                    <div class="welcome-section">
-                        <h1>Welcome, <span id="engineerName"></span></h1>
+    <!-- ── Dashboard Page ── -->
+    <div id="dashboardPage" class="page">
+        <header>
+            <div class="header-content">
+                <div class="welcome-section">
+                    <h1>Welcome, <span id="engineerName"></span></h1>
+                </div>
+                <div class="header-right">
+                    <button id="logoutBtn" class="logout-btn">Logout</button>
+                    <img src="https://www.dropbox.com/scl/fi/kkujm1u6y7vvnp7luq8d7/ngu-main-white.png?rlkey=kgq2uh48qh4xssh4vlbz868lr&st=6cy1lbvp&dl=1" alt="NGU Logo" class="ngu-logo">
+                </div>
+            </div>
+            <p class="subtitle">ENGINEER DASHBOARD</p>
+        </header>
+
+        <main>
+            <div class="card">
+                <div class="date-range-section">
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" id="startDate" required>
                     </div>
-                    <div class="header-right">
-                        <button id="logoutBtn" class="logout-btn">Logout</button>
-                        <img src="https://www.dropbox.com/scl/fi/kkujm1u6y7vvnp7luq8d7/ngu-main-white.png?rlkey=kgq2uh48qh4xssh4vlbz868lr&st=6cy1lbvp&dl=1" alt="NGU Logo" class="ngu-logo">
+                    <div class="form-group">
+                        <label for="endDate">End Date</label>
+                        <input type="date" id="endDate" required>
                     </div>
                 </div>
-                <p class="subtitle">ENGINEER DASHBOARD</p>
-            </header>
+                <div class="button-group">
+                    <button id="showBreakdownBtn" class="btn btn-primary">Show Daily Breakdown</button>
+                    <button id="submitPaymentsBtn" class="btn btn-secondary">Submit Additional Payments</button>
+                </div>
+            </div>
 
-            <main>
+            <div id="loadingSection" class="loading">
+                <div class="spinner"></div>
+                <p>Loading data...</p>
+            </div>
+
+            <div id="resultsSection" class="results-section">
+                <!-- Period Summary Card -->
+                <div class="card" id="periodSummaryCard" style="margin-bottom: 1.5rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(245,158,11,0.1) 0%, rgba(245,158,11,0.05) 100%); border: 2px solid var(--bonus); border-radius: 12px;">
+                            <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Period Bonus Total</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--bonus); font-family: 'DM Mono', monospace;" id="periodBonusTotal">£0.00</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;" id="periodBonusPoints">0 total points</div>
+                        </div>
+                        <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0.05) 100%); border: 2px solid var(--success); border-radius: 12px;">
+                            <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Approved Additional Payments</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--success); font-family: 'DM Mono', monospace;" id="periodApprovedPayments">£0.00</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;" id="periodApprovedCount">0 submissions</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card">
-                    <div class="date-range-section">
-                        <div class="form-group">
-                            <label for="startDate">Start Date</label>
-                            <input type="date" id="startDate" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="endDate">End Date</label>
-                            <input type="date" id="endDate" required>
-                        </div>
+                    <div class="results-header">
+                        <h2 class="results-title">Daily Breakdown</h2>
+                        <span id="totalRecords" class="record-count">0 jobs</span>
                     </div>
-
-                    <div class="button-group">
-                        <button id="showBreakdownBtn" class="btn btn-primary">Show Daily Breakdown</button>
-                        <button id="submitPaymentsBtn" class="btn btn-secondary">Submit Additional Payments</button>
-                    </div>
+                    <div id="resultsContainer"></div>
                 </div>
+            </div>
+        </main>
 
-                <div id="loadingSection" class="loading">
-                    <div class="spinner"></div>
-                    <p>Loading data...</p>
-                </div>
-
-                <div id="resultsSection" class="results-section">
-                    <!-- Period Summary Card -->
-                    <div class="card" id="periodSummaryCard" style="margin-bottom: 1.5rem;">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-                            <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%); border: 2px solid var(--bonus); border-radius: 12px;">
-                                <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Period Bonus Total</div>
-                                <div style="font-size: 2rem; font-weight: 700; color: var(--bonus); font-family: 'DM Mono', monospace;" id="periodBonusTotal">£0.00</div>
-                                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;" id="periodBonusPoints">0 total points</div>
-                            </div>
-                            <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); border: 2px solid var(--success); border-radius: 12px;">
-                                <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Approved Additional Payments</div>
-                                <div style="font-size: 2rem; font-weight: 700; color: var(--success); font-family: 'DM Mono', monospace;" id="periodApprovedPayments">£0.00</div>
-                                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;" id="periodApprovedCount">0 submissions</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="results-header">
-                            <h2 class="results-title">Daily Breakdown</h2>
-                            <span id="totalRecords" class="record-count">0 jobs</span>
-                        </div>
-
-                        <div id="resultsContainer"></div>
-                    </div>
-                </div>
-            </main>
-
-            <footer>
-                NGU - Scottish Power - Engineer Dashboard - Barry Dixon
-            </footer>
-        </div>
+        <footer>NGU - Scottish Power - Engineer Dashboard - Barry Dixon</footer>
     </div>
+</div>
 
-    <!-- Additional Payments Modal -->
-    <div id="paymentsModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Submit Additional Payments</h2>
-                <button class="close-btn" id="closeModal">×</button>
+<!-- ── Additional Payments Modal ── -->
+<div id="paymentsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Submit Additional Payments</h2>
+            <button class="close-btn" id="closeModal">×</button>
+        </div>
+        <form id="paymentsForm">
+            <div class="form-group">
+                <label for="paymentDate">Payment Date</label>
+                <input type="date" id="paymentDate" required>
             </div>
 
-            <form id="paymentsForm">
-                <div class="form-group">
-                    <label for="paymentDate">Payment Date</label>
-                    <input type="date" id="paymentDate" required>
+            <div class="question-group">
+                <span class="question-label">Are you claiming Standby payment?</span>
+                <div class="radio-group">
+                    <div class="radio-option"><input type="radio" id="standbyYes" name="standby" value="yes"><label for="standbyYes">Yes</label></div>
+                    <div class="radio-option"><input type="radio" id="standbyNo"  name="standby" value="no" checked><label for="standbyNo">No</label></div>
                 </div>
+            </div>
 
-                <div class="question-group">
-                    <span class="question-label">Are you claiming Standby payment?</span>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" id="standbyYes" name="standby" value="yes">
-                            <label for="standbyYes">Yes</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="standbyNo" name="standby" value="no" checked>
-                            <label for="standbyNo">No</label>
-                        </div>
-                    </div>
+            <div class="question-group">
+                <span class="question-label">Are you claiming a working away allowance?</span>
+                <div class="radio-group">
+                    <div class="radio-option"><input type="radio" id="workingAwayYes" name="workingAway" value="yes"><label for="workingAwayYes">Yes</label></div>
+                    <div class="radio-option"><input type="radio" id="workingAwayNo"  name="workingAway" value="no" checked><label for="workingAwayNo">No</label></div>
                 </div>
+            </div>
 
-                <div class="question-group">
-                    <span class="question-label">Are you claiming a working away allowance?</span>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" id="workingAwayYes" name="workingAway" value="yes">
-                            <label for="workingAwayYes">Yes</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="workingAwayNo" name="workingAway" value="no" checked>
-                            <label for="workingAwayNo">No</label>
-                        </div>
-                    </div>
+            <div class="question-group">
+                <span class="question-label">Are you claiming overtime?</span>
+                <div class="radio-group">
+                    <div class="radio-option"><input type="radio" id="overtimeYes" name="overtime" value="yes"><label for="overtimeYes">Yes</label></div>
+                    <div class="radio-option"><input type="radio" id="overtimeNo"  name="overtime" value="no" checked><label for="overtimeNo">No</label></div>
                 </div>
-
-                <div class="question-group">
-                    <span class="question-label">Are you claiming overtime?</span>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" id="overtimeYes" name="overtime" value="yes">
-                            <label for="overtimeYes">Yes</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="overtimeNo" name="overtime" value="no" checked>
-                            <label for="overtimeNo">No</label>
-                        </div>
-                    </div>
-
-                    <div id="overtimeSection" class="conditional-section">
-                        <div class="form-group">
-                            <label>Overtime Period</label>
-                            <div class="time-inputs">
-                                <div>
-                                    <label style="font-size: 0.85rem; margin-bottom: 0.5rem;">Start Time</label>
-                                    <input type="time" id="overtimeStart">
-                                </div>
-                                <div>
-                                    <label style="font-size: 0.85rem; margin-bottom: 0.5rem;">End Time</label>
-                                    <input type="time" id="overtimeEnd">
-                                </div>
+                <div id="overtimeSection" class="conditional-section">
+                    <div class="form-group">
+                        <label>Overtime Period</label>
+                        <div class="time-inputs">
+                            <div>
+                                <label style="font-size:0.85rem;margin-bottom:0.5rem;">Start Time</label>
+                                <input type="time" id="overtimeStart">
+                            </div>
+                            <div>
+                                <label style="font-size:0.85rem;margin-bottom:0.5rem;">End Time</label>
+                                <input type="time" id="overtimeEnd">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="overtimeReason">Overtime Reason</label>
-                            <select id="overtimeReason">
-                                <option value="">Select a reason</option>
-                                <option value="Extra Work">Extra Work</option>
-                                <option value="OOH Rota Coverage">OOH Rota Coverage</option>
-                                <option value="Standard Weekly Hours Exceeded">Standard Weekly Hours Exceeded</option>
-                                <option value="Travel to Training/Work Away">Travel to Training/Work Away</option>
-                            </select>
-                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="overtimeReason">Overtime Reason</label>
+                        <select id="overtimeReason">
+                            <option value="">Select a reason</option>
+                            <option value="Extra Work">Extra Work</option>
+                            <option value="OOH Rota Coverage">OOH Rota Coverage</option>
+                            <option value="Standard Weekly Hours Exceeded">Standard Weekly Hours Exceeded</option>
+                            <option value="Travel to Training/Work Away">Travel to Training/Work Away</option>
+                        </select>
                     </div>
                 </div>
+            </div>
 
-                <div class="question-group">
-                    <span class="question-label">Did you carry out any jobs?</span>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" id="jobsYes" name="jobs" value="yes">
-                            <label for="jobsYes">Yes</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="jobsNo" name="jobs" value="no" checked>
-                            <label for="jobsNo">No</label>
-                        </div>
+            <div class="question-group">
+                <span class="question-label">Did you carry out any jobs?</span>
+                <div class="radio-group">
+                    <div class="radio-option"><input type="radio" id="jobsYes" name="jobs" value="yes"><label for="jobsYes">Yes</label></div>
+                    <div class="radio-option"><input type="radio" id="jobsNo"  name="jobs" value="no" checked><label for="jobsNo">No</label></div>
+                </div>
+                <div id="jobsSection" class="conditional-section">
+                    <div class="form-group">
+                        <label for="numJobs">Number of Jobs (1-10)</label>
+                        <input type="number" id="numJobs" min="1" max="10" value="1">
                     </div>
-
-                    <div id="jobsSection" class="conditional-section">
-                        <div class="form-group">
-                            <label for="numJobs">Number of Jobs (1-10)</label>
-                            <input type="number" id="numJobs" min="1" max="10" value="1">
-                        </div>
-                        <div id="jobsContainer" class="jobs-container"></div>
-                    </div>
+                    <div id="jobsContainer" class="jobs-container"></div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label for="paymentNotes">Additional Notes (Optional)</label>
-                    <textarea id="paymentNotes" rows="3" placeholder="Add any additional information or context for this payment submission..."></textarea>
-                </div>
+            <div class="form-group">
+                <label for="paymentNotes">Additional Notes (Optional)</label>
+                <textarea id="paymentNotes" rows="3" placeholder="Add any additional information or context..."></textarea>
+            </div>
 
-                <div id="paymentSummary" class="payment-summary"></div>
+            <div id="paymentSummary" class="payment-summary"></div>
 
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelPayment">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Submit Payment</button>
-                </div>
-            </form>
-        </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" id="cancelPayment">Cancel</button>
+                <button type="submit" class="btn btn-primary">Submit Payment</button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, collection, query, where, getDocs, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+<!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp }    from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, query, where, getDocs, addDoc, serverTimestamp }
+        from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCMmUOdW2uEIGVd6XQfWXKF8eaFmwEog1g",
-            authDomain: "oesperformance-a54c0.firebaseapp.com",
-            projectId: "oesperformance-a54c0",
-            storageBucket: "oesperformance-a54c0.firebasestorage.app",
-            messagingSenderId: "484894102454",
-            appId: "1:484894102454:web:17535ee497eac2d90d6717",
-            measurementId: "G-R56BGZYV8N"
-        };
+    const firebaseConfig = {
+        apiKey:            "AIzaSyCMmUOdW2uEIGVd6XQfWXKF8eaFmwEog1g",
+        authDomain:        "oesperformance-a54c0.firebaseapp.com",
+        projectId:         "oesperformance-a54c0",
+        storageBucket:     "oesperformance-a54c0.firebasestorage.app",
+        messagingSenderId: "484894102454",
+        appId:             "1:484894102454:web:17535ee497eac2d90d6717",
+        measurementId:     "G-R56BGZYV8N"
+    };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
 
-        // Job Points Mapping
-        const JOB_POINTS = {
-    'SX1-1 - Electricity Meter Multi Rate': 2,
-    'SX1-1 - Electricity Meter Exchange Legacy to Smart': 1.5,
-    'SX1-2 - Gas Meter Exchange Legacy to Smart': 1.5,
-    'SX1-3 -Dual Fuel Multi Rate': 2,
-    'SX1-3 - Dual Fuel Exchange Legacy to Smart': 2,
-    'SR1-1 - Remove Metering System (Electricity)': 1.5,
-    'SR1-2 - Remove Metering System (Gas)': 1.5,
-    'SR1-3 - Remove Metering System (Dual Fuel)': 2,
-    'SD1-1 - Remove Metering System (Electricity) and replace with Dumb Meter': 1.5,
-    'SD1-2 - Remove Metering System (Gas) and replace with Dumb Meter': 1.5,
-    'SD1-3 - Remove Metering System (Dual Fuel) and replace with Dumb Meter': 2,
-    'SI1-1 - Install New Electricity Metering System New Connection': 1.5,
-    'SI1-2 - Install New Gas Metering System New Connection': 1.5,
-    'SI1-3 - Install New Dual Fuel Metering System New Connection': 2,
-    'SM1-1 - Investigate Smart Metering System Fault Electricity': 1,
-    'SM1-2 - Investigate Smart Metering System Fault Gas': 1,
-    'SM1-3 - Investigate Smart Metering System Fault Dual Fuel': 1,
-    'SM1-CH - Replace Communications Hub': 1,
-    'SE1-1 - Investigate Smart Metering System Fault Electricity': 1,
-    'SE1-2 - Investigate Smart Metering System Fault Gas': 1,
-    'SE1-3 - Investigate Smart Metering System Fault – Dual Fuel': 1,
-    'SM1-IH - Replace IHD': 1,
-    'SX1-1-SS - Electricity Meter Exchange Smart to Smart': 1.5,
-    'SX1-2-SS - Gas Meter Exchange Smart to Smart': 1.5,
-    'SX1-3-SS - Dual Fuel Exchange Smart to Smart': 2,
-    'MIS-PP - Install PPMID': 1,
-    'SX1 - D2S CR Elec Twin Element': 2,
-    'SX1 - D2S CR Elec 3PH': 2,
-    'SX1 - D2S CR Elec Single Element with ALCS': 2,
-    'SX1 - D2S CR Elec 3PH with ALCS': 2,
-    'SX1 - D2S PP Elec Twin Element': 2,
-    'SX1 - D2S PP Elec 3PH': 2,
-    'SX1 - D2S PP Elec Single Element with ALCS': 2,
-    'SX1 - D2S PP Elec 3PH with ALCS': 2,
-    'SX1 - D2S DS Elec CR Twin Element, Gas CR': 2,
-    'SX1 - D2S DS Elec CR 3PH, Gas CR': 2.5,
-    'SX1 - D2S DS Elec CR Single Element with ALCS, Gas CR': 2,
-    'SX1 - D2S DS Elec CR 3PH with ALCS, Gas CR': 2.5,
-    'SX1 - D2S DS Elec CR Twin Element, Gas PP': 2,
-    'SX1 - D2S DS Elec CR 3PH, Gas PP': 2.5,
-    'SX1 - D2S DS Elec CR Single Element with ALCS, Gas PP': 2,
-    'SX1 - D2S DS Elec CR 3PH with ALCS, Gas PP': 2.5,
-    'SX1 - D2S DS Elec PP Twin Element, Gas CR': 2,
-    'SX1 - D2S DS Elec PP 3PH, Gas CR': 2.5,
-    'SX1 - D2S DS Elec PP Single Element with ALCS, Gas CR': 2,
-    'SX1 - D2S DS Elec PP 3PH with ALCS, Gas CR': 2.5,
-    'SX1 - D2S DS Elec PP Twin Element, Gas PP': 2,
-    'SX1 - D2S DS Elec PP 3PH, Gas PP': 2.5,
-    'SX1 - D2S DS Elec PP Single Element with ALCS, Gas PP': 2,
-    'SX1 - D2S DS Elec PP 3PH with ALCS, Gas PP': 2.5,
-    'G4 - Exchange Metering System - like for like - Credit < 11 scmh': 1.5,
-    'E9 - Miscellaneous Site Visit - PrePayment Key/Card Meter': 1,
-    'E20 - Install Isolator Switch - Seperate Visit - Single Phase': 1,
-    'E9 - Miscellaneous Site Visit - Single Phase': 1,
-    'E23 - Service Engineer Hire - Half Day': 3.5,
-    'E24 - Service Engineer Hire - Full Day': 7,
-    'E13 - Remove Metering System - Single Phase': 1.5,
-    'E8 - Investigate Metering System Fault - Supply Not Interrupted - Single Phase': 1,
-    'G25 - Service Provider Service Engineer Hire - AM Hire': 3.5,
-    'G16 - Remove Metering System - Credit < 11 scmh': 1.5,
-    'E9 - Miscellaneous Site Visit - PolyPhase': 1,
-    'G31 - Miscellaneous - Group 2 - Credit < 11 scmh': 1.5,
-    'G16 - Remove Metering System - Prepayment': 1.5,
-    'E12 - Relocate Metering System - Single Phase': 1.5,
-    'E20 - Install Isolator Switch - Seperate Visit - PolyPhase': 1,
-    'Non Chargeable': 1.5,
-    'BAU Smart': 1,
-    'E7 - Investigate Metering System Fault - Supply Interrupted - Single Phase': 1,
-    'G21 - Callout  Customer with Credit Metering System - Gas Off - Call Out Faulty Credit Meter - Gas Off': 1,
-    'Assist': 1,
-    // ── New entries ──
-    'SX1-DCE4 D2S CR Elec Single Element with ALCS': 1.5,
-    'SX1-SCE4 S2S CR Elec Single Element with ALCS': 1.5,    
-    'SX1-DPE2 D2S PP Elec Single Element': 1.5,
-    'SX1-DCG1 D2S CR Gas': 1.5,
-    'SX1-SCE1 S2S CR Elec Single Element': 1.5,
-    'SX1-DPE1 D2S PP Elec Single Element': 1.5,
-    'SX1-DS01 D2S DS Elec CR Single Element, Gas CR': 2,
-    'SX1-CM22 SX D2S CR MULTI TO SINGLE ELEC 1E ALCS': 2,
-    'SX1-DCE1 D2S CR Elec Single Element': 1.5,
-    'SX1-DCM4 SX D2S CR MULTI TO MULTI ELEC 2E ALCS': 2,
-    'SX1-SCG1 S2S CR Gas': 1.5,
-    'SX1-PM22 SX D2S PP MULTI TO SINGLE ELEC 1E ALCS': 2,
-    'SX1-DPM4 SX D2S PP MULTI TO MULTI ELEC 2E ALCS': 2,
-    'SX1-DPG1 D2S PP Gas': 1.5,
-    'Assist Job': 1,
-    'SX1-DPE4 D2S PP Elec Single Element with ALCS': 2,
-    'G25 - Service Provider Service Engineer Hire - Day Hire': 7,
-    'SE1-EING Emergency Investigate Gas': 1.5,
-    'SX1-CM21 SX D2S CR MULTI TO SINGLE ELEC 1E': 1.5
-};
+    // ── Constants ──────────────────────────────────────────────────────────────
+    const BONUS_THRESHOLD = 6;
+    const BONUS_RATE      = 20;
 
-        // Constants
-        const BONUS_THRESHOLD = 6;
-        const BONUS_RATE = 20;
+    // ── DOM refs ───────────────────────────────────────────────────────────────
+    const loginPage           = document.getElementById('loginPage');
+    const dashboardPage       = document.getElementById('dashboardPage');
+    const loginForm           = document.getElementById('loginForm');
+    const loginError          = document.getElementById('loginError');
+    const engineerNameSpan    = document.getElementById('engineerName');
+    const logoutBtn           = document.getElementById('logoutBtn');
+    const startDateInput      = document.getElementById('startDate');
+    const endDateInput        = document.getElementById('endDate');
+    const showBreakdownBtn    = document.getElementById('showBreakdownBtn');
+    const submitPaymentsBtn   = document.getElementById('submitPaymentsBtn');
+    const loadingSection      = document.getElementById('loadingSection');
+    const resultsSection      = document.getElementById('resultsSection');
+    const resultsContainer    = document.getElementById('resultsContainer');
+    const totalRecords        = document.getElementById('totalRecords');
+    const paymentsModal       = document.getElementById('paymentsModal');
+    const closeModal          = document.getElementById('closeModal');
+    const cancelPayment       = document.getElementById('cancelPayment');
+    const paymentsForm        = document.getElementById('paymentsForm');
+    const periodBonusTotal    = document.getElementById('periodBonusTotal');
+    const periodBonusPoints   = document.getElementById('periodBonusPoints');
+    const periodApprovedPayments = document.getElementById('periodApprovedPayments');
+    const periodApprovedCount    = document.getElementById('periodApprovedCount');
 
-        // DOM elements
-        const loginPage = document.getElementById('loginPage');
-        const dashboardPage = document.getElementById('dashboardPage');
-        const loginForm = document.getElementById('loginForm');
-        const loginError = document.getElementById('loginError');
-        const usernameInput = document.getElementById('username');
-        const passwordInput = document.getElementById('password');
-        const engineerNameSpan = document.getElementById('engineerName');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const startDateInput = document.getElementById('startDate');
-        const endDateInput = document.getElementById('endDate');
-        const showBreakdownBtn = document.getElementById('showBreakdownBtn');
-        const submitPaymentsBtn = document.getElementById('submitPaymentsBtn');
-        const loadingSection = document.getElementById('loadingSection');
-        const resultsSection = document.getElementById('resultsSection');
-        const resultsContainer = document.getElementById('resultsContainer');
-        const totalRecords = document.getElementById('totalRecords');
-        const paymentsModal = document.getElementById('paymentsModal');
-        const closeModal = document.getElementById('closeModal');
-        const cancelPayment = document.getElementById('cancelPayment');
-        const paymentsForm = document.getElementById('paymentsForm');
+    // ── State ──────────────────────────────────────────────────────────────────
+    let currentUser      = null;
+    let additionalPayments = [];
+    let averageBonuses   = {};
 
-        // Period summary elements
-        const periodBonusTotal = document.getElementById('periodBonusTotal');
-        const periodBonusPoints = document.getElementById('periodBonusPoints');
-        const periodApprovedPayments = document.getElementById('periodApprovedPayments');
-        const periodApprovedCount = document.getElementById('periodApprovedCount');
-
-        // Current user data
-        let currentUser = null;
-        let additionalPayments = [];
-        let averageBonuses = {};
-
-        // Load average bonuses from Firebase
-        async function loadAverageBonuses() {
-            try {
-                const querySnapshot = await getDocs(collection(db, "Average Bonuses"));
-                averageBonuses = {};
-                
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const name = data.name;
-                    const month = data.month;
-                    const fullDay = parseFloat(data.fullDay) || 0;
-                    
-                    if (!averageBonuses[name]) {
-                        averageBonuses[name] = {};
-                    }
-                    averageBonuses[name][month] = fullDay;
-                });
-                
-                console.log('Average bonuses loaded:', averageBonuses);
-            } catch (error) {
-                console.error('Error loading average bonuses:', error);
-            }
+    // ── Average bonuses ────────────────────────────────────────────────────────
+    async function loadAverageBonuses() {
+        try {
+            const snap = await getDocs(collection(db, 'Average Bonuses'));
+            averageBonuses = {};
+            snap.forEach(doc => {
+                const d = doc.data();
+                if (!averageBonuses[d.name]) averageBonuses[d.name] = {};
+                averageBonuses[d.name][d.month] = parseFloat(d.fullDay) || 0;
+            });
+        } catch (err) {
+            console.error('Error loading average bonuses:', err);
         }
+    }
 
-        // Get average bonus for engineer and month - FIXED VERSION
-        function getAverageBonusForDate(engineerName, dateStr) {
-            // Handle both YYYY-MM-DD and DD/MM/YYYY formats
-            let date;
-            if (dateStr.includes('/')) {
-                const [day, month, year] = dateStr.split('/');
-                date = new Date(year, month - 1, day);
+    function getAverageBonusForDate(engineerName, dateStr) {
+        let date;
+        if (dateStr.includes('/')) {
+            const [d, m, y] = dateStr.split('/');
+            date = new Date(y, m - 1, d);
+        } else {
+            date = new Date(dateStr);
+        }
+        const monthNames = ['January','February','March','April','May','June',
+                            'July','August','September','October','November','December'];
+        const month = monthNames[date.getMonth()];
+        return (averageBonuses[engineerName] && averageBonuses[engineerName][month])
+            ? averageBonuses[engineerName][month]
+            : 0;
+    }
+
+    // ── Login ──────────────────────────────────────────────────────────────────
+    loginForm.addEventListener('submit', async e => {
+        e.preventDefault();
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+
+        try {
+            const q    = query(collection(db, 'SP Engineers'), where('name', '==', username));
+            const snap = await getDocs(q);
+
+            if (snap.empty) { showLoginError('Invalid username or password'); return; }
+
+            let authenticated = false, engineerData = null;
+            snap.forEach(doc => {
+                const d = doc.data();
+                if (d.password === password) { authenticated = true; engineerData = d; }
+            });
+
+            if (!authenticated) { showLoginError('Invalid username or password'); return; }
+
+            currentUser = { username, name: engineerData.name, email: engineerData.email };
+            await loadAverageBonuses();
+
+            loginPage.classList.remove('active');
+            dashboardPage.classList.add('active');
+            engineerNameSpan.textContent = currentUser.name;
+            loginForm.reset();
+            loginError.classList.remove('show');
+
+        } catch (err) {
+            console.error(err);
+            showLoginError('Login error. Please try again.');
+        }
+    });
+
+    function showLoginError(msg) {
+        loginError.textContent = msg;
+        loginError.classList.add('show');
+    }
+
+    // ── Logout ─────────────────────────────────────────────────────────────────
+    logoutBtn.addEventListener('click', () => {
+        currentUser = null;
+        dashboardPage.classList.remove('active');
+        loginPage.classList.add('active');
+        resultsSection.classList.remove('show');
+        resultsContainer.innerHTML = '';
+    });
+
+    // ── Show Daily Breakdown ───────────────────────────────────────────────────
+    showBreakdownBtn.addEventListener('click', async () => {
+        const startDate = startDateInput.value;
+        const endDate   = endDateInput.value;
+
+        if (!startDate || !endDate) { alert('Please select both start and end dates'); return; }
+        if (new Date(startDate) > new Date(endDate)) { alert('Start date must be before end date'); return; }
+
+        loadingSection.classList.add('show');
+        resultsSection.classList.remove('show');
+        resultsContainer.innerHTML = '';
+
+        try {
+            // ── Fetch Sureserve jobs for this engineer ──
+            const sureserveSnap = await getDocs(
+                query(collection(db, 'SP-SureserveData'), where('resource', '==', currentUser.name))
+            );
+
+            const sureserveDataByDate = {};
+            sureserveSnap.forEach(doc => {
+                const data = doc.data();
+                if (isDateInRange(data.dateOfAppointment, startDate, endDate)) {
+                    const d = data.dateOfAppointment;
+                    if (!sureserveDataByDate[d]) sureserveDataByDate[d] = [];
+                    sureserveDataByDate[d].push(data);
+                }
+            });
+
+            // ── Fetch SP Submitted Data ──
+            const submittedSnap = await getDocs(
+                query(collection(db, 'SP Submitted Data'), where('outcomeResource', '==', currentUser.name))
+            );
+            const dataByDate = {};
+            let totalJobs = 0;
+            submittedSnap.forEach(doc => {
+                const data = doc.data();
+                if (isDateInRange(data.jobDate, startDate, endDate)) {
+                    if (!dataByDate[data.jobDate]) dataByDate[data.jobDate] = [];
+                    dataByDate[data.jobDate].push(data);
+                    totalJobs++;
+                }
+            });
+
+            // ── Fetch Additional Payments ──
+            const paymentsSnap = await getDocs(
+                query(collection(db, 'SP Additional Payment'), where('engineerName', '==', currentUser.name))
+            );
+            additionalPayments = [];
+            paymentsSnap.forEach(doc => additionalPayments.push(doc.data()));
+
+            // ── Fetch Attendance ──
+            const attendanceSnap = await getDocs(
+                query(collection(db, 'SP Attendance'), where('engineerName', '==', currentUser.name))
+            );
+            const attendanceData = {};
+            attendanceSnap.forEach(doc => {
+                const d = doc.data();
+                if (d.date) attendanceData[d.date] = d.attendance;
+            });
+
+            // ── Calculate & display ──
+            const periodTotals = calculatePeriodTotals(sureserveDataByDate, additionalPayments, startDate, endDate, attendanceData);
+            displayResults(dataByDate, totalJobs, startDate, endDate, attendanceData, sureserveDataByDate);
+            updatePeriodSummary(periodTotals);
+
+            loadingSection.classList.remove('show');
+            resultsSection.classList.add('show');
+
+        } catch (err) {
+            console.error(err);
+            alert('Error loading data. Please try again.');
+            loadingSection.classList.remove('show');
+        }
+    });
+
+    // ── Period Totals ──────────────────────────────────────────────────────────
+    // Points are now read from job.points (stored in Firebase by the upload tool).
+    // Falls back to 0 if the field is absent.
+    function calculatePeriodTotals(sureserveDataByDate, additionalPayments, startDate, endDate, attendanceData) {
+        let totalBonusAmount    = 0;
+        let totalBonusPoints    = 0;
+        let totalApprovedPayments = 0;
+        let approvedCount       = 0;
+        let totalHolidayBonus   = 0;
+
+        // Holiday days with no Sureserve data
+        Object.entries(attendanceData).forEach(([stdDate, attendance]) => {
+            if (!isDateInRange(stdDate, startDate, endDate)) return;
+            const displayDate = convertToDisplayDate(stdDate);
+
+            if ((attendance === 'H' || attendance === 'H/H') && !sureserveDataByDate[displayDate]) {
+                const avg = getAverageBonusForDate(currentUser.name, displayDate);
+                if (avg > 0) {
+                    const amount = attendance === 'H/H' ? avg / 2 : avg;
+                    totalHolidayBonus   += amount;
+                    totalBonusAmount    += amount;
+                }
+            }
+        });
+
+        // Sureserve data days
+        Object.entries(sureserveDataByDate).forEach(([date, dayJobs]) => {
+            const stdDate    = convertToStandardDate(date);
+            const attendance = stdDate ? attendanceData[stdDate] : null;
+
+            if (attendance === 'H' || attendance === 'H/H') {
+                const avg = getAverageBonusForDate(currentUser.name, date);
+                if (avg > 0) {
+                    const amount = attendance === 'H/H' ? avg / 2 : avg;
+                    totalHolidayBonus += amount;
+                    totalBonusAmount  += amount;
+                }
             } else {
-                date = new Date(dateStr);
-            }
-            
-            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
-                              'July', 'August', 'September', 'October', 'November', 'December'];
-            const month = monthNames[date.getMonth()];
-            
-            console.log('Looking up bonus for:', engineerName, 'month:', month, 'date:', dateStr);
-            
-            if (averageBonuses[engineerName] && averageBonuses[engineerName][month]) {
-                const bonus = averageBonuses[engineerName][month];
-                console.log('Found bonus:', bonus);
-                return bonus;
-            }
-            console.log('No bonus found for', engineerName, month);
-            return 0;
-        }
-
-        // Handle login
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const username = usernameInput.value.trim();
-            const password = passwordInput.value;
-
-            try {
-                const engineersCollection = collection(db, 'SP Engineers');
-                const q = query(engineersCollection, where('name', '==', username));
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    loginError.textContent = 'Invalid username or password';
-                    loginError.classList.add('show');
-                    return;
-                }
-
-                let authenticated = false;
-                let engineerData = null;
-
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    if (data.password === password) {
-                        authenticated = true;
-                        engineerData = data;
-                    }
+                // ── Read points from Firebase field ──
+                const completedJobs = dayJobs.filter(j => isCompleted(j.status));
+                let dayPoints = 0;
+                completedJobs.forEach(job => {
+                    dayPoints += parseFloat(job.points) || 0;
                 });
 
-                if (authenticated) {
-                    currentUser = {
-                        username: username,
-                        name: engineerData.name,
-                        email: engineerData.email
-                    };
+                totalBonusPoints += dayPoints;
 
-                    // Load average bonuses
-                    await loadAverageBonuses();
-
-                    loginPage.classList.remove('active');
-                    dashboardPage.classList.add('active');
-                    engineerNameSpan.textContent = currentUser.name;
-                    
-                    loginForm.reset();
-                    loginError.classList.remove('show');
-                } else {
-                    loginError.textContent = 'Invalid username or password';
-                    loginError.classList.add('show');
+                if (dayPoints >= BONUS_THRESHOLD) {
+                    const bonusUnits  = Math.floor((dayPoints - BONUS_THRESHOLD) / 0.5);
+                    totalBonusAmount += bonusUnits * BONUS_RATE;
                 }
-
-            } catch (error) {
-                console.error('Error during login:', error);
-                loginError.textContent = 'Login error. Please try again.';
-                loginError.classList.add('show');
             }
         });
 
-        // Handle logout
-        logoutBtn.addEventListener('click', () => {
-            currentUser = null;
-            dashboardPage.classList.remove('active');
-            loginPage.classList.add('active');
-            resultsSection.classList.remove('show');
-            resultsContainer.innerHTML = '';
-        });
-
-        // Show daily breakdown
-        showBreakdownBtn.addEventListener('click', async () => {
-            const startDate = startDateInput.value;
-            const endDate = endDateInput.value;
-
-            if (!startDate || !endDate) {
-                alert('Please select both start and end dates');
-                return;
-            }
-
-            if (new Date(startDate) > new Date(endDate)) {
-                alert('Start date must be before end date');
-                return;
-            }
-
-            loadingSection.classList.add('show');
-            resultsSection.classList.remove('show');
-            resultsContainer.innerHTML = '';
-
-            try {
-                // Query Firebase for Sureserve data
-                const sureserveCollection = collection(db, 'SP-SureserveData');
-                const sureserveQuery = query(sureserveCollection, where('resource', '==', currentUser.name));
-                const sureserveSnapshot = await getDocs(sureserveQuery);
-                
-                const sureserveDataByDate = {};
-                sureserveSnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const jobDate = data.dateOfAppointment;
-                    
-                    if (isDateInRange(jobDate, startDate, endDate)) {
-                        if (!sureserveDataByDate[jobDate]) {
-                            sureserveDataByDate[jobDate] = [];
-                        }
-                        sureserveDataByDate[jobDate].push(data);
-                    }
-                });
-
-                // Query Firebase for data matching the logged-in engineer's name
-                const dataCollection = collection(db, 'SP Submitted Data');
-                const q = query(dataCollection, where('outcomeResource', '==', currentUser.name));
-                const querySnapshot = await getDocs(q);
-
-                // Get ALL additional payments
-                const paymentsCollection = collection(db, 'SP Additional Payment');
-                const paymentsQuery = query(paymentsCollection, where('engineerName', '==', currentUser.name));
-                const paymentsSnapshot = await getDocs(paymentsQuery);
-                
-                additionalPayments = [];
-                paymentsSnapshot.forEach((doc) => {
-                    additionalPayments.push(doc.data());
-                });
-
-                // Load attendance data
-                const attendanceCollection = collection(db, 'SP Attendance');
-                const attendanceQuery = query(attendanceCollection, where('engineerName', '==', currentUser.name));
-                const attendanceSnapshot = await getDocs(attendanceQuery);
-                
-                const attendanceData = {};
-                attendanceSnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    if (data.date) {
-                        attendanceData[data.date] = data.attendance;
-                    }
-                });
-
-                console.log('Attendance data loaded:', attendanceData);
-
-                // Filter and organize data by date
-                const dataByDate = {};
-                let totalJobs = 0;
-
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const jobDate = data.jobDate;
-
-                    if (isDateInRange(jobDate, startDate, endDate)) {
-                        if (!dataByDate[jobDate]) {
-                            dataByDate[jobDate] = [];
-                        }
-                        dataByDate[jobDate].push(data);
-                        totalJobs++;
-                    }
-                });
-
-                // Calculate period totals - FIXED VERSION
-                const periodTotals = calculatePeriodTotals(sureserveDataByDate, additionalPayments, startDate, endDate, attendanceData);
-
-                // Display results
-                displayResults(dataByDate, totalJobs, startDate, endDate, attendanceData, sureserveDataByDate);
-                
-                // Update period summary
-                updatePeriodSummary(periodTotals);
-                
-                loadingSection.classList.remove('show');
-                resultsSection.classList.add('show');
-
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                alert('Error loading data. Please try again.');
-                loadingSection.classList.remove('show');
+        // Approved additional payments
+        additionalPayments.forEach(payment => {
+            if (isDateInRange(payment.paymentDate, startDate, endDate)) {
+                const status = payment.status || 'Awaiting Approval';
+                if (status === 'Approved' || status === 'Approved with Changes') {
+                    totalApprovedPayments += payment.totalAmount || 0;
+                    approvedCount++;
+                }
             }
         });
 
-        // Calculate period totals - FIXED VERSION
-        function calculatePeriodTotals(sureserveDataByDate, additionalPayments, startDate, endDate, attendanceData) {
-            let totalBonusAmount = 0;
-            let totalBonusPoints = 0;
-            let totalApprovedPayments = 0;
-            let approvedPaymentsCount = 0;
-            let totalHolidayBonus = 0;
+        return { totalBonusAmount, totalBonusPoints, totalApprovedPayments, approvedPaymentsCount: approvedCount, totalHolidayBonus };
+    }
 
-            console.log('Calculating period totals...');
-            console.log('Sureserve data dates:', Object.keys(sureserveDataByDate));
-            console.log('Attendance data:', attendanceData);
+    function updatePeriodSummary(totals) {
+        periodBonusTotal.textContent      = `£${totals.totalBonusAmount.toFixed(2)}`;
+        periodBonusPoints.textContent     = `${totals.totalBonusPoints.toFixed(1)} total points`;
+        periodApprovedPayments.textContent = `£${totals.totalApprovedPayments.toFixed(2)}`;
+        periodApprovedCount.textContent    = `${totals.approvedPaymentsCount} submission${totals.approvedPaymentsCount !== 1 ? 's' : ''}`;
+    }
 
-            // First, check ALL attendance dates for holidays (not just Sureserve dates)
-            Object.entries(attendanceData).forEach(([standardDate, attendance]) => {
-                // Only process dates within the selected range
-                if (isDateInRange(standardDate, startDate, endDate)) {
-                    // Convert YYYY-MM-DD to DD/MM/YYYY for display and lookup
-                    const displayDate = convertToDisplayDate(standardDate);
-                    
-                    // Check if it's a holiday
-                    if (attendance === 'H' || attendance === 'H/H') {
-                        // Only add holiday bonus if there's NO Sureserve data for this day
-                        // (if there is Sureserve data, it will be handled below)
-                        if (!sureserveDataByDate[displayDate]) {
-                            const avgBonus = getAverageBonusForDate(currentUser.name, displayDate);
-                            console.log(`Holiday without Sureserve data - Date: ${displayDate}, Attendance: ${attendance}, Bonus: ${avgBonus}`);
-                            
-                            if (avgBonus > 0) {
-                                // For half day holidays, use half the bonus
-                                const bonusAmount = attendance === 'H/H' ? avgBonus / 2 : avgBonus;
-                                totalHolidayBonus += bonusAmount;
-                                totalBonusAmount += bonusAmount;
-                                console.log(`Added holiday bonus: £${bonusAmount.toFixed(2)}`);
-                            }
-                        }
-                    }
-                }
-            });
+    // ── Bonus Summary Card ─────────────────────────────────────────────────────
+    // Reads job.points from Firebase. Jobs with no points field are listed
+    // separately and flagged so the engineer can spot missing data.
+    function createBonusSummary(date, sureserveJobs) {
+        const completedJobs = sureserveJobs.filter(j => isCompleted(j.status));
+        if (completedJobs.length === 0) return null;
 
-            // Calculate bonus totals from Sureserve data
-            Object.entries(sureserveDataByDate).forEach(([date, dayJobs]) => {
-                // Convert DD/MM/YYYY to YYYY-MM-DD for attendance lookup
-                const standardDate = convertToStandardDate(date);
-                const attendance = standardDate ? attendanceData[standardDate] : null;
-                
-                console.log(`Sureserve Date: ${date} (${standardDate}), Attendance: ${attendance}`);
-                
-                // Check if it's a holiday
-                if (attendance && (attendance === 'H' || attendance === 'H/H')) {
-                    const avgBonus = getAverageBonusForDate(currentUser.name, date);
-                    console.log(`Holiday with Sureserve data detected! Average bonus: ${avgBonus}`);
-                    
-                    if (avgBonus > 0) {
-                        // For half day holidays, use half the bonus
-                        const bonusAmount = attendance === 'H/H' ? avgBonus / 2 : avgBonus;
-                        totalHolidayBonus += bonusAmount;
-                        totalBonusAmount += bonusAmount;
-                        console.log(`Added holiday bonus: £${bonusAmount.toFixed(2)}`);
-                    }
-                } else {
-                    // Regular working day - calculate from completed jobs
-                    const completedJobs = dayJobs.filter(job => isCompleted(job.status));
-                    let dayPoints = 0;
+        let totalPoints    = 0;
+        const jobsWithPts  = [];
+        const jobsNoPts    = [];
 
-                    completedJobs.forEach(job => {
-                        const points = JOB_POINTS[job.description] || 0;
-                        dayPoints += points;
-                    });
-
-                    totalBonusPoints += dayPoints;
-
-                    if (dayPoints >= BONUS_THRESHOLD) {
-                        const bonusPoints = dayPoints - BONUS_THRESHOLD;
-                        const bonusUnits = Math.floor(bonusPoints / 0.5);
-                        const bonusAmount = bonusUnits * BONUS_RATE;
-                        totalBonusAmount += bonusAmount;
-                        console.log(`Regular day bonus: £${bonusAmount.toFixed(2)} from ${dayPoints} points`);
-                    }
-                }
-            });
-
-            console.log(`Total holiday bonus: £${totalHolidayBonus.toFixed(2)}`);
-            console.log(`Total bonus amount: £${totalBonusAmount.toFixed(2)}`);
-
-            // Calculate approved additional payments
-            additionalPayments.forEach(payment => {
-                if (isDateInRange(payment.paymentDate, startDate, endDate)) {
-                    const status = payment.status || 'Awaiting Approval';
-                    if (status === 'Approved' || status === 'Approved with Changes') {
-                        totalApprovedPayments += payment.totalAmount || 0;
-                        approvedPaymentsCount++;
-                    }
-                }
-            });
-
-            return {
-                totalBonusAmount,
-                totalBonusPoints,
-                totalApprovedPayments,
-                approvedPaymentsCount,
-                totalHolidayBonus
-            };
-        }
-
-        // Update period summary display
-        function updatePeriodSummary(totals) {
-            periodBonusTotal.textContent = `£${totals.totalBonusAmount.toFixed(2)}`;
-            periodBonusPoints.textContent = `${totals.totalBonusPoints.toFixed(1)} total points`;
-            periodApprovedPayments.textContent = `£${totals.totalApprovedPayments.toFixed(2)}`;
-            periodApprovedCount.textContent = `${totals.approvedPaymentsCount} submission${totals.approvedPaymentsCount !== 1 ? 's' : ''}`;
-        }
-
-        // Check if a date is within range
-        function isDateInRange(dateStr, startStr, endStr) {
-            let date;
-            
-            if (dateStr.includes('/')) {
-                const dateParts = dateStr.split('/');
-                if (dateParts.length !== 3) return false;
-                date = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+        completedJobs.forEach(job => {
+            const pts = parseFloat(job.points);
+            if (!isNaN(pts) && pts > 0) {
+                totalPoints += pts;
+                jobsWithPts.push({ ref: job.ref, description: job.description, points: pts });
             } else {
-                date = new Date(dateStr);
+                jobsNoPts.push({ ref: job.ref, description: job.description });
             }
-            
-            const start = new Date(startStr);
-            const end = new Date(endStr);
-            end.setHours(23, 59, 59, 999);
+        });
 
-            return date >= start && date <= end;
-        }
+        const bonusDiv = document.createElement('div');
+        bonusDiv.className = 'bonus-summary';
 
-        // Convert DD/MM/YYYY to YYYY-MM-DD
-        function convertToStandardDate(ddmmyyyy) {
-            const parts = ddmmyyyy.split('/');
-            if (parts.length !== 3) return null;
-            return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-        }
+        let html = `
+            <div class="bonus-header">
+                <div class="bonus-title">💰 Bonus Summary</div>
+                <div class="bonus-total-points">${totalPoints.toFixed(1)} pts</div>
+            </div>
+        `;
 
-        // Convert any date to DD/MM/YYYY format
-        function convertToDisplayDate(dateStr) {
-            if (dateStr.includes('/')) {
-                return dateStr;
-            }
-            
-            const date = new Date(dateStr);
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            return `${day}/${month}/${year}`;
-        }
-
-        // Check if status indicates completion
-        function isCompleted(status) {
-            if (!status) return false;
-            const statusLower = status.toLowerCase();
-            return statusLower.includes('complete') || statusLower.includes('done');
-        }
-
-        // Create holiday bonus summary - FIXED VERSION
-        function createHolidayBonusSummary(date, attendance) {
-            // Use the DD/MM/YYYY date directly for lookup
-            const avgBonus = getAverageBonusForDate(currentUser.name, date);
-            
-            console.log(`Creating holiday bonus display for ${date}, attendance: ${attendance}, bonus: ${avgBonus}`);
-            
-            if (avgBonus === 0) {
-                console.log('No bonus found, not displaying holiday bonus card');
-                return null;
-            }
-
-            // For half day holidays, show half the bonus
-            const displayBonus = attendance === 'H/H' ? avgBonus / 2 : avgBonus;
-
-            const bonusDiv = document.createElement('div');
-            bonusDiv.className = 'holiday-bonus-summary';
-
-            bonusDiv.innerHTML = `
-                <div class="holiday-bonus-header">
-                    <div class="holiday-bonus-title">🏖️ Holiday Bonus</div>
-                    <div class="holiday-bonus-amount">£${displayBonus.toFixed(2)}</div>
-                </div>
-                <div class="holiday-bonus-note">
-                    Average bonus applied for holiday (${attendance === 'H/H' ? 'Half Day' : 'Full Day'})
-                </div>
-            `;
-
-            return bonusDiv;
-        }
-
-        // Create bonus summary card
-        function createBonusSummary(date, sureserveJobs) {
-            const completedJobs = sureserveJobs.filter(job => isCompleted(job.status));
-            
-            if (completedJobs.length === 0) {
-                return null;
-            }
-
-            let totalPoints = 0;
-            const jobsWithPoints = [];
-
-            completedJobs.forEach(job => {
-                const points = JOB_POINTS[job.description] || 0;
-                if (points > 0) {
-                    totalPoints += points;
-                    jobsWithPoints.push({
-                        ref: job.ref,
-                        description: job.description,
-                        points: points
-                    });
-                }
+        // ── Jobs with points ──
+        if (jobsWithPts.length > 0) {
+            html += '<div class="bonus-jobs-list">';
+            jobsWithPts.forEach(job => {
+                html += `
+                    <div class="bonus-job-item">
+                        <div class="bonus-job-ref">${escapeHtml(job.ref)}</div>
+                        <div class="bonus-job-desc">${escapeHtml(job.description)}</div>
+                        <div class="bonus-job-points">${job.points.toFixed(1)} pts</div>
+                    </div>
+                `;
             });
+            html += '</div>';
+        }
 
-            const bonusDiv = document.createElement('div');
-            bonusDiv.className = 'bonus-summary';
+        // ── Jobs missing points ──
+        if (jobsNoPts.length > 0) {
+            html += `<div class="bonus-unrecognised-header">⚠️ No Points Value (${jobsNoPts.length} job${jobsNoPts.length !== 1 ? 's' : ''})</div>`;
+            html += '<div class="bonus-jobs-list">';
+            jobsNoPts.forEach(job => {
+                html += `
+                    <div class="bonus-job-item no-points">
+                        <div class="bonus-job-ref">${escapeHtml(job.ref)}</div>
+                        <div class="bonus-job-desc">${escapeHtml(job.description)}</div>
+                        <div class="bonus-job-points unknown">? pts</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+        }
 
-            let bonusHTML = `
-                <div class="bonus-header">
-                    <div class="bonus-title">💰 Bonus Summary</div>
-                    <div class="bonus-total-points">${totalPoints.toFixed(1)} pts</div>
-                </div>
+        // ── Calculation breakdown ──
+        html += '<div class="bonus-calculation">';
+        html += `<div class="bonus-calc-row"><span>Total Points Earned:</span><span>${totalPoints.toFixed(1)}</span></div>`;
+        html += `<div class="bonus-calc-row"><span>Threshold Required:</span><span>${BONUS_THRESHOLD.toFixed(1)}</span></div>`;
+
+        if (totalPoints >= BONUS_THRESHOLD) {
+            const bonusUnits  = Math.floor((totalPoints - BONUS_THRESHOLD) / 0.5);
+            const bonusAmount = bonusUnits * BONUS_RATE;
+            html += `<div class="bonus-calc-row highlight"><span>Bonus Points (Above Threshold):</span><span>${(totalPoints - BONUS_THRESHOLD).toFixed(1)}</span></div>`;
+            html += `<div class="bonus-calc-row"><span>Bonus Units (÷ 0.5):</span><span>${bonusUnits}</span></div>`;
+            html += `<div class="bonus-calc-row"><span>Rate per Unit:</span><span>£${BONUS_RATE.toFixed(2)}</span></div>`;
+            html += `<div class="bonus-calc-row total"><span>Bonus Earned:</span><span>£${bonusAmount.toFixed(2)}</span></div>`;
+            html += '</div>';
+            html += `<div class="bonus-unlocked-message">🎉 Bonus Unlocked! You've earned £${bonusAmount.toFixed(2)}</div>`;
+        } else {
+            const needed = BONUS_THRESHOLD - totalPoints;
+            html += '</div>';
+            html += `<div class="bonus-threshold-message">⚠️ ${needed.toFixed(1)} more point${needed !== 1 ? 's' : ''} needed to unlock bonus</div>`;
+        }
+
+        if (jobsNoPts.length > 0) {
+            html += `<div class="bonus-warning-message">📋 ${jobsNoPts.length} completed job${jobsNoPts.length !== 1 ? 's have' : ' has'} no points value in the system. Ask your admin to check Column E in the Sureserve upload.</div>`;
+        }
+
+        bonusDiv.innerHTML = html;
+        return bonusDiv;
+    }
+
+    // ── Holiday Bonus Card ─────────────────────────────────────────────────────
+    function createHolidayBonusSummary(date, attendance) {
+        const avg = getAverageBonusForDate(currentUser.name, date);
+        if (avg === 0) return null;
+        const displayBonus = attendance === 'H/H' ? avg / 2 : avg;
+
+        const div = document.createElement('div');
+        div.className = 'holiday-bonus-summary';
+        div.innerHTML = `
+            <div class="holiday-bonus-header">
+                <div class="holiday-bonus-title">🏖️ Holiday Bonus</div>
+                <div class="holiday-bonus-amount">£${displayBonus.toFixed(2)}</div>
+            </div>
+            <div class="holiday-bonus-note">
+                Average bonus applied for holiday (${attendance === 'H/H' ? 'Half Day' : 'Full Day'})
+            </div>
+        `;
+        return div;
+    }
+
+    // ── Display Results ────────────────────────────────────────────────────────
+    function displayResults(dataByDate, totalJobs, startDate, endDate, attendanceData, sureserveDataByDate) {
+        resultsContainer.innerHTML = '';
+        totalRecords.textContent = `${totalJobs} jobs`;
+
+        if (totalJobs === 0 && additionalPayments.length === 0 && Object.keys(sureserveDataByDate).length === 0) {
+            resultsContainer.innerHTML = `
+                <div class="no-results">
+                    <div class="no-results-icon">📭</div>
+                    <p>No jobs found for the selected date range</p>
+                </div>`;
+            return;
+        }
+
+        const allDates = new Set([
+            ...Object.keys(dataByDate),
+            ...Object.keys(sureserveDataByDate),
+            ...additionalPayments
+                .filter(p => isDateInRange(p.paymentDate, startDate, endDate))
+                .map(p => convertToDisplayDate(p.paymentDate))
+        ]);
+
+        const sortedDates = Array.from(allDates).sort((a, b) => {
+            const [da, ma, ya] = a.split('/');
+            const [db2, mb, yb] = b.split('/');
+            return new Date(ya, ma - 1, da) - new Date(yb, mb - 1, db2);
+        });
+
+        sortedDates.forEach(date => {
+            const jobs          = dataByDate[date]         || [];
+            const sureserveJobs = sureserveDataByDate[date] || [];
+
+            const daySection  = document.createElement('div');
+            daySection.className = 'day-section';
+
+            const stdDate    = convertToStandardDate(date);
+            const attendance = stdDate ? attendanceData[stdDate] : null;
+
+            const totalDayJobs = jobs.length + sureserveJobs.length;
+            const dayHeader    = document.createElement('div');
+            dayHeader.className = 'day-header';
+            dayHeader.innerHTML = `
+                ${formatDateDisplay(date)} – ${totalDayJobs} job${totalDayJobs !== 1 ? 's' : ''}
+                ${getAttendanceBadgeHTML(attendance)}
             `;
+            daySection.appendChild(dayHeader);
 
-            if (jobsWithPoints.length > 0) {
-                bonusHTML += '<div class="bonus-jobs-list">';
-                jobsWithPoints.forEach(job => {
-                    bonusHTML += `
-                        <div class="bonus-job-item">
-                            <div class="bonus-job-ref">${escapeHtml(job.ref)}</div>
-                            <div class="bonus-job-desc">${escapeHtml(job.description)}</div>
-                            <div class="bonus-job-points">${job.points.toFixed(1)} pts</div>
-                        </div>
+            // SP Submitted Data jobs
+            if (jobs.length > 0) {
+                jobs.sort((a, b) => (a.startTime || '99:99').localeCompare(b.startTime || '99:99'));
+                const grid = document.createElement('div');
+                grid.className = 'job-grid';
+                jobs.forEach(job => {
+                    const card = document.createElement('div');
+                    card.className = 'job-card';
+                    card.innerHTML = `
+                        <div class="job-detail"><span class="job-label">Job Reference</span><span class="job-value">${escapeHtml(job.jobId)}</span></div>
+                        <div class="job-detail"><span class="job-label">Job Type</span><span class="job-value">${escapeHtml(job.jobType)}</span></div>
+                        <div class="job-detail"><span class="job-label">Status</span><span class="status-badge ${getStatusClass(job.jobStatus)}">${escapeHtml(job.jobStatus)}</span></div>
+                        ${job.startTime ? `<div class="job-detail"><span class="job-label">Start Time</span><span class="job-value">${escapeHtml(job.startTime)}</span></div>` : ''}
                     `;
+                    grid.appendChild(card);
                 });
-                bonusHTML += '</div>';
+                daySection.appendChild(grid);
             }
 
-            bonusHTML += '<div class="bonus-calculation">';
-            bonusHTML += `<div class="bonus-calc-row"><span>Total Points Earned:</span><span>${totalPoints.toFixed(1)}</span></div>`;
-            bonusHTML += `<div class="bonus-calc-row"><span>Threshold Required:</span><span>${BONUS_THRESHOLD.toFixed(1)}</span></div>`;
-
-            if (totalPoints >= BONUS_THRESHOLD) {
-                const bonusPoints = totalPoints - BONUS_THRESHOLD;
-                const bonusUnits = Math.floor(bonusPoints / 0.5);
-                const bonusAmount = bonusUnits * BONUS_RATE;
-
-                bonusHTML += `<div class="bonus-calc-row highlight"><span>Bonus Points (Above Threshold):</span><span>${bonusPoints.toFixed(1)}</span></div>`;
-                bonusHTML += `<div class="bonus-calc-row"><span>Bonus Units (÷ 0.5):</span><span>${bonusUnits}</span></div>`;
-                bonusHTML += `<div class="bonus-calc-row"><span>Rate per Unit:</span><span>£${BONUS_RATE.toFixed(2)}</span></div>`;
-                bonusHTML += `<div class="bonus-calc-row total"><span>Bonus Earned:</span><span>£${bonusAmount.toFixed(2)}</span></div>`;
-                bonusHTML += '</div>';
-
-                bonusHTML += `<div class="bonus-unlocked-message">🎉 Bonus Unlocked! You've earned £${bonusAmount.toFixed(2)}</div>`;
-            } else {
-                const pointsNeeded = BONUS_THRESHOLD - totalPoints;
-                bonusHTML += '</div>';
-                bonusHTML += `<div class="bonus-threshold-message">⚠️ ${pointsNeeded.toFixed(1)} more point${pointsNeeded !== 1 ? 's' : ''} needed to unlock bonus</div>`;
+            // Bonus / holiday card
+            if (attendance === 'H' || attendance === 'H/H') {
+                const holidayBonus = createHolidayBonusSummary(date, attendance);
+                if (holidayBonus) daySection.appendChild(holidayBonus);
+            } else if (sureserveJobs.length > 0) {
+                const bonusSummary = createBonusSummary(date, sureserveJobs);
+                if (bonusSummary) daySection.appendChild(bonusSummary);
             }
 
-            bonusDiv.innerHTML = bonusHTML;
-            return bonusDiv;
+            // Additional payments for this date
+            const displayDate   = convertToDisplayDate(date);
+            const datePayments  = additionalPayments.filter(p => convertToDisplayDate(p.paymentDate) === displayDate);
+            datePayments.forEach(payment => daySection.appendChild(createAdditionalPaymentCard(payment)));
+
+            resultsContainer.appendChild(daySection);
+        });
+    }
+
+    // ── Helpers ────────────────────────────────────────────────────────────────
+    function isDateInRange(dateStr, startStr, endStr) {
+        if (!dateStr) return false;
+        let date;
+        if (dateStr.includes('/')) {
+            const [d, m, y] = dateStr.split('/');
+            if (!d || !m || !y) return false;
+            date = new Date(y, m - 1, d);
+        } else {
+            date = new Date(dateStr);
         }
+        const start = new Date(startStr);
+        const end   = new Date(endStr);
+        end.setHours(23, 59, 59, 999);
+        return date >= start && date <= end;
+    }
 
-        // Display results grouped by date
-        function displayResults(dataByDate, totalJobs, startDate, endDate, attendanceData, sureserveDataByDate) {
-            resultsContainer.innerHTML = '';
-            totalRecords.textContent = `${totalJobs} jobs`;
+    function convertToStandardDate(ddmmyyyy) {
+        const parts = ddmmyyyy.split('/');
+        if (parts.length !== 3) return null;
+        return `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+    }
 
-            if (totalJobs === 0 && additionalPayments.length === 0 && Object.keys(sureserveDataByDate).length === 0) {
-                resultsContainer.innerHTML = `
-                    <div class="no-results">
-                        <div class="no-results-icon">📭</div>
-                        <p>No jobs found for the selected date range</p>
-                    </div>
-                `;
-                return;
-            }
+    function convertToDisplayDate(dateStr) {
+        if (dateStr && dateStr.includes('/')) return dateStr;
+        const date = new Date(dateStr);
+        return `${String(date.getDate()).padStart(2,'0')}/${String(date.getMonth()+1).padStart(2,'0')}/${date.getFullYear()}`;
+    }
 
-            const allDates = new Set([
-                ...Object.keys(dataByDate),
-                ...Object.keys(sureserveDataByDate),
-                ...additionalPayments.filter(p => isDateInRange(p.paymentDate, startDate, endDate)).map(p => convertToDisplayDate(p.paymentDate))
-            ]);
+    function isCompleted(status) {
+        if (!status) return false;
+        const s = status.toLowerCase();
+        return s.includes('complete') || s.includes('done');
+    }
 
-            const sortedDates = Array.from(allDates).sort((a, b) => {
-                const [dayA, monthA, yearA] = a.split('/');
-                const [dayB, monthB, yearB] = b.split('/');
-                return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);
-            });
+    function formatDateDisplay(dateStr) {
+        const [d, m, y] = dateStr.split('/');
+        return new Date(y, m - 1, d).toLocaleDateString('en-GB', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+    }
 
-            sortedDates.forEach(date => {
-                const jobs = dataByDate[date] || [];
-                const sureserveJobs = sureserveDataByDate[date] || [];
-                
-                const daySection = document.createElement('div');
-                daySection.className = 'day-section';
+    function getStatusClass(status) {
+        const s = status.toLowerCase();
+        if (s.includes('complete') || s.includes('done'))   return 'status-completed';
+        if (s.includes('cancel')   || s.includes('failed')) return 'status-cancelled';
+        return 'status-pending';
+    }
 
-                const standardDate = convertToStandardDate(date);
-                const attendance = standardDate ? attendanceData[standardDate] : null;
-                
-                console.log(`Displaying date: ${date}, standard: ${standardDate}, attendance: ${attendance}`);
-                
-                const dayHeader = document.createElement('div');
-                dayHeader.className = 'day-header';
-                const totalDayJobs = jobs.length + sureserveJobs.length;
-                dayHeader.innerHTML = `
-                    ${formatDateDisplay(date)} - ${totalDayJobs} job${totalDayJobs !== 1 ? 's' : ''}
-                    ${getAttendanceBadgeHTML(attendance)}
-                `;
-
-                daySection.appendChild(dayHeader);
-
-                if (jobs.length > 0) {
-                    jobs.sort((a, b) => {
-                        const timeA = a.startTime || '99:99';
-                        const timeB = b.startTime || '99:99';
-                        return timeA.localeCompare(timeB);
-                    });
-
-                    const jobGrid = document.createElement('div');
-                    jobGrid.className = 'job-grid';
-
-                    jobs.forEach(job => {
-                        const jobCard = document.createElement('div');
-                        jobCard.className = 'job-card';
-                        jobCard.innerHTML = `
-                            <div class="job-detail">
-                                <span class="job-label">Job Reference</span>
-                                <span class="job-value">${escapeHtml(job.jobId)}</span>
-                            </div>
-                            <div class="job-detail">
-                                <span class="job-label">Job Type</span>
-                                <span class="job-value">${escapeHtml(job.jobType)}</span>
-                            </div>
-                            <div class="job-detail">
-                                <span class="job-label">Status</span>
-                                <span class="status-badge ${getStatusClass(job.jobStatus)}">${escapeHtml(job.jobStatus)}</span>
-                            </div>
-                            ${job.startTime ? `
-                            <div class="job-detail">
-                                <span class="job-label">Start Time</span>
-                                <span class="job-value">${escapeHtml(job.startTime)}</span>
-                            </div>
-                            ` : ''}
-                        `;
-                        jobGrid.appendChild(jobCard);
-                    });
-
-                    daySection.appendChild(jobGrid);
-                }
-
-                // Check if it's a holiday and add holiday bonus
-                if (attendance && (attendance === 'H' || attendance === 'H/H')) {
-                    console.log(`Creating holiday bonus for ${date}`);
-                    const holidayBonus = createHolidayBonusSummary(date, attendance);
-                    if (holidayBonus) {
-                        daySection.appendChild(holidayBonus);
-                    } else {
-                        console.log('Holiday bonus creation returned null');
-                    }
-                } else if (sureserveJobs.length > 0) {
-                    // Regular working day - show job-based bonus
-                    const bonusSummary = createBonusSummary(date, sureserveJobs);
-                    if (bonusSummary) {
-                        daySection.appendChild(bonusSummary);
-                    }
-                }
-
-                const displayDate = convertToDisplayDate(date);
-                const datePayments = additionalPayments.filter(payment => 
-                    convertToDisplayDate(payment.paymentDate) === displayDate
-                );
-
-                if (datePayments.length > 0) {
-                    datePayments.forEach(payment => {
-                        const paymentCard = createAdditionalPaymentCard(payment);
-                        daySection.appendChild(paymentCard);
-                    });
-                }
-
-                resultsContainer.appendChild(daySection);
-            });
+    function getAttendanceBadgeHTML(attendance) {
+        if (!attendance) return '';
+        const labels = { H:'Holiday', 'H/H':'Half Day Holiday', Sick:'Sick Leave', AAUP:'Authorised Absence Unpaid', TOFD:'Time Off For Dependants', AAP:'Authorised Absence Paid', X:'Present' };
+        let cls = 'attendance-badge', icon = '✅', label = 'Present';
+        if (attendance === 'X') {
+            cls += ' present';
+        } else if (attendance === 'H' || attendance === 'H/H') {
+            cls += ' holiday'; icon = '🏖️'; label = labels[attendance] || attendance;
+        } else if (attendance === 'Sick') {
+            cls += ' sick'; icon = '🤒'; label = 'Sick Leave';
+        } else {
+            cls += ' other'; icon = '📋'; label = labels[attendance] || attendance;
         }
+        return `<span class="${cls}" style="margin-left:1rem;">${icon} ${label}</span>`;
+    }
 
-        // Get attendance badge HTML for inline display
-        function getAttendanceBadgeHTML(attendanceStatus) {
-            if (!attendanceStatus) return '';
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text || '';
+        return div.innerHTML;
+    }
 
-            const absenceLabels = {
-                'H': 'Holiday',
-                'H/H': 'Half Day Holiday',
-                'Sick': 'Sick Leave',
-                'AAUP': 'Authorised Absence Unpaid',
-                'TOFD': 'Time Off For Dependants',
-                'AAP': 'Authorised Absence Paid',
-                'X': 'Present'
-            };
+    // ── Additional Payment Card ────────────────────────────────────────────────
+    function createAdditionalPaymentCard(payment) {
+        const card   = document.createElement('div');
+        const status = payment.status || 'Awaiting Approval';
+        let statusClass = 'awaiting', badgeClass = 'status-awaiting-payment';
+        if (status === 'Approved')               { statusClass = 'approved';         badgeClass = 'status-approved-payment'; }
+        if (status === 'Approved with Changes')  { statusClass = 'approved-changes'; badgeClass = 'status-approved-changes-payment'; }
+        if (status === 'Denied')                 { statusClass = 'denied';           badgeClass = 'status-denied-payment'; }
 
-            let badgeClass = 'attendance-badge';
-            let icon = '✅';
-            let label = 'Present';
+        card.className = `additional-payment-card ${statusClass}`;
 
-            if (attendanceStatus === 'X') {
-                badgeClass += ' present';
-            } else if (attendanceStatus === 'H' || attendanceStatus === 'H/H') {
-                badgeClass += ' holiday';
-                icon = '🏖️';
-                label = absenceLabels[attendanceStatus] || attendanceStatus;
-            } else if (attendanceStatus === 'Sick') {
-                badgeClass += ' sick';
-                icon = '🤒';
-                label = 'Sick Leave';
-            } else {
-                badgeClass += ' other';
-                icon = '📋';
-                label = absenceLabels[attendanceStatus] || attendanceStatus;
-            }
-
-            return `<span class="${badgeClass}" style="margin-left: 1rem;">${icon} ${label}</span>`;
-        }
-
-        // Create additional payment card
-        function createAdditionalPaymentCard(payment) {
-            const card = document.createElement('div');
-            card.className = 'additional-payment-card';
-            
-            const status = payment.status || 'Awaiting Approval';
-            let statusClass = 'awaiting';
-            let statusBadgeClass = 'status-awaiting-payment';
-            
-            if (status === 'Approved') {
-                statusClass = 'approved';
-                statusBadgeClass = 'status-approved-payment';
-            } else if (status === 'Approved with Changes') {
-                statusClass = 'approved-changes';
-                statusBadgeClass = 'status-approved-changes-payment';
-            } else if (status === 'Denied') {
-                statusClass = 'denied';
-                statusBadgeClass = 'status-denied-payment';
-            }
-            
-            card.className += ` ${statusClass}`;
-
-            let detailsHTML = '';
-            
-            if (payment.standby) {
-                detailsHTML += `
-                    <div class="payment-detail-row">
-                        <span>Standby Payment</span>
-                        <span>£${payment.standbyAmount.toFixed(2)}</span>
-                    </div>
-                `;
-            }
-
-            if (payment.workingAway) {
-                detailsHTML += `
-                    <div class="payment-detail-row">
-                        <span>Working Away Allowance</span>
-                        <span>✓</span>
-                    </div>
-                `;
-            }
-
-            if (payment.overtime) {
-                detailsHTML += `
-                    <div class="payment-detail-row">
-                        <span>Overtime (${payment.overtimeHours.toFixed(2)} hrs)</span>
-                        <span>£${payment.overtimeAmount.toFixed(2)}</span>
-                    </div>
-                    <div class="payment-detail-row">
-                        <span style="font-size: 0.85rem; color: var(--text-muted);">Reason: ${payment.overtimeReason}</span>
-                    </div>
-                `;
-            }
-
-            if (payment.jobs && payment.jobs.length > 0) {
-                detailsHTML += `
-                    <div class="payment-detail-row">
-                        <span>Jobs Carried Out</span>
-                        <span>${payment.jobs.length} job${payment.jobs.length !== 1 ? 's' : ''}</span>
-                    </div>
-                `;
-                payment.jobs.forEach((job, index) => {
-                    detailsHTML += `
-                        <div class="payment-detail-row" style="font-size: 0.85rem; color: var(--text-muted);">
-                            <span>Job ${index + 1}: ${job.jobNumber}</span>
-                            <span>${job.jobType} - ${job.postCode}</span>
-                        </div>
-                    `;
-                });
-            }
-
-            let notesHTML = '';
-            if (payment.notes && payment.notes.trim()) {
-                notesHTML = `
-                    <div class="payment-notes">
-                        <div class="payment-notes-title">📝 Additional Notes</div>
-                        <div class="payment-notes-text">${escapeHtml(payment.notes)}</div>
-                    </div>
-                `;
-            }
-
-            let changesLogHTML = '';
-            if (status === 'Approved with Changes' && payment.changesLog && payment.changesLog.length > 0) {
-                changesLogHTML = `
-                    <div class="changes-log">
-                        <div class="changes-log-title">Changes Made:</div>
-                        ${payment.changesLog.map(change => `
-                            <div class="changes-log-item">• ${change}</div>
-                        `).join('')}
-                        ${payment.originalAmount ? `
-                            <div class="changes-log-item" style="margin-top: 0.5rem; font-weight: 600;">
-                                Original amount: £${payment.originalAmount.toFixed(2)} → New amount: £${payment.totalAmount.toFixed(2)}
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            }
-
-            let denialReasonHTML = '';
-            if (status === 'Denied' && payment.denialReason) {
-                denialReasonHTML = `
-                    <div class="denial-reason">
-                        <div class="denial-reason-title">Reason for Denial:</div>
-                        <div class="denial-reason-text">${escapeHtml(payment.denialReason)}</div>
-                    </div>
-                `;
-            }
-
-            card.innerHTML = `
-                <div class="additional-payment-header">
-                    <span class="additional-payment-title">Additional Payment Submission</span>
-                    <span class="status-badge-payment ${statusBadgeClass}">${status}</span>
-                </div>
-                <div class="payment-details">
-                    ${detailsHTML}
-                    ${payment.totalAmount ? `
-                    <div class="payment-detail-row" style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 2px solid var(--border); font-weight: 700; color: var(--success);">
-                        <span>Total</span>
-                        <span>£${payment.totalAmount.toFixed(2)}</span>
-                    </div>
-                    ` : ''}
-                </div>
-                ${notesHTML}
-                ${changesLogHTML}
-                ${denialReasonHTML}
+        let detailsHTML = '';
+        if (payment.standby) detailsHTML += `<div class="payment-detail-row"><span>Standby Payment</span><span>£${payment.standbyAmount.toFixed(2)}</span></div>`;
+        if (payment.workingAway) detailsHTML += `<div class="payment-detail-row"><span>Working Away Allowance</span><span>✓</span></div>`;
+        if (payment.overtime) {
+            detailsHTML += `
+                <div class="payment-detail-row"><span>Overtime (${payment.overtimeHours.toFixed(2)} hrs)</span><span>£${payment.overtimeAmount.toFixed(2)}</span></div>
+                <div class="payment-detail-row"><span style="font-size:0.85rem;color:var(--text-muted);">Reason: ${payment.overtimeReason}</span></div>
             `;
-
-            return card;
         }
-
-        // Format date for display
-        function formatDateDisplay(dateStr) {
-            const [day, month, year] = dateStr.split('/');
-            const date = new Date(year, month - 1, day);
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            return date.toLocaleDateString('en-GB', options);
-        }
-
-        // Get status badge class
-        function getStatusClass(status) {
-            const statusLower = status.toLowerCase();
-            if (statusLower.includes('complete') || statusLower.includes('done')) {
-                return 'status-completed';
-            } else if (statusLower.includes('cancel') || statusLower.includes('failed')) {
-                return 'status-cancelled';
-            }
-            return 'status-pending';
-        }
-
-        // Escape HTML to prevent XSS
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text || '';
-            return div.innerHTML;
-        }
-
-        // Modal handlers
-        submitPaymentsBtn.addEventListener('click', () => {
-            paymentsModal.classList.add('show');
-            document.getElementById('paymentDate').valueAsDate = new Date();
-        });
-
-        closeModal.addEventListener('click', () => {
-            paymentsModal.classList.remove('show');
-            paymentsForm.reset();
-            document.getElementById('overtimeSection').classList.remove('show');
-            document.getElementById('jobsSection').classList.remove('show');
-            document.getElementById('jobsContainer').classList.remove('show');
-            document.getElementById('paymentSummary').classList.remove('show');
-        });
-
-        cancelPayment.addEventListener('click', () => {
-            paymentsModal.classList.remove('show');
-            paymentsForm.reset();
-            document.getElementById('overtimeSection').classList.remove('show');
-            document.getElementById('jobsSection').classList.remove('show');
-            document.getElementById('jobsContainer').classList.remove('show');
-            document.getElementById('paymentSummary').classList.remove('show');
-        });
-
-        // Overtime conditional
-        document.querySelectorAll('input[name="overtime"]').forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                const overtimeSection = document.getElementById('overtimeSection');
-                if (e.target.value === 'yes') {
-                    overtimeSection.classList.add('show');
-                } else {
-                    overtimeSection.classList.remove('show');
-                }
-                updatePaymentSummary();
+        if (payment.jobs && payment.jobs.length > 0) {
+            detailsHTML += `<div class="payment-detail-row"><span>Jobs Carried Out</span><span>${payment.jobs.length} job${payment.jobs.length !== 1 ? 's' : ''}</span></div>`;
+            payment.jobs.forEach((job, i) => {
+                detailsHTML += `<div class="payment-detail-row" style="font-size:0.85rem;color:var(--text-muted);"><span>Job ${i+1}: ${job.jobNumber}</span><span>${job.jobType} – ${job.postCode}</span></div>`;
             });
+        }
+
+        const notesHTML = (payment.notes && payment.notes.trim()) ? `
+            <div class="payment-notes">
+                <div class="payment-notes-title">📝 Additional Notes</div>
+                <div class="payment-notes-text">${escapeHtml(payment.notes)}</div>
+            </div>` : '';
+
+        const changesHTML = (status === 'Approved with Changes' && payment.changesLog && payment.changesLog.length > 0) ? `
+            <div class="changes-log">
+                <div class="changes-log-title">Changes Made:</div>
+                ${payment.changesLog.map(c => `<div class="changes-log-item">• ${c}</div>`).join('')}
+                ${payment.originalAmount ? `<div class="changes-log-item" style="margin-top:0.5rem;font-weight:600;">Original: £${payment.originalAmount.toFixed(2)} → New: £${payment.totalAmount.toFixed(2)}</div>` : ''}
+            </div>` : '';
+
+        const denialHTML = (status === 'Denied' && payment.denialReason) ? `
+            <div class="denial-reason">
+                <div class="denial-reason-title">Reason for Denial:</div>
+                <div class="denial-reason-text">${escapeHtml(payment.denialReason)}</div>
+            </div>` : '';
+
+        card.innerHTML = `
+            <div class="additional-payment-header">
+                <span class="additional-payment-title">Additional Payment Submission</span>
+                <span class="status-badge-payment ${badgeClass}">${status}</span>
+            </div>
+            <div class="payment-details">
+                ${detailsHTML}
+                ${payment.totalAmount ? `<div class="payment-detail-row" style="margin-top:0.75rem;padding-top:0.75rem;border-top:2px solid var(--border);font-weight:700;color:var(--success);"><span>Total</span><span>£${payment.totalAmount.toFixed(2)}</span></div>` : ''}
+            </div>
+            ${notesHTML}${changesHTML}${denialHTML}
+        `;
+        return card;
+    }
+
+    // ── Payments Modal ─────────────────────────────────────────────────────────
+    function resetModal() {
+        paymentsForm.reset();
+        document.getElementById('overtimeSection').classList.remove('show');
+        document.getElementById('jobsSection').classList.remove('show');
+        document.getElementById('jobsContainer').classList.remove('show');
+        document.getElementById('paymentSummary').classList.remove('show');
+    }
+
+    submitPaymentsBtn.addEventListener('click', () => {
+        paymentsModal.classList.add('show');
+        document.getElementById('paymentDate').valueAsDate = new Date();
+    });
+    closeModal.addEventListener('click',    () => { paymentsModal.classList.remove('show'); resetModal(); });
+    cancelPayment.addEventListener('click', () => { paymentsModal.classList.remove('show'); resetModal(); });
+
+    document.querySelectorAll('input[name="overtime"]').forEach(r => {
+        r.addEventListener('change', e => {
+            document.getElementById('overtimeSection').classList.toggle('show', e.target.value === 'yes');
+            updatePaymentSummary();
         });
+    });
 
-        // Jobs conditional
-        document.querySelectorAll('input[name="jobs"]').forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                const jobsSection = document.getElementById('jobsSection');
-                if (e.target.value === 'yes') {
-                    jobsSection.classList.add('show');
-                    generateJobInputs();
-                } else {
-                    jobsSection.classList.remove('show');
-                }
-            });
+    document.querySelectorAll('input[name="jobs"]').forEach(r => {
+        r.addEventListener('change', e => {
+            document.getElementById('jobsSection').classList.toggle('show', e.target.value === 'yes');
+            if (e.target.value === 'yes') generateJobInputs();
         });
+    });
 
-        // Number of jobs change
-        document.getElementById('numJobs').addEventListener('change', generateJobInputs);
+    document.getElementById('numJobs').addEventListener('change', generateJobInputs);
 
-        // Generate job input fields
-        function generateJobInputs() {
-            const numJobs = parseInt(document.getElementById('numJobs').value);
-            const container = document.getElementById('jobsContainer');
-            container.innerHTML = '';
-            container.classList.add('show');
-
-            for (let i = 1; i <= numJobs; i++) {
-                const jobEntry = document.createElement('div');
-                jobEntry.className = 'job-entry';
-                jobEntry.innerHTML = `
+    function generateJobInputs() {
+        const num       = parseInt(document.getElementById('numJobs').value);
+        const container = document.getElementById('jobsContainer');
+        container.innerHTML = '';
+        container.classList.add('show');
+        for (let i = 1; i <= num; i++) {
+            container.innerHTML += `
+                <div class="job-entry">
                     <div class="job-entry-header">Job ${i}</div>
                     <div class="job-inputs">
-                        <div class="form-group" style="margin-bottom: 0.75rem;">
-                            <label style="font-size: 0.85rem;">Job Number</label>
-                            <input type="text" class="job-number" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0.75rem;">
-                            <label style="font-size: 0.85rem;">Post Code</label>
-                            <input type="text" class="job-postcode" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label style="font-size: 0.85rem;">Job Type</label>
+                        <div class="form-group" style="margin-bottom:0.75rem;"><label style="font-size:0.85rem;">Job Number</label><input type="text" class="job-number" required></div>
+                        <div class="form-group" style="margin-bottom:0.75rem;"><label style="font-size:0.85rem;">Post Code</label><input type="text" class="job-postcode" required></div>
+                        <div class="form-group" style="margin-bottom:0;"><label style="font-size:0.85rem;">Job Type</label>
                             <select class="job-type" required>
                                 <option value="">Select type</option>
                                 <option value="Dual">Dual</option>
@@ -2352,176 +1431,131 @@
                             </select>
                         </div>
                     </div>
-                `;
-                container.appendChild(jobEntry);
+                </div>`;
+        }
+    }
+
+    document.querySelectorAll('input[name="standby"], input[name="workingAway"]').forEach(r => r.addEventListener('change', updatePaymentSummary));
+    document.getElementById('overtimeStart').addEventListener('change', updatePaymentSummary);
+    document.getElementById('overtimeEnd').addEventListener('change', updatePaymentSummary);
+    document.getElementById('paymentDate').addEventListener('change', updatePaymentSummary);
+
+    function updatePaymentSummary() {
+        const paymentDate = document.getElementById('paymentDate').value;
+        if (!paymentDate) return;
+
+        const dow = new Date(paymentDate).getDay();
+        let total = 0, html = '<div class="payment-summary-title">Payment Summary</div>';
+
+        if (document.querySelector('input[name="standby"]:checked').value === 'yes') {
+            const amt = (dow === 0 || dow === 6) ? 100 : 20;
+            html  += `<div class="payment-line"><span>Standby (${dow === 0 || dow === 6 ? 'Weekend' : 'Weekday'})</span><span>£${amt.toFixed(2)}</span></div>`;
+            total += amt;
+        }
+        if (document.querySelector('input[name="workingAway"]:checked').value === 'yes') {
+            html += `<div class="payment-line"><span>Working Away Allowance</span><span>TBD</span></div>`;
+        }
+        if (document.querySelector('input[name="overtime"]:checked').value === 'yes') {
+            const start = document.getElementById('overtimeStart').value;
+            const end   = document.getElementById('overtimeEnd').value;
+            if (start && end) {
+                const hrs  = calcHours(start, end);
+                const rate = dow === 0 ? 37.50 : dow === 6 ? 28.13 : 24.94;
+                const amt  = hrs * rate;
+                const day  = dow === 0 ? 'Sunday' : dow === 6 ? 'Saturday' : 'Weekday';
+                html  += `<div class="payment-line"><span>Overtime (${hrs.toFixed(2)} hrs @ £${rate} – ${day})</span><span>£${amt.toFixed(2)}</span></div>`;
+                total += amt;
             }
         }
 
-        // Update payment summary
-        document.querySelectorAll('input[name="standby"], input[name="workingAway"]').forEach(radio => {
-            radio.addEventListener('change', updatePaymentSummary);
-        });
+        if (total > 0) {
+            html += `<div class="payment-line total"><span>Total</span><span>£${total.toFixed(2)}</span></div>`;
+            document.getElementById('paymentSummary').innerHTML = html;
+            document.getElementById('paymentSummary').classList.add('show');
+        } else {
+            document.getElementById('paymentSummary').classList.remove('show');
+        }
+    }
 
-        document.getElementById('overtimeStart').addEventListener('change', updatePaymentSummary);
-        document.getElementById('overtimeEnd').addEventListener('change', updatePaymentSummary);
-        document.getElementById('paymentDate').addEventListener('change', updatePaymentSummary);
+    function calcHours(start, end) {
+        const [sh, sm] = start.split(':').map(Number);
+        const [eh, em] = end.split(':').map(Number);
+        let startMins = sh * 60 + sm;
+        let endMins   = eh * 60 + em;
+        if (endMins < startMins) endMins += 24 * 60;
+        return (endMins - startMins) / 60;
+    }
 
-        function updatePaymentSummary() {
-            const paymentDate = document.getElementById('paymentDate').value;
-            if (!paymentDate) return;
+    // ── Submit Payment ─────────────────────────────────────────────────────────
+    paymentsForm.addEventListener('submit', async e => {
+        e.preventDefault();
 
-            const date = new Date(paymentDate);
-            const dayOfWeek = date.getDay();
+        const paymentDate = document.getElementById('paymentDate').value;
+        const date        = new Date(paymentDate);
+        const dow         = date.getDay();
+        const [y, m, d]   = paymentDate.split('-');
+        const ukDate      = `${d}/${m}/${y}`;
 
-            let total = 0;
-            let summaryHTML = '<div class="payment-summary-title">Payment Summary</div>';
+        const paymentData = {
+            engineerName:   currentUser.name,
+            paymentDate:    ukDate,
+            submissionDate: paymentDate,
+            standby:     document.querySelector('input[name="standby"]:checked').value   === 'yes',
+            workingAway: document.querySelector('input[name="workingAway"]:checked').value === 'yes',
+            overtime:    document.querySelector('input[name="overtime"]:checked').value  === 'yes',
+            status:      'Awaiting Approval',
+            timestamp:   serverTimestamp()
+        };
 
-            const standby = document.querySelector('input[name="standby"]:checked').value === 'yes';
-            if (standby) {
-                const standbyAmount = (dayOfWeek === 0 || dayOfWeek === 6) ? 100 : 20;
-                summaryHTML += `<div class="payment-line"><span>Standby (${dayOfWeek === 0 || dayOfWeek === 6 ? 'Weekend' : 'Weekday'})</span><span>£${standbyAmount.toFixed(2)}</span></div>`;
-                total += standbyAmount;
-            }
+        const notes = document.getElementById('paymentNotes').value.trim();
+        if (notes) paymentData.notes = notes;
 
-            const workingAway = document.querySelector('input[name="workingAway"]:checked').value === 'yes';
-            if (workingAway) {
-                summaryHTML += `<div class="payment-line"><span>Working Away Allowance</span><span>TBD</span></div>`;
-            }
+        let total = 0;
 
-            const overtime = document.querySelector('input[name="overtime"]:checked').value === 'yes';
-            if (overtime) {
-                const startTime = document.getElementById('overtimeStart').value;
-                const endTime = document.getElementById('overtimeEnd').value;
-
-                if (startTime && endTime) {
-                    const hours = calculateHoursDifference(startTime, endTime);
-                    let rate = 24.94;
-                    if (dayOfWeek === 6) rate = 28.13;
-                    if (dayOfWeek === 0) rate = 37.50;
-
-                    const overtimeAmount = hours * rate;
-                    const dayName = dayOfWeek === 0 ? 'Sunday' : dayOfWeek === 6 ? 'Saturday' : 'Weekday';
-                    summaryHTML += `<div class="payment-line"><span>Overtime (${hours.toFixed(2)} hrs @ £${rate} - ${dayName})</span><span>£${overtimeAmount.toFixed(2)}</span></div>`;
-                    total += overtimeAmount;
-                }
-            }
-
-            if (total > 0) {
-                summaryHTML += `<div class="payment-line total"><span>Total</span><span>£${total.toFixed(2)}</span></div>`;
-                document.getElementById('paymentSummary').innerHTML = summaryHTML;
-                document.getElementById('paymentSummary').classList.add('show');
-            } else {
-                document.getElementById('paymentSummary').classList.remove('show');
-            }
+        if (paymentData.standby) {
+            paymentData.standbyAmount = (dow === 0 || dow === 6) ? 100 : 20;
+            total += paymentData.standbyAmount;
         }
 
-        function calculateHoursDifference(start, end) {
-            const [startHours, startMinutes] = start.split(':').map(Number);
-            const [endHours, endMinutes] = end.split(':').map(Number);
-            
-            const startTotal = startHours * 60 + startMinutes;
-            let endTotal = endHours * 60 + endMinutes;
-            
-            if (endTotal < startTotal) {
-                endTotal += 24 * 60;
-            }
-            
-            return (endTotal - startTotal) / 60;
+        if (paymentData.overtime) {
+            const start  = document.getElementById('overtimeStart').value;
+            const end    = document.getElementById('overtimeEnd').value;
+            const reason = document.getElementById('overtimeReason').value;
+            const hrs    = calcHours(start, end);
+            const rate   = dow === 0 ? 37.50 : dow === 6 ? 28.13 : 24.94;
+
+            Object.assign(paymentData, {
+                overtimeStart:  start,
+                overtimeEnd:    end,
+                overtimeReason: reason,
+                overtimeHours:  hrs,
+                overtimeRate:   rate,
+                overtimeAmount: hrs * rate
+            });
+            total += paymentData.overtimeAmount;
         }
 
-        // Submit payment form
-        paymentsForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        if (document.querySelector('input[name="jobs"]:checked').value === 'yes') {
+            paymentData.jobs = Array.from(document.querySelectorAll('.job-entry')).map(entry => ({
+                jobNumber: entry.querySelector('.job-number').value,
+                postCode:  entry.querySelector('.job-postcode').value,
+                jobType:   entry.querySelector('.job-type').value
+            }));
+        }
 
-            const paymentDate = document.getElementById('paymentDate').value;
-            const date = new Date(paymentDate);
-            const dayOfWeek = date.getDay();
+        paymentData.totalAmount = total;
 
-            const [year, month, day] = paymentDate.split('-');
-            const ukFormattedDate = `${day}/${month}/${year}`;
-
-            const paymentData = {
-                engineerName: currentUser.name,
-                paymentDate: ukFormattedDate,
-                submissionDate: paymentDate,
-                standby: document.querySelector('input[name="standby"]:checked').value === 'yes',
-                workingAway: document.querySelector('input[name="workingAway"]:checked').value === 'yes',
-                overtime: document.querySelector('input[name="overtime"]:checked').value === 'yes',
-                status: 'Awaiting Approval',
-                timestamp: serverTimestamp()
-            };
-
-            // Add notes if provided
-            const notes = document.getElementById('paymentNotes').value.trim();
-            if (notes) {
-                paymentData.notes = notes;
-            }
-
-            let totalAmount = 0;
-
-            if (paymentData.standby) {
-                paymentData.standbyAmount = (dayOfWeek === 0 || dayOfWeek === 6) ? 100 : 20;
-                totalAmount += paymentData.standbyAmount;
-            }
-
-            if (paymentData.overtime) {
-                const startTime = document.getElementById('overtimeStart').value;
-                const endTime = document.getElementById('overtimeEnd').value;
-                const reason = document.getElementById('overtimeReason').value;
-
-                const hours = calculateHoursDifference(startTime, endTime);
-                let rate = 24.94;
-                if (dayOfWeek === 6) rate = 28.13;
-                if (dayOfWeek === 0) rate = 37.50;
-
-                paymentData.overtimeStart = startTime;
-                paymentData.overtimeEnd = endTime;
-                paymentData.overtimeReason = reason;
-                paymentData.overtimeHours = hours;
-                paymentData.overtimeRate = rate;
-                paymentData.overtimeAmount = hours * rate;
-                totalAmount += paymentData.overtimeAmount;
-            }
-
-            const hasJobs = document.querySelector('input[name="jobs"]:checked').value === 'yes';
-            if (hasJobs) {
-                const jobs = [];
-                const jobEntries = document.querySelectorAll('.job-entry');
-                
-                jobEntries.forEach((entry, index) => {
-                    jobs.push({
-                        jobNumber: entry.querySelector('.job-number').value,
-                        postCode: entry.querySelector('.job-postcode').value,
-                        jobType: entry.querySelector('.job-type').value
-                    });
-                });
-
-                paymentData.jobs = jobs;
-            }
-
-            paymentData.totalAmount = totalAmount;
-
-            try {
-                const paymentsCollection = collection(db, 'SP Additional Payment');
-                await addDoc(paymentsCollection, paymentData);
-
-                alert('Additional payment submitted successfully!');
-                paymentsModal.classList.remove('show');
-                paymentsForm.reset();
-                document.getElementById('overtimeSection').classList.remove('show');
-                document.getElementById('jobsSection').classList.remove('show');
-                document.getElementById('jobsContainer').classList.remove('show');
-                document.getElementById('paymentSummary').classList.remove('show');
-
-                if (resultsSection.classList.contains('show')) {
-                    showBreakdownBtn.click();
-                }
-
-            } catch (error) {
-                console.error('Error submitting payment:', error);
-                alert('Error submitting payment. Please try again.');
-            }
-        });
-    </script>
+        try {
+            await addDoc(collection(db, 'SP Additional Payment'), paymentData);
+            alert('Additional payment submitted successfully!');
+            paymentsModal.classList.remove('show');
+            resetModal();
+            if (resultsSection.classList.contains('show')) showBreakdownBtn.click();
+        } catch (err) {
+            console.error(err);
+            alert('Error submitting payment. Please try again.');
+        }
+    });
+</script>
 </body>
 </html>
