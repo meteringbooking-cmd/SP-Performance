@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Jobs Completed • OES</title>
+  <title>Jobs Completed • SP</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
@@ -291,7 +291,7 @@
 
 <!-- ── SIDEBAR ── -->
 <aside>
-  <div class="logo">OES</div>
+  <div class="logo">SP</div>
   <div class="logo-sub">Jobs Completed</div>
 
   <div class="sidebar-section-title">Time Period</div>
@@ -624,9 +624,9 @@ function drawChart(data) {
         tooltip: {
           callbacks: {
             afterBody: (items) => {
-              const total = items[0]?.raw || 0;
-              const done  = items[1]?.raw || 0;
-              const pct   = total > 0 ? ((done/total)*100).toFixed(1) : 0;
+              const total = items.find(i => i.dataset.label === 'Total Jobs')?.raw || 0;
+              const done  = items.find(i => i.dataset.label === 'Completed')?.raw || 0;
+              const pct   = total > 0 ? ((done / total) * 100).toFixed(1) : 0;
               return [`Completion: ${pct}%`];
             }
           }
