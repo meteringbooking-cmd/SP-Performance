@@ -444,13 +444,15 @@ async function fetchJobs() {
   return snap.docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
-// ── Determine if a job is "completed" ────────────────────────────────────
-// Adjust this logic to match your actual jobStatus / outcomeResource values
+// ── Only count jobs where jobStatus is "Completed" or "Full Abort" ─────────
+function isCountable(job) {
+  const status = (job.jobStatus || '').trim().toLowerCase();
+  return status === 'completed' || status === 'full abort';
+}
+
+// ── A job is "completed" (green bar) only if status is "Completed" ────────
 function isCompleted(job) {
-  const status  = (job.jobStatus || '').toLowerCase();
-  const outcome = (job.outcomeResource || '').toLowerCase();
-  return status.includes('complet') || outcome.includes('complet') ||
-         status === 'done' || status === 'closed' || outcome === 'done';
+  return (job.jobStatus || '').trim().toLowerCase() === 'completed';
 }
 
 // ── Get team leader for a job ─────────────────────────────────────────────
@@ -510,7 +512,7 @@ function aggregateForChart(jobs) {
     }
     jobs.forEach(j => {
       const k = (j.submissionDate || '').substring(0, 7);
-      if (map[k]) { map[k].total++; if (isCompleted(j)) map[k].completed++; }
+      if (map[k]) { if (isCountable(j)) { map[k].total++; if (isCompleted(j)) map[k].completed++; } }
     });
     return {
       labels:    keys.map(k => map[k].label),
@@ -535,7 +537,7 @@ function aggregateForChart(jobs) {
       // find closest week start
       let best = keys[0];
       for (const k of keys) { if (k <= j.submissionDate) best = k; else break; }
-      if (map[best]) { map[best].total++; if (isCompleted(j)) map[best].completed++; }
+      if (map[best]) { if (isCountable(j)) { map[best].total++; if (isCompleted(j)) map[best].completed++; } }
     });
     return {
       labels:    keys.map(k => map[k].label),
@@ -556,8 +558,7 @@ function aggregateForChart(jobs) {
   days.forEach(d => map[d] = { total: 0, completed: 0 });
   jobs.forEach(j => {
     if (map[j.submissionDate]) {
-      map[j.submissionDate].total++;
-      if (isCompleted(j)) map[j.submissionDate].completed++;
+      if (isCountable(j)) { map[j.submissionDate].total++; if (isCompleted(j)) map[j.submissionDate].completed++; }
     }
   });
   return {
@@ -661,8 +662,7 @@ function buildBreakdown(jobs) {
   jobs.forEach(j => {
     const eng = (j.outcomeResource || 'Unknown').trim();
     if (!byEngineer[eng]) byEngineer[eng] = { total: 0, completed: 0, types: new Set() };
-    byEngineer[eng].total++;
-    if (isCompleted(j)) byEngineer[eng].completed++;
+    if (isCountable(j)) { byEngineer[eng].total++; if (isCompleted(j)) byEngineer[eng].completed++; }
     if (j.jobType) byEngineer[eng].types.add(j.jobType);
   });
 
@@ -693,7 +693,7 @@ function buildBreakdown(jobs) {
 
 // ── Update stats bar ──────────────────────────────────────────────────────
 function updateStats(jobs) {
-  const total     = jobs.length;
+  const total     = jobs.filter(isCountable).length;
   const completed = jobs.filter(isCompleted).length;
   const pct       = total > 0 ? ((completed/total)*100).toFixed(1) : 0;
   const engineers = new Set(jobs.map(j => j.outcomeResource).filter(Boolean)).size;
