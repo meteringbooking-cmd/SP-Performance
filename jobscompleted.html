@@ -464,6 +464,9 @@ function getTeamLeader(job) {
 // ── Filter jobs by current team + job type ────────────────────────────────
 function filterJobs(jobs) {
   return jobs.filter(job => {
+    // Only include jobs where the engineer exists in SP - Teams
+    const eng = (job.outcomeResource || '').trim().toLowerCase();
+    if (!teamMap[eng]) return false;
     // Team filter
     if (currentTeam !== 'all') {
       const tl = getTeamLeader(job);
