@@ -109,6 +109,58 @@
       font-style: italic;
     }
 
+    .team-btn-wrap { position: relative; }
+
+    .team-btn .tl-chevron {
+      float: right;
+      font-size: 0.7rem;
+      transition: transform 0.22s;
+      color: rgba(255,255,255,0.5);
+      margin-top: 2px;
+    }
+    .team-btn.active .tl-chevron { color: white; }
+    .team-btn.expanded .tl-chevron { transform: rotate(180deg); }
+
+    .engineer-list {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      margin-left: 0.5rem;
+    }
+    .engineer-list.open { max-height: 600px; }
+
+    .eng-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.55rem 0.9rem;
+      margin: 0.2rem 0;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      color: var(--text-dim);
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 0.82rem;
+      font-family: inherit;
+    }
+    .eng-btn:hover { background: rgba(16,185,129,0.07); color: var(--text); border-color: rgba(16,185,129,0.3); }
+    .eng-btn.active { background: rgba(16,185,129,0.15); color: white; border-color: var(--accent); font-weight: 600; }
+
+    .eng-pct {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.1rem 0.45rem;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.08);
+      color: var(--text-dim);
+      flex-shrink: 0;
+      margin-left: 0.4rem;
+    }
+    .eng-btn.active .eng-pct { background: rgba(16,185,129,0.25); color: var(--accent); }
+
     /* ── MAIN ── */
     main { padding: 2.5rem 3rem; overflow-y: auto; }
 
@@ -374,12 +426,14 @@ const app = initializeApp({
 const db = getFirestore(app);
 
 // ── State ─────────────────────────────────────────────────────────────────
-let currentPeriod  = '7days';
-let currentTeam    = 'all';
-let currentJobType = 'all';
-let teamMap        = {}; // engineerName (lower) → teamLeader
-let allTeamLeaders = [];
-let chart          = null;
+let currentPeriod   = '7days';
+let currentTeam     = 'all';
+let currentJobType  = 'all';
+let currentEngineer = 'all';
+let teamMap         = {}; // engineerName (lower) → teamLeader
+let engineerDisplayMap = {}; // engineerName (lower) → original case
+let allTeamLeaders  = [];
+let chart           = null;
 const canvas       = document.createElement('canvas');
 document.getElementById('chartContainer').appendChild(canvas);
 
@@ -399,7 +453,9 @@ async function loadTeamLeaders() {
     snap.docs.forEach(d => {
       const data = d.data();
       if (data.engineerName && data.teamLeader) {
-        teamMap[data.engineerName.trim().toLowerCase()] = data.teamLeader.trim();
+        const key = data.engineerName.trim().toLowerCase();
+        teamMap[key] = data.teamLeader.trim();
+        engineerDisplayMap[key] = data.engineerName.trim();
         leaders.add(data.teamLeader.trim());
       }
     });
@@ -412,16 +468,99 @@ async function loadTeamLeaders() {
 
 function renderTeamButtons() {
   const container = document.getElementById('teamLeaderBtns');
-  container.innerHTML = allTeamLeaders.map(tl =>
-    `<button class="team-btn" data-team="${esc(tl)}">${esc(tl)}</button>`
-  ).join('');
+
+  // Group engineers by team leader
+  const byLeader = {};
+  Object.entries(teamMap).forEach(([engLower, tl]) => {
+    if (!byLeader[tl]) byLeader[tl] = [];
+    // find display name (original case) from engineerDisplayMap
+    byLeader[tl].push(engineerDisplayMap[engLower] || engLower);
+  });
+
+  container.innerHTML = allTeamLeaders.map(tl => {
+    const engineers = (byLeader[tl] || []).sort();
+    return `<div class="team-btn-wrap">
+      <button class="team-btn" data-team="${esc(tl)}">
+        ${esc(tl)}<span class="tl-chevron">▼</span>
+      </button>
+      <div class="engineer-list" id="englist-${esc(tl.replace(/\s+/g,'-'))}">
+        ${engineers.map(eng => `
+          <button class="eng-btn" data-engineer="${esc(eng)}" data-team="${esc(tl)}">
+            <span class="eng-name">${esc(eng)}</span>
+            <span class="eng-pct" id="engpct-${esc(eng.replace(/\s+/g,'-'))}">—</span>
+          </button>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Team leader click — expand/collapse engineers + filter
   container.querySelectorAll('.team-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.team-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentTeam = btn.dataset.team;
+      const tl      = btn.dataset.team;
+      const listId  = 'englist-' + tl.replace(/\s+/g,'-');
+      const list    = document.getElementById(listId);
+      const isOpen  = list.classList.contains('open');
+
+      // If clicking already-active TL, collapse and go to all
+      if (currentTeam === tl && isOpen) {
+        list.classList.remove('open');
+        btn.classList.remove('expanded');
+        document.querySelectorAll('.team-btn, .eng-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.team-btn[data-team="all"]').classList.add('active');
+        currentTeam     = 'all';
+        currentEngineer = 'all';
+        refresh();
+        return;
+      }
+
+      // Close all other lists
+      container.querySelectorAll('.engineer-list').forEach(l => l.classList.remove('open'));
+      container.querySelectorAll('.team-btn').forEach(b => b.classList.remove('active','expanded'));
+      container.querySelectorAll('.eng-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.team-btn[data-team="all"]').classList.remove('active');
+
+      // Open this list
+      list.classList.add('open');
+      btn.classList.add('active','expanded');
+      currentTeam     = tl;
+      currentEngineer = 'all';
       refresh();
     });
+  });
+
+  // Engineer click — filter to individual
+  container.querySelectorAll('.eng-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      container.querySelectorAll('.eng-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentTeam     = btn.dataset.team;
+      currentEngineer = btn.dataset.engineer;
+      // keep parent TL active too
+      container.querySelectorAll('.team-btn').forEach(b => b.classList.remove('active'));
+      container.querySelector(`.team-btn[data-team="${CSS.escape(btn.dataset.team)}"]`)?.classList.add('active');
+      refresh();
+    });
+  });
+}
+
+function updateEngineerBadges(jobs) {
+  // Calculate pct per engineer and update badges in sidebar
+  const byEng = {};
+  jobs.forEach(j => {
+    const eng = (j.outcomeResource || '').trim();
+    if (!eng) return;
+    if (!byEng[eng]) byEng[eng] = { total: 0, completed: 0 };
+    if (isCountable(j)) { byEng[eng].total++; if (isCompleted(j)) byEng[eng].completed++; }
+  });
+  Object.entries(byEng).forEach(([eng, d]) => {
+    const id  = 'engpct-' + eng.replace(/\s+/g,'-');
+    const el  = document.getElementById(id);
+    if (!el) return;
+    const pct = d.total > 0 ? Math.round((d.completed/d.total)*100) : 0;
+    el.textContent = pct + '%';
+    el.style.background = pct >= 80 ? 'rgba(16,185,129,0.25)' : pct >= 50 ? 'rgba(245,158,11,0.2)' : 'rgba(248,113,113,0.2)';
+    el.style.color = pct >= 80 ? '#34d399' : pct >= 50 ? '#fbbf24' : '#f87171';
   });
 }
 
@@ -471,6 +610,11 @@ function filterJobs(jobs) {
     if (currentTeam !== 'all') {
       const tl = getTeamLeader(job);
       if (!tl || tl !== currentTeam) return false;
+    }
+    // Engineer filter
+    if (currentEngineer !== 'all') {
+      const jobEng = (job.outcomeResource || '').trim();
+      if (jobEng !== currentEngineer) return false;
     }
     // Job type filter
     if (currentJobType !== 'all') {
@@ -739,6 +883,14 @@ async function refresh() {
     updateStats(filtered);
     drawChart(chartData);
     buildBreakdown(filtered);
+    // Update engineer % badges in sidebar using team-filtered (not engineer-filtered) jobs
+    const teamFiltered = rawJobs.filter(job => {
+      const eng = (job.outcomeResource || '').trim().toLowerCase();
+      if (!teamMap[eng]) return false;
+      if (currentTeam !== 'all') { const tl = getTeamLeader(job); if (!tl || tl !== currentTeam) return false; }
+      return true;
+    });
+    updateEngineerBadges(teamFiltered);
   } catch(e) {
     console.error(e);
     container.querySelectorAll('.overlay').forEach(el => el.remove());
@@ -761,9 +913,11 @@ document.querySelectorAll('.period-btn').forEach(btn => {
 
 // ── All teams button ───────────────────────────────────────────────────────
 document.querySelector('.team-btn[data-team="all"]').addEventListener('click', function() {
-  document.querySelectorAll('.team-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.team-btn, .eng-btn').forEach(b => b.classList.remove('active','expanded'));
+  document.querySelectorAll('.engineer-list').forEach(l => l.classList.remove('open'));
   this.classList.add('active');
-  currentTeam = 'all';
+  currentTeam     = 'all';
+  currentEngineer = 'all';
   refresh();
 });
 
