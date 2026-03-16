@@ -607,79 +607,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Job Points Mapping
-        const JOB_POINTS = {
-            'SX1-1 - Electricity Meter Multi Rate': 2,
-            'SX1-1 - Electricity Meter Exchange  Legacy to Smart': 1.5,
-            'SX1-2 - Gas Meter Exchange  Legacy to Smart': 1.5,
-            'SX1-3 -Dual Fuel Multi Rate': 2,
-            'SX1-3 - Dual Fuel Exchange  Legacy to Smart': 2,
-            'SR1-1 - Remove Metering System (Electricity)': 1.5,
-            'SR1-2 - Remove Metering System (Gas)': 1.5,
-            'SR1-3 - Remove Metering System (Dual Fuel)': 2,
-            'SD1-1 - Remove Metering System (Electricity) and replace with Dumb Meter': 1.5,
-            'SD1-2 - Remove Metering System (Gas) and replace with Dumb Meter': 1.5,
-            'SD1-3 - Remove Metering System (Dual Fuel) and replace with Dumb Meter': 2,
-            'SI1-1 - Install New Electricity Metering System New Connection': 1.5,
-            'SI1-2 - Install New Gas Metering System New Connection': 1.5,
-            'SI1-3 - Install New Dual Fuel Metering System New Connection': 2,
-            'SM1-1 - Investigate Smart Metering System Fault  Electricity': 1,
-            'SM1-2 - Investigate Smart Metering System Fault  Gas': 1,
-            'SM1-3 - Investigate Smart Metering System Fault  Dual Fuel': 1,
-            'SM1-CH - Replace Communications Hub': 1,
-            'SE1-1 - Investigate Smart Metering System Fault  Electricity': 1,
-            'SE1-2 - Investigate Smart Metering System Fault  Gas': 1,
-            'SE1-3 - Investigate Smart Metering System Fault – Dual Fuel': 1,
-            'SM1-IH - Replace IHD': 1,
-            'SX1-1-SS - Electricity Meter Exchange  Smart to Smart': 1.5,
-            'SX1-2-SS - Gas Meter Exchange  Smart to Smart': 1.5,
-            'SX1-3-SS - Dual Fuel Exchange  Smart to Smart': 2,
-            'MIS-PP - Install PPMID': 1,
-            'SX1 - D2S CR Elec Twin Element': 2,
-            'SX1 - D2S CR Elec 3PH': 2,
-            'SX1 - D2S CR Elec Single Element with ALCS': 2,
-            'SX1 - D2S CR Elec 3PH with ALCS': 2,
-            'SX1 - D2S PP Elec Twin Element': 2,
-            'SX1 - D2S PP Elec 3PH': 2,
-            'SX1 - D2S PP Elec Single Element with ALCS': 2,
-            'SX1 - D2S PP Elec 3PH with ALCS': 2,
-            'SX1 - D2S DS Elec CR Twin Element, Gas CR': 2,
-            'SX1 - D2S DS Elec CR 3PH, Gas CR': 2.5,
-            'SX1 - D2S DS Elec CR Single Element with ALCS, Gas CR': 2,
-            'SX1 - D2S DS Elec CR 3PH with ALCS, Gas CR': 2.5,
-            'SX1 - D2S DS Elec CR Twin Element, Gas PP': 2,
-            'SX1 - D2S DS Elec CR 3PH, Gas PP': 2.5,
-            'SX1 - D2S DS Elec CR Single Element with ALCS, Gas PP': 2,
-            'SX1 - D2S DS Elec CR 3PH with ALCS, Gas PP': 2.5,
-            'SX1 - D2S DS Elec PP Twin Element, Gas CR': 2,
-            'SX1 - D2S DS Elec PP 3PH, Gas CR': 2.5,
-            'SX1 - D2S DS Elec PP Single Element with ALCS, Gas CR': 2,
-            'SX1 - D2S DS Elec PP 3PH with ALCS, Gas CR': 2.5,
-            'SX1 - D2S DS Elec PP Twin Element, Gas PP': 2,
-            'SX1 - D2S DS Elec PP 3PH, Gas PP': 2.5,
-            'SX1 - D2S DS Elec PP Single Element with ALCS, Gas PP': 2,
-            'SX1 - D2S DS Elec PP 3PH with ALCS, Gas PP': 2.5,
-            'G4 - Exchange Metering System - like for like - Credit < 11 scmh': 1.5,
-            'E9 - Miscellaneous Site Visit - PrePayment Key/Card Meter': 1,
-            'E20 - Install Isolator Switch - Seperate Visit - Single Phase': 1,
-            'E9 - Miscellaneous Site Visit - Single Phase': 1,
-            'E23 - Service Engineer Hire - Half Day': 3.5,
-            'E24 - Service Engineer Hire - Full Day': 7,
-            'E13 - Remove Metering System - Single Phase': 1.5,
-            'E8 - Investigate Metering System Fault - Supply Not Interrupted - Single Phase': 1,
-            'G25 - Service Provider Service Engineer Hire - AM Hire': 3.5,
-            'G16 - Remove Metering System - Credit < 11 scmh': 1.5,
-            'E9 - Miscellaneous Site Visit - PolyPhase': 1,
-            'G31 - Miscellaneous - Group 2 - Credit < 11 scmh': 1.5,
-            'G16 - Remove Metering System - Prepayment': 1.5,
-            'E12 - Relocate Metering System - Single Phase': 1.5,
-            'E20 - Install Isolator Switch - Seperate Visit - PolyPhase': 1,
-            'Non Chargeable': 1.5,
-            'BAU Smart': 1,
-            'E7 - Investigate Metering System Fault - Supply Interrupted - Single Phase': 1,
-            'G21 - Callout  Customer with Credit Metering System - Gas Off - Call Out Faulty Credit Meter - Gas Off': 1
-        };
-
         const BONUS_THRESHOLD = 6;
         const BONUS_RATE = 20;
 
@@ -723,7 +650,7 @@
             try {
                 const payments = await fetchPayments();
                 const sureserveData = await fetchSureserveData();
-                
+
                 currentPaymentsData = payments;
                 currentSureserveData = sureserveData;
 
@@ -761,7 +688,7 @@
                 if (isDateInRange(data.dateOfAppointment, startDate, endDate)) {
                     const engineer = data.resource;
                     const date = data.dateOfAppointment;
-                    
+
                     if (!dataByEngineerAndDate[engineer]) {
                         dataByEngineerAndDate[engineer] = {};
                     }
@@ -785,7 +712,7 @@
             try {
                 let payments = currentPaymentsData;
                 let sureserveData = currentSureserveData;
-                
+
                 // If no preview data, fetch fresh
                 if (payments.length === 0) {
                     payments = await fetchPayments();
@@ -872,7 +799,7 @@
         // Display statistics
         function displayStats(payments) {
             document.getElementById('totalRecords').textContent = payments.length;
-            
+
             const total = payments.reduce((sum, payment) => sum + (payment.totalAmount || 0), 0);
             document.getElementById('totalValue').textContent = `£${total.toFixed(2)}`;
 
@@ -881,7 +808,7 @@
 
             const startDate = new Date(startDateInput.value);
             const endDate = new Date(endDateInput.value);
-            document.getElementById('dateRange').textContent = 
+            document.getElementById('dateRange').textContent =
                 `${startDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })} - ${endDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}`;
         }
 
@@ -891,7 +818,7 @@
             const selectedFields = getSelectedFields();
 
             let tableHTML = '<table><thead><tr>';
-            
+
             // Add headers
             selectedFields.forEach(field => {
                 tableHTML += `<th>${field.label}</th>`;
@@ -932,6 +859,8 @@
         }
 
         // Generate Bonus CSV
+        // Points are read directly from the 'points' field stored in Firebase
+        // (uploaded from Column E of the Sureserve CSV — no hardcoded lookup needed)
         function generateBonusCSV(sureserveData) {
             // CSV Header with UTF-8 BOM
             let csv = '\uFEFF';
@@ -940,16 +869,19 @@
             // Process each engineer
             Object.keys(sureserveData).sort().forEach(engineerName => {
                 const engineerDates = sureserveData[engineerName];
-                
+
                 // Process each date
                 Object.keys(engineerDates).sort().forEach(date => {
                     const jobs = engineerDates[date];
                     const completedJobs = jobs.filter(job => isCompleted(job.status));
-                    
+
                     let totalPoints = 0;
                     completedJobs.forEach(job => {
-                        const points = JOB_POINTS[job.description] || 0;
-                        totalPoints += points;
+                        // Use the points value stored in Firebase (read from Column E during upload)
+                        const pts = parseFloat(job.points);
+                        if (!isNaN(pts)) {
+                            totalPoints += pts;
+                        }
                     });
 
                     let bonusPoints = 0;
@@ -1100,7 +1032,7 @@
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
-            
+
             link.setAttribute('href', url);
             link.setAttribute('download', filename);
             link.style.visibility = 'hidden';
@@ -1114,13 +1046,13 @@
             if (value === null || value === undefined) {
                 return '';
             }
-            
+
             const stringValue = String(value);
-            
+
             if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
                 return `"${stringValue.replace(/"/g, '""')}"`;
             }
-            
+
             return stringValue;
         }
 
