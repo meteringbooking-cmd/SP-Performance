@@ -46,10 +46,8 @@
                 radial-gradient(circle at 60% 40%, rgba(139,92,246,0.04) 0%, transparent 40%);
             pointer-events: none; z-index: 0;
         }
-
         /* ── LAYOUT ── */
         .page { max-width: 1500px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
-
         /* ── HEADER ── */
         header { margin-bottom: 2.5rem; animation: slideDown 0.5s ease-out; }
         @keyframes slideDown { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:translateY(0); } }
@@ -67,7 +65,6 @@
             -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
         }
         .subtitle { font-family:'DM Mono',monospace; color:var(--text-muted); font-size:0.88rem; margin-left:69px; letter-spacing:0.06em; }
-
         /* ── CARDS ── */
         .card {
             background:var(--bg-card); border:1px solid var(--border); border-radius:16px;
@@ -80,7 +77,6 @@
             color:var(--text-muted); margin-bottom:1.25rem; display:flex; align-items:center; gap:0.6rem;
         }
         .card-title::after { content:''; flex:1; height:1px; background:var(--border); }
-
         /* ── SECTION TABS (entry / overview) ── */
         .page-tabs { display:flex; gap:0.5rem; margin-bottom:1.5rem; }
         .ptab {
@@ -91,7 +87,6 @@
         }
         .ptab:hover { border-color:var(--border-hover); color:var(--text-light); }
         .ptab.active { border-color:var(--accent); color:var(--accent); background:rgba(0,163,224,0.08); }
-
         /* ── ENTRY FORM ── */
         .entry-date-row { display:flex; align-items:flex-end; gap:1rem; margin-bottom:1.75rem; flex-wrap:wrap; }
         .entry-date-row .form-group { flex:0 0 200px; }
@@ -101,8 +96,7 @@
         }
         .day-weekday { background:rgba(0,163,224,0.12); color:var(--accent); border:1px solid rgba(0,163,224,0.25); }
         .day-saturday { background:var(--warning-dim); color:var(--warning); border:1px solid rgba(245,158,11,0.3); }
-        .day-sunday   { background:rgba(239,68,68,0.12); color:var(--error); border:1px solid rgba(239,68,68,0.25); }
-
+        .day-sunday { background:rgba(239,68,68,0.12); color:var(--error); border:1px solid rgba(239,68,68,0.25); }
         .engineers-grid {
             display:grid; grid-template-columns:repeat(auto-fill, minmax(310px,1fr));
             gap:1rem; margin-bottom:1.5rem;
@@ -120,7 +114,7 @@
             text-transform:uppercase; letter-spacing:0.05em;
         }
         .badge-transactional { background:var(--purple-dim); color:var(--purple); border:1px solid rgba(139,92,246,0.3); }
-        .badge-dayrate       { background:var(--teal-dim);   color:var(--teal);   border:1px solid rgba(20,184,166,0.3); }
+        .badge-dayrate { background:var(--teal-dim); color:var(--teal); border:1px solid rgba(20,184,166,0.3); }
         .eng-input-wrap { position:relative; }
         .eng-input-wrap .pound {
             position:absolute; left:0.8rem; top:50%; transform:translateY(-50%);
@@ -136,7 +130,6 @@
         .eng-input::placeholder { color:var(--border); }
         .eng-input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(0,163,224,0.1); }
         .eng-input.filled { border-color:rgba(0,163,224,0.4); }
-
         .form-group { display:flex; flex-direction:column; }
         label { margin-bottom:0.45rem; font-weight:600; font-size:0.9rem; color:var(--text-light); }
         input[type="date"], input[type="text"], select {
@@ -146,7 +139,6 @@
             font-family:'Work Sans',sans-serif; font-size:0.95rem; transition:all 0.2s;
         }
         input:focus, select:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(0,163,224,0.1); }
-
         .section-divider {
             border:none; height:1px; background:var(--border); margin:1.5rem 0;
         }
@@ -155,13 +147,11 @@
             margin-bottom:0.9rem; display:flex; align-items:center; gap:0.6rem;
         }
         .lbl-transactional { color:var(--purple); }
-        .lbl-dayrate        { color:var(--teal); }
+        .lbl-dayrate { color:var(--teal); }
         .engineers-section-label::after { content:''; flex:1; height:1px; background:var(--border); }
-
         .save-row { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-top:1rem; }
         .entry-total { font-family:'DM Mono',monospace; font-size:1rem; color:var(--text-muted); }
         .entry-total strong { color:var(--success); font-size:1.2rem; }
-
         .btn {
             padding:0.8rem 1.75rem; border:none; border-radius:10px;
             font-weight:600; font-size:0.95rem; cursor:pointer;
@@ -172,7 +162,6 @@
         .btn-secondary { background:var(--bg-dark); color:var(--text-light); border:2px solid var(--border); }
         .btn-secondary:hover { border-color:var(--accent); }
         .btn:disabled { opacity:0.45; cursor:not-allowed; }
-
         /* ── OVERVIEW ── */
         .overview-controls { display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-end; margin-bottom:1.5rem; }
         .overview-controls .form-group { flex:1; min-width:160px; }
@@ -184,7 +173,6 @@
         }
         .qbtn:hover { border-color:var(--accent); color:var(--accent); }
         .qbtn.active { border-color:var(--accent); color:var(--accent); background:rgba(0,163,224,0.08); }
-
         /* ── AVERAGES STRIP ── */
         .averages-strip {
             display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
@@ -199,9 +187,8 @@
         .avg-eng-type { font-size:0.67rem; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.5rem; }
         .avg-value { font-family:'DM Mono',monospace; font-size:1.3rem; font-weight:500; }
         .avg-value.transactional { color:var(--purple); }
-        .avg-value.dayrate        { color:var(--teal); }
+        .avg-value.dayrate { color:var(--teal); }
         .avg-days { font-size:0.72rem; color:var(--text-muted); margin-top:0.25rem; }
-
         /* ── DAILY BREAKDOWN TABLE ── */
         .breakdown-wrap { overflow-x:auto; }
         .breakdown-table { width:100%; border-collapse:collapse; font-size:0.85rem; min-width:700px; }
@@ -212,28 +199,26 @@
             white-space:nowrap;
         }
         .breakdown-table thead th:first-child { border-radius:8px 0 0 8px; }
-        .breakdown-table thead th:last-child  { border-radius:0 8px 8px 0; }
+        .breakdown-table thead th:last-child { border-radius:0 8px 8px 0; }
         .breakdown-table tbody tr { border-bottom:1px solid rgba(255,255,255,0.04); transition:background 0.15s; }
         .breakdown-table tbody tr:hover { background:rgba(0,163,224,0.04); }
         .breakdown-table tbody tr:last-child { border-bottom:none; }
         .breakdown-table td { padding:0.75rem 0.9rem; vertical-align:middle; }
         .td-date { font-family:'DM Mono',monospace; font-size:0.8rem; color:var(--text-muted); white-space:nowrap; }
-        .td-day  { font-weight:600; font-size:0.82rem; }
-        .td-eng  { font-weight:600; color:var(--text-light); }
+        .td-day { font-weight:600; font-size:0.82rem; }
+        .td-eng { font-weight:600; color:var(--text-light); }
         .td-type { font-size:0.72rem; }
         .td-amount { font-family:'DM Mono',monospace; font-weight:600; color:var(--success); }
         .td-no-entry { color:var(--border); font-size:0.75rem; font-style:italic; }
         .day-sat { color:var(--warning); }
         .day-sun { color:var(--error); }
         .day-wkd { color:var(--accent); }
-
         /* ── EMPTY / LOADING ── */
         .state-empty { text-align:center; padding:3rem; color:var(--text-muted); }
         .state-empty .icon { font-size:2.5rem; margin-bottom:0.75rem; }
         .spinner-wrap { text-align:center; padding:2.5rem; }
         .spinner { width:42px; height:42px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.9s linear infinite; margin:0 auto 1rem; }
         @keyframes spin { to { transform:rotate(360deg); } }
-
         /* ── TOAST ── */
         .toast {
             position:fixed; bottom:1.75rem; left:50%; transform:translateX(-50%) translateY(70px);
@@ -242,8 +227,54 @@
             z-index:200; transition:transform 0.3s; pointer-events:none;
             display:flex; align-items:center; gap:0.5rem;
         }
-        .toast.show  { transform:translateX(-50%) translateY(0); }
+        .toast.show { transform:translateX(-50%) translateY(0); }
         .toast.error { border-color:var(--error); color:var(--error); }
+
+        /* Custom engineer addition styles */
+        .add-custom-eng {
+            background: rgba(139,92,246,0.08);
+            border: 1px dashed var(--purple);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-top: 1.5rem;
+        }
+        .add-custom-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        .add-custom-row .form-group {
+            flex: 1;
+            min-width: 180px;
+        }
+        .custom-eng-card {
+            background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(20,184,166,0.08));
+            border: 2px dashed rgba(139,92,246,0.5);
+        }
+        .custom-eng-card .eng-type-badge {
+            background: rgba(255,255,255,0.08);
+            color: var(--text-light);
+            border: 1px solid var(--border);
+        }
+        .remove-custom {
+            background: rgba(239,68,68,0.15);
+            color: var(--error);
+            border: none;
+            border-radius: 6px;
+            width: 24px;
+            height: 24px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .remove-custom:hover {
+            background: var(--error);
+            color: white;
+        }
 
         @media (max-width:700px) {
             .page { padding:1rem; }
@@ -257,7 +288,6 @@
 </head>
 <body>
 <div class="page">
-
     <header>
         <div class="header-row">
             <a href="index.html" class="back-btn">←</a>
@@ -265,18 +295,15 @@
         </div>
         <p class="subtitle">SCOTTISH POWER · REVENUE TRACKING</p>
     </header>
-
     <!-- TAB SWITCHER -->
     <div class="page-tabs">
-        <button class="ptab active" id="tab-entry"    onclick="switchTab('entry')">📥 Enter Revenue</button>
-        <button class="ptab"        id="tab-overview" onclick="switchTab('overview')">📊 Overview</button>
+        <button class="ptab active" id="tab-entry" onclick="switchTab('entry')">📥 Enter Revenue</button>
+        <button class="ptab" id="tab-overview" onclick="switchTab('overview')">📊 Overview</button>
     </div>
-
     <!-- ═══════════════════════ ENTRY TAB ═══════════════════════ -->
     <div id="panel-entry">
         <div class="card" style="animation-delay:0.05s">
             <div class="card-title">📅 Select Date</div>
-
             <div class="entry-date-row">
                 <div class="form-group">
                     <label for="entryDate">Date</label>
@@ -284,14 +311,31 @@
                 </div>
                 <div class="day-type-tag day-weekday" id="dayTypeTag">Weekday</div>
             </div>
-
             <hr class="section-divider">
             <div class="engineers-section-label lbl-transactional">⚡ Transactional Engineers</div>
             <div class="engineers-grid" id="grid-transactional"></div>
-
             <hr class="section-divider">
             <div class="engineers-section-label lbl-dayrate">📅 Day Rate Engineers</div>
             <div class="engineers-grid" id="grid-dayrate"></div>
+
+            <!-- Add custom engineer section -->
+            <div class="add-custom-eng">
+                <div class="card-title" style="margin-bottom:1rem;">➕ Add other engineer / contractor</div>
+                <div class="add-custom-row">
+                    <div class="form-group">
+                        <label for="customName">Engineer Name</label>
+                        <input type="text" id="customName" placeholder="e.g. Sarah Jones">
+                    </div>
+                    <div class="form-group">
+                        <label for="customAmount">Revenue (£)</label>
+                        <div class="eng-input-wrap">
+                            <span class="pound">£</span>
+                            <input type="number" id="customAmount" placeholder="0.00" min="0" step="0.01">
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="addCustomEngineer()">Add Engineer</button>
+                </div>
+            </div>
 
             <div class="save-row">
                 <div class="entry-total">Total entered: <strong id="entryTotalVal">£0.00</strong></div>
@@ -299,10 +343,8 @@
             </div>
         </div>
     </div>
-
     <!-- ═══════════════════════ OVERVIEW TAB ═══════════════════════ -->
     <div id="panel-overview" style="display:none">
-
         <!-- Timeframe controls -->
         <div class="card" style="animation-delay:0.05s">
             <div class="card-title">⏱ Timeframe</div>
@@ -316,16 +358,15 @@
                     <input type="date" id="ovEnd">
                 </div>
                 <div class="quick-btns">
-                    <button class="qbtn active" id="qbtn-7"   onclick="setQuick(7)">7 days</button>
-                    <button class="qbtn"        id="qbtn-14"  onclick="setQuick(14)">14 days</button>
-                    <button class="qbtn"        id="qbtn-30"  onclick="setQuick(30)">30 days</button>
-                    <button class="qbtn"        id="qbtn-90"  onclick="setQuick(90)">90 days</button>
-                    <button class="qbtn"        id="qbtn-0"   onclick="setQuick(0)">All time</button>
+                    <button class="qbtn active" id="qbtn-7" onclick="setQuick(7)">7 days</button>
+                    <button class="qbtn" id="qbtn-14" onclick="setQuick(14)">14 days</button>
+                    <button class="qbtn" id="qbtn-30" onclick="setQuick(30)">30 days</button>
+                    <button class="qbtn" id="qbtn-90" onclick="setQuick(90)">90 days</button>
+                    <button class="qbtn" id="qbtn-0" onclick="setQuick(0)">All time</button>
                 </div>
                 <button class="btn btn-primary" onclick="loadOverview()" style="align-self:flex-end">Apply</button>
             </div>
         </div>
-
         <!-- Averages -->
         <div class="card" style="animation-delay:0.1s">
             <div class="card-title">📈 Average Revenue Per Active Day (days with no entry excluded)</div>
@@ -333,7 +374,6 @@
                 <div class="state-empty"><div class="icon">📊</div>Select a timeframe and click Apply</div>
             </div>
         </div>
-
         <!-- Daily breakdown -->
         <div class="card" style="animation-delay:0.15s">
             <div class="card-title">📆 Daily Submissions</div>
@@ -341,28 +381,26 @@
                 <div class="state-empty"><div class="icon">📋</div>No data loaded yet</div>
             </div>
         </div>
-
     </div>
-
 </div>
-
 <div class="toast" id="toast"></div>
 
 <!-- Firebase -->
 <script type="module">
-import { initializeApp }    from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getFirestore, collection, query, where, getDocs, doc, setDoc, orderBy }
     from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 const app = initializeApp({
-    apiKey:            'AIzaSyCMmUOdW2uEIGVd6XQfWXKF8eaFmwEog1g',
-    authDomain:        'oesperformance-a54c0.firebaseapp.com',
-    projectId:         'oesperformance-a54c0',
-    storageBucket:     'oesperformance-a54c0.firebasestorage.app',
+    apiKey: 'AIzaSyCMmUOdW2uEIGVd6XQfWXKF8eaFmwEog1g',
+    authDomain: 'oesperformance-a54c0.firebaseapp.com',
+    projectId: 'oesperformance-a54c0',
+    storageBucket: 'oesperformance-a54c0.firebasestorage.app',
     messagingSenderId: '484894102454',
-    appId:             '1:484894102454:web:17535ee497eac2d90d6717',
-    measurementId:     'G-R56BGZYV8N'
+    appId: '1:484894102454:web:17535ee497eac2d90d6717',
+    measurementId: 'G-R56BGZYV8N'
 });
+
 const db = getFirestore(app);
 window._db = db;
 
@@ -377,9 +415,10 @@ const DAY_RATE = [
 ];
 const ALL_ENGINEERS = [
     ...TRANSACTIONAL.map(n => ({ name: n, type: 'transactional' })),
-    ...DAY_RATE.map(n      => ({ name: n, type: 'dayrate'        }))
+    ...DAY_RATE.map(n => ({ name: n, type: 'dayrate' }))
 ];
 window._engineers = ALL_ENGINEERS;
+window._customEngineers = [];
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 function fmt(n) { return '£' + (n||0).toFixed(2); }
@@ -453,7 +492,6 @@ function updateEntryTotal() {
 // ── Date handling for entry ─────────────────────────────────────────────────
 document.getElementById('entryDate').value = today();
 updateDayTag();
-
 document.getElementById('entryDate').addEventListener('change', function() {
     updateDayTag();
     loadExistingEntry(this.value);
@@ -465,19 +503,22 @@ function updateDayTag() {
     const tag = document.getElementById('dayTypeTag');
     const dw = dayOfWeek(iso);
     tag.className = 'day-type-tag';
-    if (dw===0)      { tag.classList.add('day-sunday');   tag.textContent='Sunday'; }
+    if (dw===0) { tag.classList.add('day-sunday'); tag.textContent='Sunday'; }
     else if (dw===6) { tag.classList.add('day-saturday'); tag.textContent='Saturday'; }
-    else             { tag.classList.add('day-weekday');  tag.textContent='Weekday'; }
+    else { tag.classList.add('day-weekday'); tag.textContent='Weekday'; }
 }
 
 async function loadExistingEntry(iso) {
-    // Clear inputs first
+    // Clear fixed + custom
     document.querySelectorAll('.eng-input').forEach(el => {
         el.value = '';
         el.classList.remove('filled');
         document.getElementById('card-'+el.id)?.classList.remove('has-value');
     });
+    document.querySelectorAll('.custom-eng-card').forEach(c => c.remove());
+    window._customEngineers = [];
     updateEntryTotal();
+
     try {
         const snap = await getDocs(query(
             collection(db,'SP Financial'),
@@ -488,12 +529,35 @@ async function loadExistingEntry(iso) {
                 const data = d.data();
                 if (data.entries) {
                     data.entries.forEach(e => {
-                        const id = 'eng-' + e.name.replace(/\s+/g,'-').toLowerCase();
-                        const el = document.getElementById(id);
-                        if (el && e.amount > 0) {
-                            el.value = e.amount.toFixed(2);
-                            el.classList.add('filled');
-                            document.getElementById('card-'+id)?.classList.add('has-value');
+                        if (e.type === 'custom') {
+                            const id = 'custom-' + Date.now();
+                            const cardHTML = `
+                                <div class="eng-card custom-eng-card" id="card-${id}">
+                                    <div class="eng-header">
+                                        <span class="eng-name">${e.name}</span>
+                                        <div style="display:flex;align-items:center;gap:0.5rem;">
+                                            <span class="eng-type-badge">Custom</span>
+                                            <button class="remove-custom" onclick="removeCustom('${id}')">×</button>
+                                        </div>
+                                    </div>
+                                    <div class="eng-input-wrap">
+                                        <span class="pound">£</span>
+                                        <input type="number" class="eng-input filled" id="${id}"
+                                            value="${e.amount.toFixed(2)}" min="0" step="0.01"
+                                            data-name="${e.name}" data-type="custom"
+                                            oninput="onEngInput(this)">
+                                    </div>
+                                </div>`;
+                            document.getElementById('grid-dayrate').insertAdjacentHTML('beforeend', cardHTML);
+                            window._customEngineers.push({ id, name: e.name, amount: e.amount });
+                        } else {
+                            const id = 'eng-' + e.name.replace(/\s+/g,'-').toLowerCase();
+                            const el = document.getElementById(id);
+                            if (el && e.amount > 0) {
+                                el.value = e.amount.toFixed(2);
+                                el.classList.add('filled');
+                                document.getElementById('card-'+id)?.classList.add('has-value');
+                            }
                         }
                     });
                     updateEntryTotal();
@@ -506,6 +570,60 @@ async function loadExistingEntry(iso) {
 // Pre-load today's entry on boot
 loadExistingEntry(today());
 
+// ── NEW: Add custom engineer ────────────────────────────────────────────────
+window.addCustomEngineer = function() {
+    const nameInput = document.getElementById('customName');
+    const amtInput  = document.getElementById('customAmount');
+    
+    const name = nameInput.value.trim();
+    const amt  = parseFloat(amtInput.value) || 0;
+
+    if (!name) {
+        showToast('Please enter engineer name', true);
+        return;
+    }
+    if (amt <= 0) {
+        showToast('Please enter revenue amount > 0', true);
+        return;
+    }
+
+    const id = 'custom-' + Date.now();
+    const cardHTML = `
+        <div class="eng-card custom-eng-card" id="card-${id}">
+            <div class="eng-header">
+                <span class="eng-name">${name}</span>
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <span class="eng-type-badge">Custom</span>
+                    <button class="remove-custom" onclick="removeCustom('${id}')">×</button>
+                </div>
+            </div>
+            <div class="eng-input-wrap">
+                <span class="pound">£</span>
+                <input type="number" class="eng-input filled" id="${id}"
+                    value="${amt.toFixed(2)}" min="0" step="0.01"
+                    data-name="${name}" data-type="custom"
+                    oninput="onEngInput(this)">
+            </div>
+        </div>`;
+
+    document.getElementById('grid-dayrate').insertAdjacentHTML('beforeend', cardHTML);
+    
+    window._customEngineers.push({ id, name, amount: amt });
+
+    nameInput.value = '';
+    amtInput.value = '';
+    updateEntryTotal();
+    showToast(`Added ${name}`);
+};
+
+window.removeCustom = function(id) {
+    const card = document.getElementById('card-' + id);
+    if (card) card.remove();
+    window._customEngineers = window._customEngineers.filter(c => c.id !== id);
+    updateEntryTotal();
+    showToast('Custom entry removed');
+};
+
 // ── Save entry ───────────────────────────────────────────────────────────────
 window.saveEntry = async function() {
     const iso = document.getElementById('entryDate').value;
@@ -514,17 +632,29 @@ window.saveEntry = async function() {
     btn.disabled = true; btn.textContent = 'Saving…';
 
     const entries = [];
-    document.querySelectorAll('.eng-input').forEach(el => {
+
+    // Fixed engineers
+    document.querySelectorAll('.eng-input:not([data-type="custom"])').forEach(el => {
         const amt = parseFloat(el.value)||0;
         if (amt > 0) {
             entries.push({ name: el.dataset.name, type: el.dataset.type, amount: amt });
         }
     });
 
-    if (!entries.length) { showToast('No values entered — nothing to save', true); btn.disabled=false; btn.textContent='💾 Save Revenue Entry'; return; }
+    // Custom engineers
+    window._customEngineers.forEach(c => {
+        entries.push({ name: c.name, type: 'custom', amount: c.amount });
+    });
+
+    if (!entries.length) {
+        showToast('No values entered — nothing to save', true);
+        btn.disabled = false;
+        btn.textContent = '💾 Save Revenue Entry';
+        return;
+    }
 
     const total = entries.reduce((s,e)=>s+e.amount,0);
-    const docId = iso; // one doc per date
+    const docId = iso;
 
     try {
         await setDoc(doc(db,'SP Financial',docId), {
@@ -535,6 +665,10 @@ window.saveEntry = async function() {
             savedAt: new Date().toISOString()
         });
         showToast(`Saved ${entries.length} engineer${entries.length!==1?'s':''} for ${dateToDisplay(iso)}`);
+        
+        // Clear custom entries after save
+        window._customEngineers = [];
+        document.querySelectorAll('.custom-eng-card').forEach(c => c.remove());
     } catch(err) {
         showToast('Save failed: '+err.message, true);
     }
@@ -543,16 +677,16 @@ window.saveEntry = async function() {
 
 // ── Tab switching ────────────────────────────────────────────────────────────
 window.switchTab = function(tab) {
-    document.getElementById('panel-entry').style.display    = tab==='entry'    ? '' : 'none';
+    document.getElementById('panel-entry').style.display = tab==='entry' ? '' : 'none';
     document.getElementById('panel-overview').style.display = tab==='overview' ? '' : 'none';
-    document.getElementById('tab-entry').classList.toggle('active',    tab==='entry');
+    document.getElementById('tab-entry').classList.toggle('active', tab==='entry');
     document.getElementById('tab-overview').classList.toggle('active', tab==='overview');
     if (tab==='overview') loadOverview();
 };
 
 // ── Overview ─────────────────────────────────────────────────────────────────
 const ovStart = document.getElementById('ovStart');
-const ovEnd   = document.getElementById('ovEnd');
+const ovEnd = document.getElementById('ovEnd');
 
 // Default: last 7 days
 setQuick(7, false);
@@ -574,12 +708,10 @@ window.setQuick = function(days, load=true) {
 
 window.loadOverview = async function() {
     const start = ovStart.value;
-    const end   = ovEnd.value;
+    const end = ovEnd.value;
     if (!start || !end) { showToast('Select a date range first', true); return; }
-
-    document.getElementById('averages-wrap').innerHTML  = '<div class="spinner-wrap"><div class="spinner"></div></div>';
+    document.getElementById('averages-wrap').innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
     document.getElementById('breakdown-wrap').innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
-
     try {
         const snap = await getDocs(query(
             collection(db,'SP Financial'),
@@ -587,16 +719,13 @@ window.loadOverview = async function() {
             where('date','<=',end),
             orderBy('date','asc')
         ));
-
-        // Collect all docs
         const docs = [];
         snap.forEach(d => docs.push(d.data()));
-
         renderAverages(docs);
         renderBreakdown(docs);
     } catch(err) {
         const msg = `<div class="state-empty"><div class="icon">⚠️</div>${err.message}</div>`;
-        document.getElementById('averages-wrap').innerHTML  = msg;
+        document.getElementById('averages-wrap').innerHTML = msg;
         document.getElementById('breakdown-wrap').innerHTML = msg;
     }
 };
@@ -607,34 +736,34 @@ function renderAverages(docs) {
         wrap.innerHTML = '<div class="state-empty"><div class="icon">📭</div>No entries in this period</div>';
         return;
     }
-
-    // Per engineer: sum of amounts and count of days with an entry
     const stats = {};
     window._engineers.forEach(e => { stats[e.name] = { sum:0, days:0, type:e.type }; });
-
+    // Also track custom engineers dynamically
     docs.forEach(d => {
         (d.entries||[]).forEach(e => {
-            if (stats[e.name] !== undefined && e.amount > 0) {
-                stats[e.name].sum  += e.amount;
+            if (e.amount > 0) {
+                if (!stats[e.name]) {
+                    stats[e.name] = { sum:0, days:0, type: e.type };
+                }
+                stats[e.name].sum += e.amount;
                 stats[e.name].days += 1;
             }
         });
     });
-
-    const html = window._engineers.map(e => {
-        const s   = stats[e.name];
+    const html = Object.keys(stats).map(name => {
+        const s = stats[name];
         const avg = s.days > 0 ? s.sum / s.days : null;
+        const type = s.type || 'custom';
         return `
         <div class="avg-card">
-            <div class="avg-eng-name" title="${e.name}">${e.name}</div>
-            <div class="avg-eng-type ${e.type==='transactional'?'lbl-transactional':'lbl-dayrate'}">
-                ${e.type==='transactional'?'Transactional':'Day Rate'}
+            <div class="avg-eng-name" title="${name}">${name}</div>
+            <div class="avg-eng-type ${type==='transactional'?'lbl-transactional':type==='dayrate'?'lbl-dayrate':''}">
+                ${type==='transactional'?'Transactional':type==='dayrate'?'Day Rate':'Custom'}
             </div>
-            <div class="avg-value ${e.type}">${avg !== null ? fmt(avg) : '<span style="color:var(--border);font-size:0.9rem">No data</span>'}</div>
+            <div class="avg-value ${type}">${avg !== null ? fmt(avg) : '<span style="color:var(--border);font-size:0.9rem">No data</span>'}</div>
             <div class="avg-days">${s.days} active day${s.days!==1?'s':''} · ${fmt(s.sum)} total</div>
         </div>`;
     }).join('');
-
     wrap.innerHTML = `<div class="averages-strip">${html}</div>`;
 }
 
@@ -644,8 +773,6 @@ function renderBreakdown(docs) {
         wrap.innerHTML = '<div class="state-empty"><div class="icon">📭</div>No entries in this period</div>';
         return;
     }
-
-    // Build rows: each entry per date expanded
     const rows = [];
     docs.forEach(d => {
         const entries = d.entries || [];
@@ -654,14 +781,11 @@ function renderBreakdown(docs) {
             rows.push({ date: d.date, dayType: d.dayType || dayLabel(d.date), name: e.name, type: e.type, amount: e.amount });
         });
     });
-
     if (!rows.length) {
         wrap.innerHTML = '<div class="state-empty"><div class="icon">📭</div>No individual entries found</div>';
         return;
     }
-
     const dayClass = { 'Sunday':'day-sun', 'Saturday':'day-sat', 'Weekday':'day-wkd' };
-
     const tableRows = rows.map(r => `
         <tr>
             <td class="td-date">${r.date}</td>
@@ -671,13 +795,14 @@ function renderBreakdown(docs) {
                 <span style="font-size:0.72rem;padding:0.15rem 0.5rem;border-radius:5px;
                     ${r.type==='transactional'
                         ? 'background:var(--purple-dim);color:var(--purple)'
-                        : 'background:var(--teal-dim);color:var(--teal)'}">
-                    ${r.type==='transactional'?'Transactional':'Day Rate'}
+                        : r.type==='dayrate'
+                        ? 'background:var(--teal-dim);color:var(--teal)'
+                        : 'background:rgba(255,255,255,0.08);color:var(--text-light)'}">
+                    ${r.type==='transactional'?'Transactional':r.type==='dayrate'?'Day Rate':'Custom'}
                 </span>
             </td>
             <td class="td-amount">${fmt(r.amount)}</td>
         </tr>`).join('');
-
     wrap.innerHTML = `
         <div class="breakdown-wrap">
             <table class="breakdown-table">
