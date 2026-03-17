@@ -83,6 +83,7 @@
         }
         .ptab:hover { border-color:var(--border-hover); color:var(--text-light); }
         .ptab.active { border-color:var(--accent); color:var(--accent); background:rgba(0,163,224,0.08); }
+        
         .entry-date-row { display:flex; align-items:flex-end; gap:1rem; margin-bottom:1.75rem; flex-wrap:wrap; }
         .entry-date-row .form-group { flex:0 0 200px; }
         .day-type-tag {
@@ -92,6 +93,7 @@
         .day-weekday { background:rgba(0,163,224,0.12); color:var(--accent); border:1px solid rgba(0,163,224,0.25); }
         .day-saturday { background:var(--warning-dim); color:var(--warning); border:1px solid rgba(245,158,11,0.3); }
         .day-sunday { background:rgba(239,68,68,0.12); color:var(--error); border:1px solid rgba(239,68,68,0.25); }
+
         .engineers-grid {
             display:grid; grid-template-columns:repeat(auto-fill, minmax(310px,1fr));
             gap:1rem; margin-bottom:1.5rem;
@@ -104,12 +106,10 @@
         .eng-card.has-value { border-color:rgba(0,163,224,0.4); }
         .eng-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; }
         .eng-name { font-weight:600; font-size:0.95rem; color:var(--text-light); }
-        .eng-type-badge {
-            font-size:0.68rem; font-weight:600; padding:0.18rem 0.55rem; border-radius:6px;
-            text-transform:uppercase; letter-spacing:0.05em;
-        }
+        .eng-type-badge { font-size:0.68rem; font-weight:600; padding:0.18rem 0.55rem; border-radius:6px; text-transform:uppercase; letter-spacing:0.05em; }
         .badge-transactional { background:var(--purple-dim); color:var(--purple); border:1px solid rgba(139,92,246,0.3); }
         .badge-dayrate { background:var(--teal-dim); color:var(--teal); border:1px solid rgba(20,184,166,0.3); }
+        
         .eng-input-wrap { position:relative; }
         .eng-input-wrap .pound {
             position:absolute; left:0.8rem; top:50%; transform:translateY(-50%);
@@ -122,126 +122,42 @@
             font-family:'DM Mono',monospace; font-size:1rem; font-weight:500;
             transition:all 0.2s;
         }
-        .eng-input::placeholder { color:var(--border); }
-        .eng-input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(0,163,224,0.1); }
         .eng-input.filled { border-color:rgba(0,163,224,0.4); }
         .form-group { display:flex; flex-direction:column; }
         label { margin-bottom:0.45rem; font-weight:600; font-size:0.9rem; color:var(--text-light); }
-        input[type="date"], input[type="text"], input[type="number"], select, textarea {
+        input[type="date"], input[type="text"], input[type="number"], textarea {
             width:100%; padding:0.75rem;
             background:var(--bg-input); border:2px solid var(--border);
             border-radius:10px; color:var(--text-light);
             font-family:'Work Sans',sans-serif; font-size:0.95rem; transition:all 0.2s;
         }
-        input:focus, select:focus, textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(0,163,224,0.1); }
         .section-divider { border:none; height:1px; background:var(--border); margin:1.5rem 0; }
-        .engineers-section-label {
-            font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em;
-            margin-bottom:0.9rem; display:flex; align-items:center; gap:0.6rem;
-        }
+        .engineers-section-label { font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.9rem; display:flex; align-items:center; gap:0.6rem; }
         .lbl-transactional { color:var(--purple); }
         .lbl-dayrate { color:var(--teal); }
         .engineers-section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+        
         .save-row { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-top:1rem; }
         .entry-total { font-family:'DM Mono',monospace; font-size:1rem; color:var(--text-muted); }
         .entry-total strong { color:var(--success); font-size:1.2rem; }
-        .btn {
-            padding:0.8rem 1.75rem; border:none; border-radius:10px;
-            font-weight:600; font-size:0.95rem; cursor:pointer;
-            transition:all 0.2s; font-family:'Work Sans',sans-serif;
-        }
+        
+        .btn { padding:0.8rem 1.75rem; border:none; border-radius:10px; font-weight:600; font-size:0.95rem; cursor:pointer; transition:all 0.2s; font-family:'Work Sans',sans-serif; }
         .btn-primary { background:linear-gradient(135deg, var(--primary), var(--accent)); color:white; }
         .btn-primary:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 10px 22px rgba(0,163,224,0.3); }
         .btn-secondary { background:var(--bg-dark); color:var(--text-light); border:2px solid var(--border); }
-        .btn-secondary:hover { border-color:var(--accent); }
-        .btn:disabled { opacity:0.45; cursor:not-allowed; }
-        .overview-controls { display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-end; margin-bottom:1.5rem; }
-        .overview-controls .form-group { flex:1; min-width:160px; }
-        .quick-btns { display:flex; gap:0.5rem; flex-wrap:wrap; align-self:flex-end; }
-        .qbtn {
-            padding:0.65rem 1rem; border-radius:8px; border:2px solid var(--border);
-            background:var(--bg-dark); color:var(--text-muted);
-            font-size:0.8rem; font-weight:600; cursor:pointer; transition:all 0.2s; font-family:'Work Sans',sans-serif;
-        }
-        .qbtn:hover { border-color:var(--accent); color:var(--accent); }
-        .qbtn.active { border-color:var(--accent); color:var(--accent); background:rgba(0,163,224,0.08); }
-        .averages-strip {
-            display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
-            gap:0.75rem; margin-bottom:1.5rem;
-        }
-        .avg-card {
-            background:var(--bg-dark); border:1px solid var(--border); border-radius:12px;
-            padding:1rem 1.1rem; transition:border-color 0.2s;
-        }
-        .avg-card:hover { border-color:var(--border-hover); }
-        .avg-eng-name { font-size:0.82rem; font-weight:600; color:var(--text-light); margin-bottom:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-        .avg-eng-type { font-size:0.67rem; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.5rem; }
+        
+        .averages-strip { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:0.75rem; margin-bottom:1.5rem; }
+        .avg-card { background:var(--bg-dark); border:1px solid var(--border); border-radius:12px; padding:1rem 1.1rem; }
         .avg-value { font-family:'DM Mono',monospace; font-size:1.3rem; font-weight:500; }
-        .avg-value.transactional { color:var(--purple); }
-        .avg-value.dayrate { color:var(--teal); }
-        .avg-days { font-size:0.72rem; color:var(--text-muted); margin-top:0.25rem; }
-        .breakdown-wrap { overflow-x:auto; }
         .breakdown-table { width:100%; border-collapse:collapse; font-size:0.85rem; min-width:700px; }
-        .breakdown-table thead th {
-            background:var(--bg-dark); padding:0.65rem 0.9rem;
-            text-align:left; font-size:0.7rem; font-weight:700;
-            text-transform:uppercase; letter-spacing:0.07em; color:var(--text-muted);
-            white-space:nowrap;
-        }
-        .breakdown-table thead th:first-child { border-radius:8px 0 0 8px; }
-        .breakdown-table thead th:last-child { border-radius:0 8px 8px 0; }
-        .breakdown-table tbody tr { border-bottom:1px solid rgba(255,255,255,0.04); transition:background 0.15s; }
-        .breakdown-table tbody tr:hover { background:rgba(0,163,224,0.04); }
-        .breakdown-table td { padding:0.75rem 0.9rem; vertical-align:middle; }
-        .td-date { font-family:'DM Mono',monospace; font-size:0.8rem; color:var(--text-muted); white-space:nowrap; }
-        .td-day { font-weight:600; font-size:0.82rem; }
-        .td-eng { font-weight:600; color:var(--text-light); }
-        .td-type { font-size:0.72rem; }
+        .breakdown-table td, .breakdown-table th { padding:0.75rem 0.9rem; text-align:left; border-bottom:1px solid rgba(255,255,255,0.04); }
         .td-amount { font-family:'DM Mono',monospace; font-weight:600; color:var(--success); }
-        .day-sat { color:var(--warning); }
-        .day-sun { color:var(--error); }
-        .day-wkd { color:var(--accent); }
-        .state-empty { text-align:center; padding:3rem; color:var(--text-muted); }
-        .state-empty .icon { font-size:2.5rem; margin-bottom:0.75rem; }
-        .spinner-wrap { text-align:center; padding:2.5rem; }
-        .spinner { width:42px; height:42px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.9s linear infinite; margin:0 auto 1rem; }
-        @keyframes spin { to { transform:rotate(360deg); } }
-        .toast {
-            position:fixed; bottom:1.75rem; left:50%; transform:translateX(-50%) translateY(70px);
-            background:var(--bg-card); border:2px solid var(--success); color:var(--success);
-            padding:0.75rem 1.5rem; border-radius:10px; font-size:0.88rem; font-weight:600;
-            z-index:200; transition:transform 0.3s; pointer-events:none;
-            display:flex; align-items:center; gap:0.5rem;
-        }
+        
+        .toast { position:fixed; bottom:1.75rem; left:50%; transform:translateX(-50%) translateY(70px); background:var(--bg-card); border:2px solid var(--success); color:var(--success); padding:0.75rem 1.5rem; border-radius:10px; z-index:200; transition:transform 0.3s; pointer-events:none; }
         .toast.show { transform:translateX(-50%) translateY(0); }
         .toast.error { border-color:var(--error); color:var(--error); }
-        .add-custom-eng {
-            background: rgba(139,92,246,0.08);
-            border: 1px dashed var(--purple);
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-top: 1.5rem;
-        }
-        .add-custom-row { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end; }
-        .add-custom-row .form-group { flex: 1; min-width: 180px; }
-        .custom-eng-card {
-            background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(20,184,166,0.08));
-            border: 2px dashed rgba(139,92,246,0.5);
-        }
-        .remove-custom {
-            background: rgba(239,68,68,0.15); color: var(--error); border: none;
-            border-radius: 6px; width: 24px; height: 24px; font-size: 0.9rem;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
-        }
-        .remove-custom:hover { background: var(--error); color: white; }
-        @media (max-width:700px) {
-            .page { padding:1rem; }
-            h1 { font-size:1.65rem; }
-            .subtitle { margin-left:0; margin-top:0.4rem; }
-            .engineers-grid { grid-template-columns:1fr; }
-            .averages-strip { grid-template-columns:1fr 1fr; }
-            .overview-controls { flex-direction:column; }
-        }
+        
+        .remove-custom { background: rgba(239,68,68,0.15); color: var(--error); border: none; border-radius: 6px; width: 24px; height: 24px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -271,10 +187,9 @@
             </div>
 
             <div style="margin: 1.5rem 0; padding: 1rem; border: 1px dashed var(--accent); border-radius: 12px; background: rgba(0, 163, 224, 0.03);">
-                <div class="card-title" style="margin-bottom: 0.5rem; border: none;">📋 Bulk Import (Spreadsheet Paste)</div>
-                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem;">Paste rows from Excel/Sheets (Format: Name [Tab] Amount)</p>
-                <textarea id="bulkPasteArea" placeholder="James Anderson	450.00&#10;Sarah Jones	320.50" 
-                    style="height: 80px; margin-bottom: 10px; font-family: 'DM Mono', monospace; font-size: 0.8rem;"></textarea>
+                <div class="card-title" style="margin-bottom: 0.5rem; border: none;">📋 Bulk Import (Paste from Spreadsheet)</div>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem;">Format: Name [Tab] Amount</p>
+                <textarea id="bulkPasteArea" placeholder="Alistair Cavan	450.00&#10;Allan Grant	320.50" style="height: 80px; margin-bottom: 10px;"></textarea>
                 <button class="btn btn-secondary" onclick="processBulkPaste()" style="width: 100%; font-size: 0.85rem; padding: 0.6rem;">Process Bulk Entries</button>
             </div>
 
@@ -286,18 +201,18 @@
             <div class="engineers-section-label lbl-dayrate">📅 Day Rate Engineers</div>
             <div class="engineers-grid" id="grid-dayrate"></div>
 
-            <div class="add-custom-eng">
-                <div class="card-title" style="margin-bottom:1rem;">➕ Add other engineer / contractor</div>
-                <div class="add-custom-row">
-                    <div class="form-group">
+            <div style="background: rgba(139,92,246,0.08); border: 1px dashed var(--purple); border-radius: 12px; padding: 1.25rem; margin-top: 1.5rem;">
+                <div class="card-title" style="margin-bottom:1rem;">➕ Add Other Engineer / Contractor</div>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
+                    <div class="form-group" style="flex: 1; min-width: 180px;">
                         <label for="customName">Engineer Name</label>
-                        <input type="text" id="customName" placeholder="e.g. Sarah Jones">
+                        <input type="text" id="customName" placeholder="Name">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="flex: 1; min-width: 180px;">
                         <label for="customAmount">Revenue (£)</label>
                         <div class="eng-input-wrap">
                             <span class="pound">£</span>
-                            <input type="number" id="customAmount" placeholder="0.00" min="0" step="0.01">
+                            <input type="number" id="customAmount" placeholder="0.00">
                         </div>
                     </div>
                     <button class="btn btn-secondary" onclick="addCustomEngineer()">Add Engineer</button>
@@ -314,32 +229,19 @@
     <div id="panel-overview" style="display:none">
         <div class="card">
             <div class="card-title">⏱ Timeframe</div>
-            <div class="overview-controls">
-                <div class="form-group">
-                    <label for="ovStart">From</label>
-                    <input type="date" id="ovStart">
-                </div>
-                <div class="form-group">
-                    <label for="ovEnd">To</label>
-                    <input type="date" id="ovEnd">
-                </div>
-                <div class="quick-btns">
-                    <button class="qbtn active" id="qbtn-7" onclick="setQuick(7)">7 days</button>
-                    <button class="qbtn" id="qbtn-14" onclick="setQuick(14)">14 days</button>
-                    <button class="qbtn" id="qbtn-30" onclick="setQuick(30)">30 days</button>
-                    <button class="qbtn" id="qbtn-90" onclick="setQuick(90)">90 days</button>
-                    <button class="qbtn" id="qbtn-0" onclick="setQuick(0)">All time</button>
-                </div>
-                <button class="btn btn-primary" onclick="loadOverview()">Apply</button>
+            <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-end;">
+                <div class="form-group"><label>From</label><input type="date" id="ovStart"></div>
+                <div class="form-group"><label>To</label><input type="date" id="ovEnd"></div>
+                <button class="btn btn-primary" onclick="loadOverview()">Apply Range</button>
             </div>
         </div>
         <div class="card">
             <div class="card-title">📈 Averages per Active Day</div>
-            <div id="averages-wrap"><div class="state-empty">Select timeframe and click Apply</div></div>
+            <div id="averages-wrap"></div>
         </div>
         <div class="card">
             <div class="card-title">📆 Daily Submissions</div>
-            <div id="breakdown-wrap"><div class="state-empty">No data loaded</div></div>
+            <div id="breakdown-wrap"></div>
         </div>
     </div>
 </div>
@@ -355,41 +257,74 @@ const app = initializeApp({
     projectId: 'oesperformance-a54c0',
     storageBucket: 'oesperformance-a54c0.firebasestorage.app',
     messagingSenderId: '484894102454',
-    appId: '1:484894102454:web:17535ee497eac2d90d6717',
-    measurementId: 'G-R56BGZYV8N'
+    appId: '1:484894102454:web:17535ee497eac2d90d6717'
 });
 
 const db = getFirestore(app);
-window._db = db;
 
-const TRANSACTIONAL = ['James Anderson', 'Mark Thompson', 'Ryan Clarke', 'Daniel Hughes', 'Chris Williams', 'Paul Bennett', 'Lee Harrison'];
-const DAY_RATE = ['Steve Morris', 'Kevin Shaw', 'Gary Mitchell', 'Tom Fletcher', 'Adam Cooper'];
-const ALL_ENGINEERS = [
-    ...TRANSACTIONAL.map(n => ({ name: n, type: 'transactional' })),
-    ...DAY_RATE.map(n => ({ name: n, type: 'dayrate' }))
+// ENGINEER LISTS
+const TRANSACTIONAL = [
+    'Alistair Cavan', 'Craig Steel', 'Jonathan Chyla', 
+    'Mehdi Khamseh', 'Muhammed Zafar', 'Neil Burns', 'Tomas Anderson'
 ];
-window._engineers = ALL_ENGINEERS;
+const DAY_RATE = [
+    'Allan Grant', 'Harris Saleem', 'Kris Armstrong', 'Ryan Clark', 'Scott Coyle'
+];
+
 window._customEngineers = [];
 
 // HELPERS
-function fmt(n) { return '£' + (n||0).toFixed(2); }
-function today() { return new Date().toISOString().slice(0,10); }
-function dayOfWeek(iso) { const [y,m,d] = iso.split('-'); return new Date(y,m-1,d).getDay(); }
-function dayLabel(iso) { const dw = dayOfWeek(iso); return dw===0 ? 'Sunday' : dw===6 ? 'Saturday' : 'Weekday'; }
-function showToast(msg, err=false) {
+const fmt = (n) => '£' + (n||0).toFixed(2);
+const today = () => new Date().toISOString().slice(0,10);
+const showToast = (msg, err=false) => {
     const t = document.getElementById('toast');
-    t.textContent = (err?'⚠ ':'✓ ') + msg;
-    t.className = 'toast show' + (err?' error':'');
-    setTimeout(()=>t.classList.remove('show'), 3200);
+    t.textContent = msg; t.className = 'toast show' + (err?' error':'');
+    setTimeout(()=>t.classList.remove('show'), 3000);
+};
+
+// UI BUILDER
+function buildGrid() {
+    const tGrid = document.getElementById('grid-transactional');
+    const dGrid = document.getElementById('grid-dayrate');
+    
+    tGrid.innerHTML = TRANSACTIONAL.map(name => createCard(name, 'transactional')).join('');
+    dGrid.innerHTML = DAY_RATE.map(name => createCard(name, 'dayrate')).join('');
 }
 
-// BULK PROCESSOR
-window.processBulkPaste = function() {
+function createCard(name, type) {
+    const id = 'eng-' + name.replace(/\s+/g,'-').toLowerCase();
+    return `
+        <div class="eng-card" id="card-${id}">
+            <div class="eng-header">
+                <span class="eng-name">${name}</span>
+                <span class="eng-type-badge badge-${type}">${type}</span>
+            </div>
+            <div class="eng-input-wrap">
+                <span class="pound">£</span>
+                <input type="number" class="eng-input" id="${id}" data-name="${name}" data-type="${type}" oninput="onEngInput(this)">
+            </div>
+        </div>`;
+}
+
+// LOGIC
+window.onEngInput = (el) => {
+    const card = document.getElementById('card-' + el.id);
+    if (parseFloat(el.value) > 0) { el.classList.add('filled'); card?.classList.add('has-value'); }
+    else { el.classList.remove('filled'); card?.classList.remove('has-value'); }
+    updateTotal();
+};
+
+function updateTotal() {
+    let sum = 0;
+    document.querySelectorAll('.eng-input').forEach(el => sum += parseFloat(el.value)||0);
+    document.getElementById('entryTotalVal').textContent = fmt(sum);
+}
+
+window.processBulkPaste = () => {
     const area = document.getElementById('bulkPasteArea');
     const lines = area.value.split('\n');
     let count = 0;
     lines.forEach(line => {
-        if (!line.trim()) return;
         const parts = line.split(/\t| {2,}/);
         if (parts.length < 2) return;
         const name = parts[0].trim();
@@ -398,190 +333,76 @@ window.processBulkPaste = function() {
 
         const id = 'eng-' + name.replace(/\s+/g,'-').toLowerCase();
         const input = document.getElementById(id);
-        if (input) {
-            input.value = amt.toFixed(2);
-            window.onEngInput(input);
-            count++;
-        } else {
-            addEntryAsCustom(name, amt);
-            count++;
-        }
+        if (input) { input.value = amt.toFixed(2); window.onEngInput(input); count++; }
+        else { addCustom(name, amt); count++; }
     });
     if (count > 0) { showToast(`Processed ${count} entries`); area.value = ''; }
-    else { showToast('No valid data found', true); }
 };
 
-function addEntryAsCustom(name, amt) {
+function addCustom(name, amt) {
     const id = 'custom-' + Date.now() + Math.floor(Math.random()*1000);
     const html = `
-        <div class="eng-card custom-eng-card" id="card-${id}">
+        <div class="eng-card" id="card-${id}" style="border: 2px dashed var(--purple);">
             <div class="eng-header">
                 <span class="eng-name">${name}</span>
-                <div style="display:flex;align-items:center;gap:0.5rem;">
-                    <span class="eng-type-badge">Custom</span>
-                    <button class="remove-custom" onclick="removeCustom('${id}')">×</button>
-                </div>
+                <button class="remove-custom" onclick="removeCustom('${id}')">×</button>
             </div>
             <div class="eng-input-wrap">
                 <span class="pound">£</span>
-                <input type="number" class="eng-input filled" id="${id}" value="${amt.toFixed(2)}" 
-                    data-name="${name}" data-type="custom" oninput="onEngInput(this)">
+                <input type="number" class="eng-input filled" id="${id}" value="${amt.toFixed(2)}" data-name="${name}" data-type="custom" oninput="onEngInput(this)">
             </div>
         </div>`;
     document.getElementById('grid-dayrate').insertAdjacentHTML('beforeend', html);
     window._customEngineers.push({ id, name, amount: amt });
-    updateEntryTotal();
+    updateTotal();
 }
 
-window.onEngInput = function(el) {
-    const card = document.getElementById('card-' + el.id);
-    if (el.value && parseFloat(el.value) > 0) {
-        el.classList.add('filled'); card?.classList.add('has-value');
-    } else {
-        el.classList.remove('filled'); card?.classList.remove('has-value');
-    }
-    updateEntryTotal();
-};
-
-function updateEntryTotal() {
-    let total = 0;
-    document.querySelectorAll('.eng-input').forEach(el => total += parseFloat(el.value)||0);
-    document.getElementById('entryTotalVal').textContent = fmt(total);
-}
-
-// FIREBASE OPS
-async function loadExistingEntry(iso) {
-    document.querySelectorAll('.eng-input').forEach(el => {
-        el.value = ''; el.classList.remove('filled');
-        document.getElementById('card-'+el.id)?.classList.remove('has-value');
-    });
-    document.querySelectorAll('.custom-eng-card').forEach(c => c.remove());
-    window._customEngineers = [];
-    updateEntryTotal();
-
-    try {
-        const snap = await getDocs(query(collection(db,'SP Financial'), where('date','==',iso)));
-        snap.forEach(d => {
-            const data = d.data();
-            (data.entries||[]).forEach(e => {
-                if (e.type === 'custom') addEntryAsCustom(e.name, e.amount);
-                else {
-                    const id = 'eng-' + e.name.replace(/\s+/g,'-').toLowerCase();
-                    const el = document.getElementById(id);
-                    if (el && e.amount > 0) {
-                        el.value = e.amount.toFixed(2);
-                        window.onEngInput(el);
-                    }
-                }
-            });
-        });
-    } catch(e) { console.error(e); }
-}
-
-window.saveEntry = async function() {
-    const iso = document.getElementById('entryDate').value;
-    const btn = document.getElementById('saveBtn');
-    btn.disabled = true; btn.textContent = 'Saving…';
-    const entries = [];
-    document.querySelectorAll('.eng-input:not([data-type="custom"])').forEach(el => {
-        const amt = parseFloat(el.value)||0;
-        if (amt > 0) entries.push({ name: el.dataset.name, type: el.dataset.type, amount: amt });
-    });
-    window._customEngineers.forEach(c => entries.push({ name: c.name, type: 'custom', amount: c.amount }));
-
-    if (!entries.length) { showToast('Nothing to save', true); btn.disabled=false; return; }
-
-    try {
-        await setDoc(doc(db,'SP Financial', iso), { date: iso, dayType: dayLabel(iso), entries, total: entries.reduce((s,e)=>s+e.amount,0), savedAt: new Date().toISOString() });
-        showToast(`Saved for ${iso}`);
-    } catch(e) { showToast(e.message, true); }
-    btn.disabled=false; btn.textContent='💾 Save Revenue Entry';
-};
-
-window.addCustomEngineer = function() {
+window.addCustomEngineer = () => {
     const n = document.getElementById('customName'), a = document.getElementById('customAmount');
-    if (!n.value || !parseFloat(a.value)) return showToast('Name & Amount required', true);
-    addEntryAsCustom(n.value, parseFloat(a.value));
+    if (!n.value || !a.value) return showToast('Enter name and amount', true);
+    addCustom(n.value, parseFloat(a.value));
     n.value = ''; a.value = '';
 };
 
-window.removeCustom = function(id) {
-    document.getElementById('card-'+id)?.remove();
+window.removeCustom = (id) => {
+    document.getElementById('card-'+id).remove();
     window._customEngineers = window._customEngineers.filter(c => c.id !== id);
-    updateEntryTotal();
+    updateTotal();
 };
 
-window.switchTab = function(t) {
+window.saveEntry = async () => {
+    const date = document.getElementById('entryDate').value;
+    const btn = document.getElementById('saveBtn');
+    btn.disabled = true; btn.textContent = 'Saving...';
+    
+    const entries = [];
+    document.querySelectorAll('.eng-input').forEach(el => {
+        const val = parseFloat(el.value)||0;
+        if (val > 0) entries.push({ name: el.dataset.name, type: el.dataset.type, amount: val });
+    });
+
+    try {
+        await setDoc(doc(db, 'SP Financial', date), {
+            date, 
+            entries, 
+            total: entries.reduce((s,e)=>s+e.amount,0),
+            savedAt: new Date().toISOString()
+        });
+        showToast('Successfully Saved');
+    } catch(e) { showToast('Error: ' + e.message, true); }
+    btn.disabled = false; btn.textContent = '💾 Save Revenue Entry';
+};
+
+window.switchTab = (t) => {
     document.getElementById('panel-entry').style.display = t==='entry' ? '' : 'none';
     document.getElementById('panel-overview').style.display = t==='overview' ? '' : 'none';
     document.getElementById('tab-entry').classList.toggle('active', t==='entry');
     document.getElementById('tab-overview').classList.toggle('active', t==='overview');
-    if (t==='overview') loadOverview();
 };
-
-// OVERVIEW LOGIC
-window.setQuick = function(days, load=true) {
-    const end = new Date(); document.getElementById('ovEnd').valueAsDate = end;
-    const start = days===0 ? new Date(2020,0,1) : new Date(end.getTime() - days*86400000);
-    document.getElementById('ovStart').valueAsDate = start;
-    document.querySelectorAll('.qbtn').forEach(b => b.classList.toggle('active', b.id==='qbtn-'+days));
-    if (load) loadOverview();
-};
-
-window.loadOverview = async function() {
-    const s = document.getElementById('ovStart').value, e = document.getElementById('ovEnd').value;
-    const aWrap = document.getElementById('averages-wrap'), bWrap = document.getElementById('breakdown-wrap');
-    aWrap.innerHTML = bWrap.innerHTML = '<div class="spinner"></div>';
-    try {
-        const snap = await getDocs(query(collection(db,'SP Financial'), where('date','>=',s), where('date','<=',e), orderBy('date','asc')));
-        const docs = []; snap.forEach(d => docs.push(d.data()));
-        renderAverages(docs); renderBreakdown(docs);
-    } catch(err) { aWrap.innerHTML = bWrap.innerHTML = `<div class="state-empty">${err.message}</div>`; }
-};
-
-function renderAverages(docs) {
-    const stats = {};
-    docs.forEach(d => (d.entries||[]).forEach(e => {
-        if (!stats[e.name]) stats[e.name] = { sum:0, days:0, type:e.type };
-        stats[e.name].sum += e.amount; stats[e.name].days++;
-    }));
-    const html = Object.keys(stats).map(n => {
-        const s = stats[n];
-        return `<div class="avg-card"><div class="avg-eng-name">${n}</div><div class="avg-value">${fmt(s.sum/s.days)}</div><div class="avg-days">${s.days} active days</div></div>`;
-    }).join('');
-    document.getElementById('averages-wrap').innerHTML = `<div class="averages-strip">${html}</div>`;
-}
-
-function renderBreakdown(docs) {
-    let rows = '';
-    docs.forEach(d => (d.entries||[]).forEach(e => {
-        rows += `<tr><td>${d.date}</td><td>${d.dayType}</td><td>${e.name}</td><td>${e.type}</td><td class="td-amount">${fmt(e.amount)}</td></tr>`;
-    }));
-    document.getElementById('breakdown-wrap').innerHTML = `<table class="breakdown-table"><thead><tr><th>Date</th><th>Day</th><th>Engineer</th><th>Type</th><th>Revenue</th></tr></thead><tbody>${rows}</tbody></table>`;
-}
 
 // INIT
-const eDate = document.getElementById('entryDate');
-eDate.value = today();
-eDate.addEventListener('change', (e) => {
-    const tag = document.getElementById('dayTypeTag');
-    tag.textContent = dayLabel(e.target.value);
-    tag.className = 'day-type-tag day-' + dayLabel(e.target.value).toLowerCase();
-    loadExistingEntry(e.target.value);
-});
-
-(function buildEntryGrid() {
-    ['transactional','dayrate'].forEach(type => {
-        const list = type==='transactional' ? TRANSACTIONAL : DAY_RATE;
-        document.getElementById(`grid-${type}`).innerHTML = list.map(name => {
-            const id = 'eng-' + name.replace(/\s+/g,'-').toLowerCase();
-            return `<div class="eng-card" id="card-${id}"><div class="eng-header"><span class="eng-name">${name}</span><span class="eng-type-badge badge-${type}">${type}</span></div><div class="eng-input-wrap"><span class="pound">£</span><input type="number" class="eng-input" id="${id}" data-name="${name}" data-type="${type}" oninput="onEngInput(this)"></div></div>`;
-        }).join('');
-    });
-})();
-
-setQuick(7, false);
-loadExistingEntry(today());
+buildGrid();
+document.getElementById('entryDate').value = today();
 </script>
 </body>
 </html>
