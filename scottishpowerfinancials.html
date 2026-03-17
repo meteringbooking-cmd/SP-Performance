@@ -13,6 +13,7 @@
             --bg-input: #0d1f3a; --text-light: #E8EDF2; --text-muted: #8B9AAE;
             --border: #2a3f5f; --success: #10B981; --warning: #F59E0B; --error: #EF4444;
             --purple: #8B5CF6; --teal: #14b8a6;
+            --highlight-orange: rgba(245, 158, 11, 0.15); /* Faint orange highlight */
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Work Sans', sans-serif; background: var(--bg-dark); color: var(--text-light); min-height: 100vh; }
@@ -34,6 +35,8 @@
         .engineers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
         .eng-card { background: var(--bg-dark); border: 2px solid var(--border); border-radius: 12px; padding: 1rem; }
         .eng-card.has-value { border-color: var(--accent); }
+        .eng-card.highlight-orange { background: var(--highlight-orange); border-color: var(--warning); }
+        
         .eng-input-wrap { position: relative; }
         .eng-input-wrap::before { content: '£'; position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-family: 'DM Mono'; }
         .eng-input { width: 100%; padding-left: 1.8rem; font-family: 'DM Mono'; font-size: 1.1rem; }
@@ -49,12 +52,16 @@
         .matrix-table th { background: var(--bg-card); color: var(--text-muted); font-weight: 600; }
         .name-col { text-align: left !important; font-weight: 600; background: var(--bg-card) !important; position: sticky; left: 0; z-index: 2; }
         .type-header { background: #0d1f3a !important; text-align: left !important; color: var(--accent); font-weight: 700; letter-spacing: 1px; }
+        
+        /* Highlighting Logic */
         .val-low { color: var(--error); font-weight: 700; }
         .val-good { color: var(--success); }
         .val-empty { color: #2a3f5f; }
+        .row-highlight { background-color: var(--highlight-orange) !important; }
 
         .averages-strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
         .avg-card { background: var(--bg-dark); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; }
+        .avg-card.highlight-orange { background: var(--highlight-orange); border-color: var(--warning); }
         .avg-value { font-family: 'DM Mono'; font-size: 1.3rem; color: var(--accent); }
 
         .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--bg-card); border-left: 4px solid var(--success); padding: 1rem 2rem; border-radius: 8px; display: none; z-index: 999; }
@@ -145,6 +152,9 @@
 
     const TRANSACTIONAL = ["Alistair Cavan", "Craig Steel", "Jonathan Chyla", "Mehdi Khamseh", "Muhammed Zafar", "Neil Burns", "Tomas Anderson"].sort();
     const DAYRATE = ["Allan Grant", "Harris Saleem", "Kris Armstrong", "Ryan Clark", "Scott Coyle"].sort();
+    
+    // Highlight List
+    const HIGHLIGHT_LIST = ["Allan Grant", "Harris Saleem", "Kris Armstrong", "Ryan Clark", "Scott Coyle"];
 
     function init() {
         const tGrid = document.getElementById('grid-transactional');
@@ -158,8 +168,9 @@
 
     function createCard(name, type) {
         const id = name.replace(/\s+/g, '-').toLowerCase();
+        const highlightClass = HIGHLIGHT_LIST.includes(name) ? 'highlight-orange' : '';
         return `
-            <div class="eng-card" id="card-${id}">
+            <div class="eng-card ${highlightClass}" id="card-${id}">
                 <div class="eng-header"><span class="eng-name">${name}</span></div>
                 <div class="eng-input-wrap">
                     <input type="number" step="0.01" class="eng-input" id="input-${id}" data-name="${name}" data-type="${type}" oninput="calcTotal()">
@@ -223,7 +234,7 @@
         const q = query(collection(db, "SP Financial"), where("date", ">=", start), where("date", "<=", end));
         const snap = await getDocs(q);
         
-        const dataMap = {}; // { date: { name: amount } }
+        const dataMap = {}; 
         const dates = [];
         const engStats = {};
 
@@ -251,9 +262,12 @@
         const renderSection = (title, list) => {
             html += `<tr><td colspan="${dates.length + 1}" class="type-header">${title}</td></tr>`;
             list.forEach(name => {
-                html += `<tr><td class="name-col">${name}</td>`;
+                const isHighlighted = HIGHLIGHT_LIST.includes(name);
+                const rowClass = isHighlighted ? 'class="row-highlight"' : '';
+                
+                html += `<tr ${rowClass}><td class="name-col ${isHighlighted ? 'row-highlight' : ''}">${name}</td>`;
                 dates.forEach(d => {
-                    const val = dataMap[d][name] || 0;
+                    const val = dataMap[d] ? (dataMap[d][name] || 0) : 0;
                     let style = '';
                     if (val > 0 && val < 400) style = 'class="val-low"';
                     else if (val >= 400) style = 'class="val-good"';
@@ -277,7 +291,13 @@
         Object.keys(stats).sort().forEach(name => {
             const s = stats[name];
             if (s.count > 0) {
-                container.innerHTML += `<div class="avg-card"><div style="font-size:0.7rem; color:var(--text-muted)">${name}</div><div class="avg-value">£${(s.total/s.count).toFixed(2)}</div><div style="font-size:0.6rem">Avg over ${s.count} days</div></div>`;
+                const isHighlighted = HIGHLIGHT_LIST.includes(name);
+                container.innerHTML += `
+                    <div class="avg-card ${isHighlighted ? 'highlight-orange' : ''}">
+                        <div style="font-size:0.7rem; color:var(--text-muted)">${name}</div>
+                        <div class="avg-value">£${(s.total/s.count).toFixed(2)}</div>
+                        <div style="font-size:0.6rem">Avg over ${s.count} active days</div>
+                    </div>`;
             }
         });
     }
