@@ -9,339 +9,95 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
     :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --accent: #10b981;
-      --accent2: #3b82f6;
-      --text: #e2e8f0;
-      --text-dim: #94a3b8;
-      --border: #334155;
-      --error: #f87171;
-      --warning: #f59e0b;
+      --bg: #0f172a; --card: #1e293b; --accent: #10b981; --accent2: #3b82f6;
+      --text: #e2e8f0; --text-dim: #94a3b8; --border: #334155; --error: #f87171; --warning: #f59e0b;
     }
-
     * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: grid; grid-template-columns: 290px 1fr; }
 
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 290px 1fr;
-    }
+    aside { background: var(--card); border-right: 1px solid var(--border); padding: 2rem 1.5rem; height: 100vh; position: sticky; top: 0; overflow-y: auto; }
+    .logo { font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, var(--accent), #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; text-align: center; }
+    .logo-sub { text-align: center; font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2rem; }
+    .sidebar-section-title { font-size: 0.78rem; color: var(--text-dim); margin: 1.6rem 0 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 700; }
 
-    /* ── SIDEBAR ── */
-    aside {
-      background: var(--card);
-      border-right: 1px solid var(--border);
-      padding: 2rem 1.5rem;
-      height: 100vh;
-      position: sticky;
-      top: 0;
-      overflow-y: auto;
-    }
+    .period-btn, .team-btn { display: block; width: 100%; padding: 0.85rem 1.1rem; margin: 0.35rem 0; background: transparent; border: 1px solid var(--border); border-radius: 10px; color: var(--text); text-align: left; cursor: pointer; transition: all 0.18s ease; font-size: 0.9rem; font-family: inherit; }
+    .period-btn:hover, .team-btn:hover { background: rgba(16,185,129,0.08); border-color: var(--accent); }
+    .period-btn.active { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 3px 12px rgba(16,185,129,0.3); font-weight: 600; }
+    .team-btn.active { background: rgba(16,185,129,0.2); color: white; font-weight: 600; border-color: var(--accent); }
 
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, var(--accent), #34d399);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 0.5rem;
-      text-align: center;
-    }
-    .logo-sub {
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 2rem;
-    }
+    /* Month picker */
+    .month-picker { display: none; margin-top: 0.5rem; }
+    .month-picker.visible { display: block; }
+    .month-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.35rem; margin-top: 0.5rem; }
+    .month-cell { padding: 0.5rem 0.3rem; background: transparent; border: 1px solid var(--border); border-radius: 8px; color: var(--text-dim); font-size: 0.8rem; font-family: inherit; cursor: pointer; text-align: center; transition: all 0.15s; }
+    .month-cell:hover { background: rgba(16,185,129,0.1); border-color: var(--accent); color: var(--text); }
+    .month-cell.active { background: rgba(16,185,129,0.25); border-color: var(--accent); color: white; font-weight: 600; }
+    .month-cell.disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+    .year-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem; }
+    .year-nav span { font-size: 0.88rem; color: var(--text); font-weight: 600; }
+    .year-btn { background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--text-dim); cursor: pointer; padding: 0.25rem 0.6rem; font-size: 0.8rem; transition: all 0.15s; font-family: inherit; }
+    .year-btn:hover { border-color: var(--accent); color: var(--text); }
 
-    .sidebar-section-title {
-      font-size: 0.78rem;
-      color: var(--text-dim);
-      margin: 1.6rem 0 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      font-weight: 700;
-    }
-
-    .period-btn, .team-btn {
-      display: block;
-      width: 100%;
-      padding: 0.85rem 1.1rem;
-      margin: 0.35rem 0;
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.18s ease;
-      font-size: 0.9rem;
-      font-family: inherit;
-    }
-    .period-btn:hover, .team-btn:hover {
-      background: rgba(16,185,129,0.08);
-      border-color: var(--accent);
-    }
-    .period-btn.active {
-      background: var(--accent);
-      color: white;
-      border-color: var(--accent);
-      box-shadow: 0 3px 12px rgba(16,185,129,0.3);
-      font-weight: 600;
-    }
-    .team-btn.active {
-      background: rgba(16,185,129,0.2);
-      color: white;
-      font-weight: 600;
-      border-color: var(--accent);
-    }
-
-    .team-loading {
-      color: var(--text-dim);
-      font-size: 0.82rem;
-      padding: 0.5rem 0;
-      font-style: italic;
-    }
-
+    .team-loading { color: var(--text-dim); font-size: 0.82rem; padding: 0.5rem 0; font-style: italic; }
     .team-btn-wrap { position: relative; }
-
-    .team-btn .tl-chevron {
-      float: right;
-      font-size: 0.7rem;
-      transition: transform 0.22s;
-      color: rgba(255,255,255,0.5);
-      margin-top: 2px;
-    }
+    .team-btn .tl-chevron { float: right; font-size: 0.7rem; transition: transform 0.22s; color: rgba(255,255,255,0.5); margin-top: 2px; }
     .team-btn.active .tl-chevron { color: white; }
     .team-btn.expanded .tl-chevron { transform: rotate(180deg); }
-
-    .engineer-list {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease;
-      margin-left: 0.5rem;
-    }
+    .engineer-list { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; margin-left: 0.5rem; }
     .engineer-list.open { max-height: 600px; }
-
-    .eng-btn {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      padding: 0.55rem 0.9rem;
-      margin: 0.2rem 0;
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 8px;
-      color: var(--text-dim);
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.15s;
-      font-size: 0.82rem;
-      font-family: inherit;
-    }
+    .eng-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0.55rem 0.9rem; margin: 0.2rem 0; background: transparent; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; color: var(--text-dim); text-align: left; cursor: pointer; transition: all 0.15s; font-size: 0.82rem; font-family: inherit; }
     .eng-btn:hover { background: rgba(16,185,129,0.07); color: var(--text); border-color: rgba(16,185,129,0.3); }
     .eng-btn.active { background: rgba(16,185,129,0.15); color: white; border-color: var(--accent); font-weight: 600; }
-
-    .eng-pct {
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 0.1rem 0.45rem;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.08);
-      color: var(--text-dim);
-      flex-shrink: 0;
-      margin-left: 0.4rem;
-    }
+    .eng-pct { font-size: 0.72rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 10px; background: rgba(255,255,255,0.08); color: var(--text-dim); flex-shrink: 0; margin-left: 0.4rem; }
     .eng-btn.active .eng-pct { background: rgba(16,185,129,0.25); color: var(--accent); }
 
-    /* ── MAIN ── */
     main { padding: 2.5rem 3rem; overflow-y: auto; }
+    header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; gap: 1.5rem; flex-wrap: wrap; }
+    .header-left h1 { font-size: 2.1rem; font-weight: 700; background: linear-gradient(90deg, #e2e8f0, #d1d5db); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.25rem; }
+    .header-left p { color: var(--text-dim); font-size: 0.88rem; }
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 2rem;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .header-left h1 {
-      font-size: 2.1rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, #e2e8f0, #d1d5db);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 0.25rem;
-    }
-    .header-left p {
-      color: var(--text-dim);
-      font-size: 0.88rem;
-    }
-
-    /* ── STATS ROW ── */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .stat-box {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.2rem 1.4rem;
-      transition: border-color 0.2s;
-    }
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.2rem 1.4rem; transition: border-color 0.2s; }
     .stat-box:hover { border-color: var(--accent); }
-    .stat-box .lbl {
-      font-size: 0.72rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      margin-bottom: 0.4rem;
-      font-weight: 600;
-    }
-    .stat-box .val {
-      font-size: 2rem;
-      font-weight: 700;
-      line-height: 1;
-    }
+    .stat-box .lbl { font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.4rem; font-weight: 600; }
+    .stat-box .val { font-size: 2rem; font-weight: 700; line-height: 1; }
     .val-green  { background: linear-gradient(90deg, var(--accent), #34d399); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
     .val-blue   { background: linear-gradient(90deg, #60a5fa, #93c5fd); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
     .val-amber  { background: linear-gradient(90deg, #f59e0b, #fbbf24); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
     .val-purple { background: linear-gradient(90deg, #a78bfa, #c4b5fd); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
 
-    /* ── CHART CARD ── */
-    .card {
-      background: var(--card);
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      padding: 1.8rem 2rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-      margin-bottom: 2rem;
-    }
-
-    .card-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 1.2rem;
-    }
-
-    #chartContainer {
-      height: 420px;
-      position: relative;
-    }
-
-    .overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-dim);
-      font-size: 1.1rem;
-      background: rgba(15,23,42,0.5);
-      border-radius: 10px;
-      z-index: 10;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
+    .card { background: var(--card); border-radius: 16px; border: 1px solid var(--border); padding: 1.8rem 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.35); margin-bottom: 2rem; }
+    .card-title { font-size: 1rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1.2rem; }
+    #chartContainer { height: 420px; position: relative; }
+    .overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 1.1rem; background: rgba(15,23,42,0.5); border-radius: 10px; z-index: 10; flex-direction: column; gap: 0.75rem; }
     .overlay.error { color: var(--error); font-weight: 500; text-align: center; padding: 2rem; }
-    .spinner-sm {
-      width: 36px; height: 36px;
-      border: 3px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
+    .spinner-sm { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── BREAKDOWN TABLE ── */
-    .table-wrapper {
-      overflow-x: auto;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      margin-top: 0.5rem;
-    }
+    .table-wrapper { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); margin-top: 0.5rem; }
     table { width: 100%; border-collapse: collapse; background: var(--bg); font-size: 0.9rem; }
     thead { background: linear-gradient(135deg, #005EB8 0%, #003d7a 100%); }
-    th {
-      padding: 0.9rem 1rem;
-      text-align: left;
-      font-weight: 600;
-      font-size: 0.8rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
+    th { padding: 0.9rem 1rem; text-align: left; font-weight: 600; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
     td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); }
     tbody tr { transition: background 0.15s; }
     tbody tr:hover { background: rgba(16,185,129,0.05); }
     tbody tr:last-child td { border-bottom: none; }
+    .badge { display: inline-block; padding: 0.18rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .badge-green { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+    .badge-blue  { background: rgba(96,165,250,0.15); color: #93c5fd; border: 1px solid rgba(96,165,250,0.3); }
+    .badge-amber { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+    .empty-table { text-align: center; padding: 2.5rem; color: var(--text-dim); font-style: italic; }
 
-    .badge {
-      display: inline-block;
-      padding: 0.18rem 0.6rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-    .badge-green  { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
-    .badge-blue   { background: rgba(96,165,250,0.15); color: #93c5fd; border: 1px solid rgba(96,165,250,0.3); }
-    .badge-amber  { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
-
-    .empty-table {
-      text-align: center;
-      padding: 2.5rem;
-      color: var(--text-dim);
-      font-style: italic;
-    }
-
-    /* ── JOB TYPE TOGGLE ── */
-    .toggle-row {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 1.5rem;
-    }
-    .type-toggle {
-      padding: 0.4rem 0.9rem;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background: transparent;
-      color: var(--text-dim);
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
-      font-family: inherit;
-    }
+    .toggle-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .type-toggle { padding: 0.4rem 0.9rem; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text-dim); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.15s; font-family: inherit; }
     .type-toggle:hover { border-color: var(--accent); color: var(--text); }
     .type-toggle.active { background: var(--accent); border-color: var(--accent); color: white; }
 
-    @media (max-width: 1100px) {
-      body { grid-template-columns: 1fr; }
-      aside { height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); }
-      main { padding: 1.5rem; }
-      header { flex-direction: column; }
-    }
+    @media (max-width: 1100px) { body { grid-template-columns: 1fr; } aside { height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); } main { padding: 1.5rem; } header { flex-direction: column; } }
   </style>
 </head>
 <body>
 
-<!-- ── SIDEBAR ── -->
 <aside>
   <div class="logo">SP</div>
   <div class="logo-sub">Jobs Completed</div>
@@ -351,13 +107,23 @@
   <button class="period-btn" data-period="4weeks">Last 4 weeks</button>
   <button class="period-btn" data-period="6months">Last 6 months</button>
   <button class="period-btn" data-period="year">Year to date</button>
+  <button class="period-btn" data-period="specificMonth">Specific Month…</button>
+
+  <!-- Month picker -->
+  <div class="month-picker" id="monthPicker">
+    <div class="year-nav">
+      <button class="year-btn" id="yearPrev">‹</button>
+      <span id="yearLabel">2025</span>
+      <button class="year-btn" id="yearNext">›</button>
+    </div>
+    <div class="month-grid" id="monthGrid"></div>
+  </div>
 
   <div class="sidebar-section-title">Team Leader</div>
   <button class="team-btn active" data-team="all">All Teams</button>
   <div id="teamLeaderBtns"><div class="team-loading">Loading teams…</div></div>
 </aside>
 
-<!-- ── MAIN ── -->
 <main>
   <header>
     <div class="header-left">
@@ -366,7 +132,6 @@
     </div>
   </header>
 
-  <!-- Stats -->
   <div class="stats-row">
     <div class="stat-box"><div class="lbl">Total Jobs</div><div class="val val-green" id="stat-total">—</div></div>
     <div class="stat-box"><div class="lbl">Completed</div><div class="val val-blue" id="stat-completed">—</div></div>
@@ -374,12 +139,10 @@
     <div class="stat-box"><div class="lbl">Engineers</div><div class="val val-purple" id="stat-engineers">—</div></div>
   </div>
 
-  <!-- Job type filter -->
   <div class="toggle-row" id="jobTypeToggles">
     <button class="type-toggle active" data-type="all">All Job Types</button>
   </div>
 
-  <!-- Chart -->
   <div class="card">
     <div class="card-title" id="chartTitle">Jobs Over Time</div>
     <div id="chartContainer">
@@ -387,20 +150,12 @@
     </div>
   </div>
 
-  <!-- Engineer breakdown -->
   <div class="card">
     <div class="card-title">Engineer Breakdown</div>
     <div class="table-wrapper">
       <table>
         <thead>
-          <tr>
-            <th>Engineer</th>
-            <th>Team Leader</th>
-            <th>Total Jobs</th>
-            <th>Completed</th>
-            <th>Completion %</th>
-            <th>Job Type</th>
-          </tr>
+          <tr><th>Engineer</th><th>Team Leader</th><th>Total Jobs</th><th>Completed</th><th>Completion %</th><th>Job Type</th></tr>
         </thead>
         <tbody id="breakdownBody">
           <tr><td colspan="6" class="empty-table">Loading…</td></tr>
@@ -425,16 +180,21 @@ const app = initializeApp({
 });
 const db = getFirestore(app);
 
-// ── State ─────────────────────────────────────────────────────────────────
+const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const TODAY = new Date();
+
 let currentPeriod   = '7days';
 let currentTeam     = 'all';
 let currentJobType  = 'all';
 let currentEngineer = 'all';
-let teamMap         = {}; // engineerName (lower) → teamLeader
-let engineerDisplayMap = {}; // engineerName (lower) → original case
+let teamMap         = {};
+let engineerDisplayMap = {};
 let allTeamLeaders  = [];
 let chart           = null;
-const canvas       = document.createElement('canvas');
+let pickerYear      = TODAY.getFullYear();
+let pickerMonth     = null; // 0-indexed
+
+const canvas = document.createElement('canvas');
 document.getElementById('chartContainer').appendChild(canvas);
 
 const periods = {
@@ -444,7 +204,44 @@ const periods = {
   'year':    { daysBack: 365, groupBy: 'week',  chartType: 'line', label: 'Year to date' },
 };
 
-// ── Load team leaders from SP - Teams ─────────────────────────────────────
+// ── Month picker ──────────────────────────────────────────────────────────
+function renderMonthGrid() {
+  const grid = document.getElementById('monthGrid');
+  grid.innerHTML = MONTH_NAMES.map((name, i) => {
+    const isFuture = pickerYear > TODAY.getFullYear() ||
+                     (pickerYear === TODAY.getFullYear() && i > TODAY.getMonth());
+    const isActive = i === pickerMonth && currentPeriod === 'specificMonth';
+    return `<button class="month-cell${isActive ? ' active' : ''}${isFuture ? ' disabled' : ''}"
+              data-month="${i}">${name}</button>`;
+  }).join('');
+
+  grid.querySelectorAll('.month-cell:not(.disabled)').forEach(btn => {
+    btn.addEventListener('click', () => {
+      pickerMonth = parseInt(btn.dataset.month);
+      renderMonthGrid();
+      refresh();
+    });
+  });
+}
+
+document.getElementById('yearLabel').textContent = pickerYear;
+document.getElementById('yearPrev').addEventListener('click', () => {
+  if (pickerYear > TODAY.getFullYear() - 5) {
+    pickerYear--;
+    document.getElementById('yearLabel').textContent = pickerYear;
+    renderMonthGrid();
+  }
+});
+document.getElementById('yearNext').addEventListener('click', () => {
+  if (pickerYear < TODAY.getFullYear()) {
+    pickerYear++;
+    document.getElementById('yearLabel').textContent = pickerYear;
+    renderMonthGrid();
+  }
+});
+renderMonthGrid();
+
+// ── Team loading ──────────────────────────────────────────────────────────
 async function loadTeamLeaders() {
   try {
     const snap = await getDocs(collection(db, 'SP - Teams'));
@@ -468,12 +265,9 @@ async function loadTeamLeaders() {
 
 function renderTeamButtons() {
   const container = document.getElementById('teamLeaderBtns');
-
-  // Group engineers by team leader
   const byLeader = {};
   Object.entries(teamMap).forEach(([engLower, tl]) => {
     if (!byLeader[tl]) byLeader[tl] = [];
-    // find display name (original case) from engineerDisplayMap
     byLeader[tl].push(engineerDisplayMap[engLower] || engLower);
   });
 
@@ -493,42 +287,34 @@ function renderTeamButtons() {
     </div>`;
   }).join('');
 
-  // Team leader click — expand/collapse engineers + filter
   container.querySelectorAll('.team-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const tl      = btn.dataset.team;
-      const listId  = 'englist-' + tl.replace(/\s+/g,'-');
-      const list    = document.getElementById(listId);
-      const isOpen  = list.classList.contains('open');
+      const tl     = btn.dataset.team;
+      const listId = 'englist-' + tl.replace(/\s+/g,'-');
+      const list   = document.getElementById(listId);
+      const isOpen = list.classList.contains('open');
 
-      // If clicking already-active TL, collapse and go to all
       if (currentTeam === tl && isOpen) {
         list.classList.remove('open');
         btn.classList.remove('expanded');
         document.querySelectorAll('.team-btn, .eng-btn').forEach(b => b.classList.remove('active'));
         document.querySelector('.team-btn[data-team="all"]').classList.add('active');
-        currentTeam     = 'all';
-        currentEngineer = 'all';
-        refresh();
-        return;
+        currentTeam = 'all'; currentEngineer = 'all';
+        refresh(); return;
       }
 
-      // Close all other lists
       container.querySelectorAll('.engineer-list').forEach(l => l.classList.remove('open'));
       container.querySelectorAll('.team-btn').forEach(b => b.classList.remove('active','expanded'));
       container.querySelectorAll('.eng-btn').forEach(b => b.classList.remove('active'));
       document.querySelector('.team-btn[data-team="all"]').classList.remove('active');
 
-      // Open this list
       list.classList.add('open');
       btn.classList.add('active','expanded');
-      currentTeam     = tl;
-      currentEngineer = 'all';
+      currentTeam = tl; currentEngineer = 'all';
       refresh();
     });
   });
 
-  // Engineer click — filter to individual
   container.querySelectorAll('.eng-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -536,7 +322,6 @@ function renderTeamButtons() {
       btn.classList.add('active');
       currentTeam     = btn.dataset.team;
       currentEngineer = btn.dataset.engineer;
-      // keep parent TL active too
       container.querySelectorAll('.team-btn').forEach(b => b.classList.remove('active'));
       container.querySelector(`.team-btn[data-team="${CSS.escape(btn.dataset.team)}"]`)?.classList.add('active');
       refresh();
@@ -545,7 +330,6 @@ function renderTeamButtons() {
 }
 
 function updateEngineerBadges(jobs) {
-  // Calculate pct per engineer and update badges in sidebar
   const byEng = {};
   jobs.forEach(j => {
     const eng = (j.outcomeResource || '').trim();
@@ -554,8 +338,7 @@ function updateEngineerBadges(jobs) {
     if (isCountable(j)) { byEng[eng].total++; if (isCompleted(j)) byEng[eng].completed++; }
   });
   Object.entries(byEng).forEach(([eng, d]) => {
-    const id  = 'engpct-' + eng.replace(/\s+/g,'-');
-    const el  = document.getElementById(id);
+    const el  = document.getElementById('engpct-' + eng.replace(/\s+/g,'-'));
     if (!el) return;
     const pct = d.total > 0 ? Math.round((d.completed/d.total)*100) : 0;
     el.textContent = pct + '%';
@@ -564,14 +347,23 @@ function updateEngineerBadges(jobs) {
   });
 }
 
-// ── Fetch job data ─────────────────────────────────────────────────────────
+// ── Fetch ─────────────────────────────────────────────────────────────────
 async function fetchJobs() {
-  const cfg   = periods[currentPeriod];
-  const today = new Date();
-  const start = new Date(today);
-  start.setDate(start.getDate() - cfg.daysBack);
-  const startStr = start.toISOString().split('T')[0];
-  const endStr   = today.toISOString().split('T')[0];
+  let startStr, endStr;
+
+  if (currentPeriod === 'specificMonth' && pickerMonth !== null) {
+    const firstDay = new Date(pickerYear, pickerMonth, 1);
+    const lastDay  = new Date(pickerYear, pickerMonth + 1, 0);
+    startStr = firstDay.toISOString().split('T')[0];
+    endStr   = lastDay.toISOString().split('T')[0];
+  } else {
+    const cfg   = periods[currentPeriod];
+    const now   = new Date();
+    const start = new Date(now);
+    start.setDate(start.getDate() - cfg.daysBack);
+    startStr = start.toISOString().split('T')[0];
+    endStr   = now.toISOString().split('T')[0];
+  }
 
   const q = query(
     collection(db, 'SP Submitted Data'),
@@ -583,48 +375,21 @@ async function fetchJobs() {
   return snap.docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
-// ── Only count jobs where jobStatus is "Completed" or "Full Abort" ─────────
-function isCountable(job) {
-  const status = (job.jobStatus || '').trim().toLowerCase();
-  return status === 'completed' || status === 'full abort';
-}
+function isCountable(job) { const s = (job.jobStatus || '').trim().toLowerCase(); return s === 'completed' || s === 'full abort'; }
+function isCompleted(job) { return (job.jobStatus || '').trim().toLowerCase() === 'completed'; }
+function getTeamLeader(job) { return teamMap[(job.outcomeResource || '').trim().toLowerCase()] || null; }
 
-// ── A job is "completed" (green bar) only if status is "Completed" ────────
-function isCompleted(job) {
-  return (job.jobStatus || '').trim().toLowerCase() === 'completed';
-}
-
-// ── Get team leader for a job ─────────────────────────────────────────────
-function getTeamLeader(job) {
-  const engineer = (job.outcomeResource || '').trim().toLowerCase();
-  return teamMap[engineer] || null;
-}
-
-// ── Filter jobs by current team + job type ────────────────────────────────
 function filterJobs(jobs) {
   return jobs.filter(job => {
-    // Only include jobs where the engineer exists in SP - Teams
     const eng = (job.outcomeResource || '').trim().toLowerCase();
     if (!teamMap[eng]) return false;
-    // Team filter
-    if (currentTeam !== 'all') {
-      const tl = getTeamLeader(job);
-      if (!tl || tl !== currentTeam) return false;
-    }
-    // Engineer filter
-    if (currentEngineer !== 'all') {
-      const jobEng = (job.outcomeResource || '').trim();
-      if (jobEng !== currentEngineer) return false;
-    }
-    // Job type filter
-    if (currentJobType !== 'all') {
-      if ((job.jobType || '') !== currentJobType) return false;
-    }
+    if (currentTeam !== 'all') { const tl = getTeamLeader(job); if (!tl || tl !== currentTeam) return false; }
+    if (currentEngineer !== 'all') { if ((job.outcomeResource || '').trim() !== currentEngineer) return false; }
+    if (currentJobType !== 'all') { if ((job.jobType || '') !== currentJobType) return false; }
     return true;
   });
 }
 
-// ── Build job type toggles ─────────────────────────────────────────────────
 function buildJobTypeToggles(jobs) {
   const types = [...new Set(jobs.map(j => j.jobType).filter(Boolean))].sort();
   const container = document.getElementById('jobTypeToggles');
@@ -640,293 +405,216 @@ function buildJobTypeToggles(jobs) {
   });
 }
 
-// ── Aggregate jobs into chart data ─────────────────────────────────────────
+// ── Aggregate ─────────────────────────────────────────────────────────────
 function aggregateForChart(jobs) {
-  const cfg   = periods[currentPeriod];
-  const today = new Date();
-  const start = new Date(today);
-  start.setDate(start.getDate() - cfg.daysBack);
-
-  if (cfg.groupBy === 'month') {
+  // Specific month: day-by-day (all days incl weekends)
+  if (currentPeriod === 'specificMonth' && pickerMonth !== null) {
+    const firstDay = new Date(pickerYear, pickerMonth, 1);
+    const lastDay  = new Date(pickerYear, pickerMonth + 1, 0);
+    const days = [];
+    const cur  = new Date(firstDay);
+    while (cur <= lastDay) { days.push(cur.toISOString().split('T')[0]); cur.setDate(cur.getDate() + 1); }
     const map = {};
-    const keys = [];
-    for (let i = 5; i >= 0; i--) {
-      const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
-      const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-      const lbl = d.toLocaleDateString('en-GB', { month:'short', year:'numeric' });
-      map[key] = { label: lbl, total: 0, completed: 0 };
-      keys.push(key);
-    }
-    jobs.forEach(j => {
-      const k = (j.submissionDate || '').substring(0, 7);
-      if (map[k]) { if (isCountable(j)) { map[k].total++; if (isCompleted(j)) map[k].completed++; } }
-    });
+    days.forEach(d => map[d] = { total: 0, completed: 0 });
+    jobs.forEach(j => { if (map[j.submissionDate]) { if (isCountable(j)) { map[j.submissionDate].total++; if (isCompleted(j)) map[j.submissionDate].completed++; } } });
     return {
-      labels:    keys.map(k => map[k].label),
-      totals:    keys.map(k => map[k].total),
-      completed: keys.map(k => map[k].completed),
+      labels:    days.map(d => { const dt = new Date(d); return [`${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}`, dt.toLocaleDateString('en-GB',{weekday:'short'})]; }),
+      totals:    days.map(d => map[d].total),
+      completed: days.map(d => map[d].completed),
+      chartType: 'bar',
     };
   }
 
-  if (cfg.groupBy === 'week') {
-    const map = {};
-    const keys = [];
-    const cur = new Date(start);
-    while (cur <= today) {
-      const key = cur.toISOString().split('T')[0];
-      const lbl = cur.toLocaleDateString('en-GB', { day:'2-digit', month:'short' });
-      map[key] = { label: lbl, total: 0, completed: 0 };
+  const cfg   = periods[currentPeriod];
+  const now   = new Date();
+  const start = new Date(now);
+  start.setDate(start.getDate() - cfg.daysBack);
+
+  if (cfg.groupBy === 'month') {
+    const map = {}; const keys = [];
+    for (let i = 5; i >= 0; i--) {
+      const d   = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+      map[key]  = { label: d.toLocaleDateString('en-GB', { month:'short', year:'numeric' }), total: 0, completed: 0 };
       keys.push(key);
-      cur.setDate(cur.getDate() + 7);
+    }
+    jobs.forEach(j => { const k = (j.submissionDate||'').substring(0,7); if (map[k]) { if (isCountable(j)) { map[k].total++; if (isCompleted(j)) map[k].completed++; } } });
+    return { labels: keys.map(k=>map[k].label), totals: keys.map(k=>map[k].total), completed: keys.map(k=>map[k].completed), chartType: cfg.chartType };
+  }
+
+  if (cfg.groupBy === 'week') {
+    const map = {}; const keys = [];
+    const cur = new Date(start);
+    while (cur <= now) {
+      const key = cur.toISOString().split('T')[0];
+      map[key]  = { label: cur.toLocaleDateString('en-GB',{day:'2-digit',month:'short'}), total: 0, completed: 0 };
+      keys.push(key); cur.setDate(cur.getDate()+7);
     }
     jobs.forEach(j => {
-      const jd = new Date(j.submissionDate || '');
-      // find closest week start
       let best = keys[0];
       for (const k of keys) { if (k <= j.submissionDate) best = k; else break; }
       if (map[best]) { if (isCountable(j)) { map[best].total++; if (isCompleted(j)) map[best].completed++; } }
     });
-    return {
-      labels:    keys.map(k => map[k].label),
-      totals:    keys.map(k => map[k].total),
-      completed: keys.map(k => map[k].completed),
-    };
+    return { labels: keys.map(k=>map[k].label), totals: keys.map(k=>map[k].total), completed: keys.map(k=>map[k].completed), chartType: cfg.chartType };
   }
 
-  // By day (weekdays only for 7/28 day views)
+  // By day (weekdays)
   const days = [];
   const cur  = new Date(start);
-  while (cur <= today) {
-    const day = cur.getDay();
-    if (day !== 0 && day !== 6) days.push(cur.toISOString().split('T')[0]);
-    cur.setDate(cur.getDate() + 1);
-  }
+  while (cur <= now) { const day = cur.getDay(); if (day!==0&&day!==6) days.push(cur.toISOString().split('T')[0]); cur.setDate(cur.getDate()+1); }
   const map = {};
   days.forEach(d => map[d] = { total: 0, completed: 0 });
-  jobs.forEach(j => {
-    if (map[j.submissionDate]) {
-      if (isCountable(j)) { map[j.submissionDate].total++; if (isCompleted(j)) map[j.submissionDate].completed++; }
-    }
-  });
+  jobs.forEach(j => { if (map[j.submissionDate]) { if (isCountable(j)) { map[j.submissionDate].total++; if (isCompleted(j)) map[j.submissionDate].completed++; } } });
   return {
-    labels:    days.map(d => {
-      const dt = new Date(d);
-      const dd = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}`;
-      const wd = dt.toLocaleDateString('en-GB', { weekday:'short' });
-      return [dd, wd];
-    }),
-    totals:    days.map(d => map[d].total),
-    completed: days.map(d => map[d].completed),
+    labels:    days.map(d => { const dt = new Date(d); return [`${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}`, dt.toLocaleDateString('en-GB',{weekday:'short'})]; }),
+    totals:    days.map(d=>map[d].total),
+    completed: days.map(d=>map[d].completed),
+    chartType: cfg.chartType,
   };
 }
 
-// ── Draw chart ────────────────────────────────────────────────────────────
 function drawChart(data) {
-  const cfg = periods[currentPeriod];
   const container = document.getElementById('chartContainer');
-
-  // clear overlay
   container.querySelectorAll('.overlay').forEach(el => el.remove());
   if (!container.contains(canvas)) container.appendChild(canvas);
-
   if (chart) chart.destroy();
 
   chart = new Chart(canvas, {
-    type: cfg.chartType,
+    type: data.chartType,
     data: {
       labels: data.labels,
       datasets: [
-        {
-          label: 'Total Jobs',
-          data: data.totals,
-          backgroundColor: 'rgba(96,165,250,0.6)',
-          borderColor: '#60a5fa',
-          borderWidth: cfg.chartType === 'bar' ? 1 : 2,
-          borderRadius: cfg.chartType === 'bar' ? 6 : 0,
-          tension: 0.35,
-          fill: cfg.chartType === 'line',
-          pointRadius: cfg.chartType === 'line' ? 3 : 0,
-          order: 2,
-        },
-        {
-          label: 'Completed',
-          data: data.completed,
-          backgroundColor: 'rgba(16,185,129,0.75)',
-          borderColor: '#10b981',
-          borderWidth: cfg.chartType === 'bar' ? 1 : 2,
-          borderRadius: cfg.chartType === 'bar' ? 6 : 0,
-          tension: 0.35,
-          fill: cfg.chartType === 'line',
-          pointRadius: cfg.chartType === 'line' ? 3 : 0,
-          order: 1,
-        }
+        { label: 'Total Jobs', data: data.totals, backgroundColor: 'rgba(96,165,250,0.6)', borderColor: '#60a5fa', borderWidth: data.chartType==='bar'?1:2, borderRadius: data.chartType==='bar'?6:0, tension: 0.35, fill: data.chartType==='line', pointRadius: data.chartType==='line'?3:0, order: 2 },
+        { label: 'Completed',  data: data.completed, backgroundColor: 'rgba(16,185,129,0.75)', borderColor: '#10b981', borderWidth: data.chartType==='bar'?1:2, borderRadius: data.chartType==='bar'?6:0, tension: 0.35, fill: data.chartType==='line', pointRadius: data.chartType==='line'?3:0, order: 1 }
       ]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
+      responsive: true, maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { labels: { color: '#cbd5e1', font: { size: 13 } } },
-        tooltip: {
-          callbacks: {
-            afterBody: (items) => {
-              const total = items.find(i => i.dataset.label === 'Total Jobs')?.raw || 0;
-              const done  = items.find(i => i.dataset.label === 'Completed')?.raw || 0;
-              const pct   = total > 0 ? ((done / total) * 100).toFixed(1) : 0;
-              return [`Completion: ${pct}%`];
-            }
-          }
-        },
-        datalabels: cfg.chartType === 'bar' ? {
-          anchor: 'end', align: 'top', offset: 2,
-          color: '#e2e8f0',
-          font: { weight: 'bold', size: 11 },
-          formatter: v => v > 0 ? v : '',
-          textShadowColor: 'rgba(0,0,0,0.8)',
-          textShadowBlur: 3,
-        } : false,
+        tooltip: { callbacks: { afterBody: (items) => { const total=items.find(i=>i.dataset.label==='Total Jobs')?.raw||0; const done=items.find(i=>i.dataset.label==='Completed')?.raw||0; return [`Completion: ${total>0?((done/total)*100).toFixed(1):0}%`]; } } },
+        datalabels: data.chartType==='bar' ? { anchor:'end', align:'top', offset:2, color:'#e2e8f0', font:{weight:'bold',size:11}, formatter: v=>v>0?v:'', textShadowColor:'rgba(0,0,0,0.8)', textShadowBlur:3 } : false,
       },
       scales: {
-        x: {
-          ticks: { color: '#94a3b8', font: { size: 11 }, padding: 6 },
-          grid:  { color: '#334155' }
-        },
-        y: {
-          beginAtZero: true,
-          ticks: { color: '#94a3b8', stepSize: 1 },
-          grid:  { color: '#334155' }
-        }
+        x: { ticks: { color:'#94a3b8', font:{size:11}, padding:6 }, grid:{color:'#334155'} },
+        y: { beginAtZero:true, ticks:{color:'#94a3b8',stepSize:1}, grid:{color:'#334155'} }
       }
     },
     plugins: [ChartDataLabels]
   });
 }
 
-// ── Build engineer breakdown table ─────────────────────────────────────────
 function buildBreakdown(jobs) {
   const byEngineer = {};
   jobs.forEach(j => {
-    const eng = (j.outcomeResource || 'Unknown').trim();
-    if (!byEngineer[eng]) byEngineer[eng] = { total: 0, completed: 0, types: new Set() };
+    const eng = (j.outcomeResource||'Unknown').trim();
+    if (!byEngineer[eng]) byEngineer[eng] = { total:0, completed:0, types:new Set() };
     if (isCountable(j)) { byEngineer[eng].total++; if (isCompleted(j)) byEngineer[eng].completed++; }
     if (j.jobType) byEngineer[eng].types.add(j.jobType);
   });
-
-  const rows = Object.entries(byEngineer)
-    .sort((a, b) => b[1].total - a[1].total);
-
+  const rows = Object.entries(byEngineer).sort((a,b)=>b[1].total-a[1].total);
   const body = document.getElementById('breakdownBody');
-  if (!rows.length) {
-    body.innerHTML = '<tr><td colspan="6" class="empty-table">No data for this period</td></tr>';
-    return;
-  }
-
+  if (!rows.length) { body.innerHTML='<tr><td colspan="6" class="empty-table">No data for this period</td></tr>'; return; }
   body.innerHTML = rows.map(([eng, d]) => {
     const tl  = teamMap[eng.toLowerCase()] || '<span style="color:var(--text-dim)">—</span>';
-    const pct = d.total > 0 ? ((d.completed / d.total) * 100).toFixed(1) : 0;
-    const pctColor = pct >= 80 ? 'badge-green' : pct >= 50 ? 'badge-amber' : 'badge-blue';
-    const types = [...d.types].map(t => `<span class="badge badge-blue">${esc(t)}</span>`).join(' ');
-    return `<tr>
-      <td><strong>${esc(eng)}</strong></td>
-      <td>${tl}</td>
-      <td>${d.total}</td>
-      <td>${d.completed}</td>
-      <td><span class="badge ${pctColor}">${pct}%</span></td>
-      <td>${types || '—'}</td>
-    </tr>`;
+    const pct = d.total>0?((d.completed/d.total)*100).toFixed(1):0;
+    const pctColor = pct>=80?'badge-green':pct>=50?'badge-amber':'badge-blue';
+    const types = [...d.types].map(t=>`<span class="badge badge-blue">${esc(t)}</span>`).join(' ');
+    return `<tr><td><strong>${esc(eng)}</strong></td><td>${tl}</td><td>${d.total}</td><td>${d.completed}</td><td><span class="badge ${pctColor}">${pct}%</span></td><td>${types||'—'}</td></tr>`;
   }).join('');
 }
 
-// ── Update stats bar ──────────────────────────────────────────────────────
 function updateStats(jobs) {
-  const total     = jobs.filter(isCountable).length;
-  const completed = jobs.filter(isCompleted).length;
-  const pct       = total > 0 ? ((completed/total)*100).toFixed(1) : 0;
-  const engineers = new Set(jobs.map(j => j.outcomeResource).filter(Boolean)).size;
-
-  document.getElementById('stat-total').textContent     = total;
-  document.getElementById('stat-completed').textContent = completed;
-  document.getElementById('stat-pct').textContent       = `${pct}%`;
-  document.getElementById('stat-engineers').textContent = engineers;
+  const total=jobs.filter(isCountable).length, completed=jobs.filter(isCompleted).length;
+  const pct=total>0?((completed/total)*100).toFixed(1):0;
+  const engineers=new Set(jobs.map(j=>j.outcomeResource).filter(Boolean)).size;
+  document.getElementById('stat-total').textContent=total;
+  document.getElementById('stat-completed').textContent=completed;
+  document.getElementById('stat-pct').textContent=`${pct}%`;
+  document.getElementById('stat-engineers').textContent=engineers;
 }
 
-// ── Update subtitle ───────────────────────────────────────────────────────
 function updateSubtitle() {
-  const teamLabel   = currentTeam   === 'all' ? 'All Teams' : currentTeam;
-  const typeLabel   = currentJobType === 'all' ? 'All Job Types' : currentJobType;
-  const periodLabel = periods[currentPeriod].label;
+  const teamLabel   = currentTeam==='all'?'All Teams':currentTeam;
+  const typeLabel   = currentJobType==='all'?'All Job Types':currentJobType;
+  let periodLabel;
+  if (currentPeriod === 'specificMonth' && pickerMonth !== null) {
+    periodLabel = `${MONTH_NAMES[pickerMonth]} ${pickerYear}`;
+  } else {
+    periodLabel = periods[currentPeriod]?.label || '';
+  }
   document.getElementById('subtitle').textContent = `${teamLabel} · ${typeLabel} · ${periodLabel}`;
   document.getElementById('chartTitle').textContent = `Jobs Over Time — ${periodLabel}`;
 }
 
-// ── Main refresh ──────────────────────────────────────────────────────────
 async function refresh() {
-  // Show loading overlay
+  if (currentPeriod === 'specificMonth' && pickerMonth === null) return;
+
   const container = document.getElementById('chartContainer');
   let overlay = container.querySelector('.overlay');
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.className = 'overlay';
-    container.appendChild(overlay);
-  }
+  if (!overlay) { overlay = document.createElement('div'); overlay.className='overlay'; container.appendChild(overlay); }
   overlay.innerHTML = '<div class="spinner-sm"></div><span>Loading…</span>';
-
   updateSubtitle();
 
   try {
-    const rawJobs    = await fetchJobs();
+    const rawJobs   = await fetchJobs();
     buildJobTypeToggles(rawJobs);
-    const filtered   = filterJobs(rawJobs);
-    const chartData  = aggregateForChart(filtered);
-
+    const filtered  = filterJobs(rawJobs);
+    const chartData = aggregateForChart(filtered);
     updateStats(filtered);
     drawChart(chartData);
     buildBreakdown(filtered);
-    // Update engineer % badges in sidebar using team-filtered (not engineer-filtered) jobs
     const teamFiltered = rawJobs.filter(job => {
-      const eng = (job.outcomeResource || '').trim().toLowerCase();
+      const eng = (job.outcomeResource||'').trim().toLowerCase();
       if (!teamMap[eng]) return false;
-      if (currentTeam !== 'all') { const tl = getTeamLeader(job); if (!tl || tl !== currentTeam) return false; }
+      if (currentTeam !== 'all') { const tl=getTeamLeader(job); if (!tl||tl!==currentTeam) return false; }
       return true;
     });
     updateEngineerBadges(teamFiltered);
   } catch(e) {
     console.error(e);
-    container.querySelectorAll('.overlay').forEach(el => el.remove());
+    container.querySelectorAll('.overlay').forEach(el=>el.remove());
     const err = document.createElement('div');
-    err.className = 'overlay error';
-    err.innerHTML = `⚠️ ${esc(e.message)}<br><small>Check console for details</small>`;
+    err.className='overlay error';
+    err.innerHTML=`⚠️ ${esc(e.message)}<br><small>Check console for details</small>`;
     container.appendChild(err);
   }
 }
 
-// ── Period buttons ─────────────────────────────────────────────────────────
+// ── Period buttons ────────────────────────────────────────────────────────
 document.querySelectorAll('.period-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentPeriod = btn.dataset.period;
+
+    const picker = document.getElementById('monthPicker');
+    if (currentPeriod === 'specificMonth') {
+      picker.classList.add('visible');
+      if (pickerMonth === null) {
+        pickerYear  = TODAY.getFullYear();
+        pickerMonth = TODAY.getMonth();
+        document.getElementById('yearLabel').textContent = pickerYear;
+        renderMonthGrid();
+      }
+    } else {
+      picker.classList.remove('visible');
+    }
+
     refresh();
   });
 });
 
-// ── All teams button ───────────────────────────────────────────────────────
 document.querySelector('.team-btn[data-team="all"]').addEventListener('click', function() {
   document.querySelectorAll('.team-btn, .eng-btn').forEach(b => b.classList.remove('active','expanded'));
   document.querySelectorAll('.engineer-list').forEach(l => l.classList.remove('open'));
   this.classList.add('active');
-  currentTeam     = 'all';
-  currentEngineer = 'all';
+  currentTeam='all'; currentEngineer='all';
   refresh();
 });
 
-// ── Boot ───────────────────────────────────────────────────────────────────
-function esc(t) {
-  const d = document.createElement('div');
-  d.textContent = String(t ?? '');
-  return d.innerHTML;
-}
+function esc(t) { const d=document.createElement('div'); d.textContent=String(t??''); return d.innerHTML; }
 
 await loadTeamLeaders();
 refresh();
