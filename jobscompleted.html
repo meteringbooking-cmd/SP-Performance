@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Jobs Completed • SP</title>
+  <title>Jobs Completed &bull; SP</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
@@ -24,6 +24,13 @@
     .period-btn:hover, .team-btn:hover { background: rgba(16,185,129,0.08); border-color: var(--accent); }
     .period-btn.active { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 3px 12px rgba(16,185,129,0.3); font-weight: 600; }
     .team-btn.active { background: rgba(16,185,129,0.2); color: white; font-weight: 600; border-color: var(--accent); }
+
+    /* Day pills */
+    .day-pills { display: none; gap: 0.35rem; flex-direction: column; margin-top: 0.5rem; }
+    .day-pills.visible { display: flex; }
+    .day-pill-btn { display: block; width: 100%; padding: 0.65rem 1rem; background: transparent; border: 1px solid var(--border); border-radius: 8px; color: var(--text-dim); font-size: 0.82rem; font-weight: 600; cursor: pointer; text-align: left; transition: all 0.15s; font-family: inherit; }
+    .day-pill-btn:hover { background: rgba(16,185,129,0.08); border-color: var(--accent); color: var(--text); }
+    .day-pill-btn.active { background: rgba(16,185,129,0.25); border-color: var(--accent); color: white; }
 
     /* Month picker */
     .month-picker { display: none; margin-top: 0.5rem; }
@@ -103,40 +110,42 @@
   <div class="logo-sub">Jobs Completed</div>
 
   <div class="sidebar-section-title">Time Period</div>
+  <button class="period-btn" data-period="prevdays">Previous 5 Days</button>
+  <div class="day-pills" id="dayPills"></div>
   <button class="period-btn active" data-period="7days">Last 7 days</button>
   <button class="period-btn" data-period="4weeks">Last 4 weeks</button>
   <button class="period-btn" data-period="6months">Last 6 months</button>
   <button class="period-btn" data-period="year">Year to date</button>
-  <button class="period-btn" data-period="specificMonth">Specific Month…</button>
+  <button class="period-btn" data-period="specificMonth">Specific Month&hellip;</button>
 
   <!-- Month picker -->
   <div class="month-picker" id="monthPicker">
     <div class="year-nav">
-      <button class="year-btn" id="yearPrev">‹</button>
+      <button class="year-btn" id="yearPrev">&lsaquo;</button>
       <span id="yearLabel">2025</span>
-      <button class="year-btn" id="yearNext">›</button>
+      <button class="year-btn" id="yearNext">&rsaquo;</button>
     </div>
     <div class="month-grid" id="monthGrid"></div>
   </div>
 
   <div class="sidebar-section-title">Team Leader</div>
   <button class="team-btn active" data-team="all">All Teams</button>
-  <div id="teamLeaderBtns"><div class="team-loading">Loading teams…</div></div>
+  <div id="teamLeaderBtns"><div class="team-loading">Loading teams&hellip;</div></div>
 </aside>
 
 <main>
   <header>
     <div class="header-left">
       <h1>Jobs Completed</h1>
-      <p id="subtitle">Showing all teams — last 7 days</p>
+      <p id="subtitle">Showing all teams &mdash; last 7 days</p>
     </div>
   </header>
 
   <div class="stats-row">
-    <div class="stat-box"><div class="lbl">Total Jobs</div><div class="val val-green" id="stat-total">—</div></div>
-    <div class="stat-box"><div class="lbl">Completed</div><div class="val val-blue" id="stat-completed">—</div></div>
-    <div class="stat-box"><div class="lbl">Completion %</div><div class="val val-amber" id="stat-pct">—</div></div>
-    <div class="stat-box"><div class="lbl">Engineers</div><div class="val val-purple" id="stat-engineers">—</div></div>
+    <div class="stat-box"><div class="lbl">Total Jobs</div><div class="val val-green" id="stat-total">&mdash;</div></div>
+    <div class="stat-box"><div class="lbl">Completed</div><div class="val val-blue" id="stat-completed">&mdash;</div></div>
+    <div class="stat-box"><div class="lbl">Completion %</div><div class="val val-amber" id="stat-pct">&mdash;</div></div>
+    <div class="stat-box"><div class="lbl">Engineers</div><div class="val val-purple" id="stat-engineers">&mdash;</div></div>
   </div>
 
   <div class="toggle-row" id="jobTypeToggles">
@@ -146,7 +155,7 @@
   <div class="card">
     <div class="card-title" id="chartTitle">Jobs Over Time</div>
     <div id="chartContainer">
-      <div class="overlay"><div class="spinner-sm"></div><span>Loading…</span></div>
+      <div class="overlay"><div class="spinner-sm"></div><span>Loading&hellip;</span></div>
     </div>
   </div>
 
@@ -158,7 +167,7 @@
           <tr><th>Engineer</th><th>Team Leader</th><th>Total Jobs</th><th>Completed</th><th>Completion %</th><th>Job Type</th></tr>
         </thead>
         <tbody id="breakdownBody">
-          <tr><td colspan="6" class="empty-table">Loading…</td></tr>
+          <tr><td colspan="6" class="empty-table">Loading&hellip;</td></tr>
         </tbody>
       </table>
     </div>
@@ -181,21 +190,62 @@ const app = initializeApp({
 const db = getFirestore(app);
 
 const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONTH_LONG  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS_SHORT  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DAYS_LONG   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const TODAY = new Date();
 
-let currentPeriod   = '7days';
-let currentTeam     = 'all';
-let currentJobType  = 'all';
-let currentEngineer = 'all';
-let teamMap         = {};
+let currentPeriod    = '7days';
+let currentTeam      = 'all';
+let currentJobType   = 'all';
+let currentEngineer  = 'all';
+let currentDayIndex  = 0;   // for prevdays mode
+let teamMap          = {};
 let engineerDisplayMap = {};
-let allTeamLeaders  = [];
-let chart           = null;
-let pickerYear      = TODAY.getFullYear();
-let pickerMonth     = null; // 0-indexed
+let allTeamLeaders   = [];
+let chart            = null;
+let pickerYear       = TODAY.getFullYear();
+let pickerMonth      = null;
 
 const canvas = document.createElement('canvas');
 document.getElementById('chartContainer').appendChild(canvas);
+
+// ── Working day helpers ────────────────────────────────────────────────────
+function getNthPreviousWorkingDay(n) {
+  let d = new Date(); let count = 0;
+  while (count < n) { d.setDate(d.getDate() - 1); if (d.getDay() !== 0 && d.getDay() !== 6) count++; }
+  return d;
+}
+function fmtISO(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function fmtShort(d) { return `${DAYS_SHORT[d.getDay()]} ${d.getDate()} ${MONTH_NAMES[d.getMonth()]}`; }
+function fmtLong(d)  { return `${DAYS_LONG[d.getDay()]}, ${d.getDate()} ${MONTH_LONG[d.getMonth()]} ${d.getFullYear()}`; }
+
+// Pre-compute the 5 previous working days
+const prevWorkingDays = Array.from({ length: 5 }, (_, i) => getNthPreviousWorkingDay(i + 1));
+
+// ── Build the day pills in sidebar ────────────────────────────────────────
+function buildDayPills() {
+  const container = document.getElementById('dayPills');
+  container.innerHTML = prevWorkingDays.map((d, i) =>
+    `<button class="day-pill-btn${i === currentDayIndex && currentPeriod === 'prevdays' ? ' active' : ''}" data-idx="${i}">
+      ${i === 0 ? '&#8592; ' : ''}${fmtShort(d)}${i === 0 ? ' (latest)' : ''}
+    </button>`
+  ).join('');
+  container.querySelectorAll('.day-pill-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentDayIndex = parseInt(btn.dataset.idx);
+      currentPeriod   = 'prevdays';
+      // Activate prevdays period button
+      document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.period-btn[data-period="prevdays"]').classList.add('active');
+      document.getElementById('monthPicker').classList.remove('visible');
+      // Mark correct pill
+      container.querySelectorAll('.day-pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      refresh();
+    });
+  });
+}
 
 const periods = {
   '7days':   { daysBack: 7,   groupBy: 'day',   chartType: 'bar',  label: 'Last 7 days' },
@@ -211,33 +261,18 @@ function renderMonthGrid() {
     const isFuture = pickerYear > TODAY.getFullYear() ||
                      (pickerYear === TODAY.getFullYear() && i > TODAY.getMonth());
     const isActive = i === pickerMonth && currentPeriod === 'specificMonth';
-    return `<button class="month-cell${isActive ? ' active' : ''}${isFuture ? ' disabled' : ''}"
-              data-month="${i}">${name}</button>`;
+    return `<button class="month-cell${isActive?' active':''}${isFuture?' disabled':''}" data-month="${i}">${name}</button>`;
   }).join('');
-
   grid.querySelectorAll('.month-cell:not(.disabled)').forEach(btn => {
-    btn.addEventListener('click', () => {
-      pickerMonth = parseInt(btn.dataset.month);
-      renderMonthGrid();
-      refresh();
-    });
+    btn.addEventListener('click', () => { pickerMonth = parseInt(btn.dataset.month); renderMonthGrid(); refresh(); });
   });
 }
-
 document.getElementById('yearLabel').textContent = pickerYear;
 document.getElementById('yearPrev').addEventListener('click', () => {
-  if (pickerYear > TODAY.getFullYear() - 5) {
-    pickerYear--;
-    document.getElementById('yearLabel').textContent = pickerYear;
-    renderMonthGrid();
-  }
+  if (pickerYear > TODAY.getFullYear() - 5) { pickerYear--; document.getElementById('yearLabel').textContent = pickerYear; renderMonthGrid(); }
 });
 document.getElementById('yearNext').addEventListener('click', () => {
-  if (pickerYear < TODAY.getFullYear()) {
-    pickerYear++;
-    document.getElementById('yearLabel').textContent = pickerYear;
-    renderMonthGrid();
-  }
+  if (pickerYear < TODAY.getFullYear()) { pickerYear++; document.getElementById('yearLabel').textContent = pickerYear; renderMonthGrid(); }
 });
 renderMonthGrid();
 
@@ -270,18 +305,15 @@ function renderTeamButtons() {
     if (!byLeader[tl]) byLeader[tl] = [];
     byLeader[tl].push(engineerDisplayMap[engLower] || engLower);
   });
-
   container.innerHTML = allTeamLeaders.map(tl => {
     const engineers = (byLeader[tl] || []).sort();
     return `<div class="team-btn-wrap">
-      <button class="team-btn" data-team="${esc(tl)}">
-        ${esc(tl)}<span class="tl-chevron">▼</span>
-      </button>
+      <button class="team-btn" data-team="${esc(tl)}">${esc(tl)}<span class="tl-chevron">&#9660;</span></button>
       <div class="engineer-list" id="englist-${esc(tl.replace(/\s+/g,'-'))}">
         ${engineers.map(eng => `
           <button class="eng-btn" data-engineer="${esc(eng)}" data-team="${esc(tl)}">
             <span class="eng-name">${esc(eng)}</span>
-            <span class="eng-pct" id="engpct-${esc(eng.replace(/\s+/g,'-'))}">—</span>
+            <span class="eng-pct" id="engpct-${esc(eng.replace(/\s+/g,'-'))}">&#8212;</span>
           </button>`).join('')}
       </div>
     </div>`;
@@ -293,25 +325,18 @@ function renderTeamButtons() {
       const listId = 'englist-' + tl.replace(/\s+/g,'-');
       const list   = document.getElementById(listId);
       const isOpen = list.classList.contains('open');
-
       if (currentTeam === tl && isOpen) {
-        list.classList.remove('open');
-        btn.classList.remove('expanded');
+        list.classList.remove('open'); btn.classList.remove('expanded');
         document.querySelectorAll('.team-btn, .eng-btn').forEach(b => b.classList.remove('active'));
         document.querySelector('.team-btn[data-team="all"]').classList.add('active');
-        currentTeam = 'all'; currentEngineer = 'all';
-        refresh(); return;
+        currentTeam = 'all'; currentEngineer = 'all'; refresh(); return;
       }
-
       container.querySelectorAll('.engineer-list').forEach(l => l.classList.remove('open'));
       container.querySelectorAll('.team-btn').forEach(b => b.classList.remove('active','expanded'));
       container.querySelectorAll('.eng-btn').forEach(b => b.classList.remove('active'));
       document.querySelector('.team-btn[data-team="all"]').classList.remove('active');
-
-      list.classList.add('open');
-      btn.classList.add('active','expanded');
-      currentTeam = tl; currentEngineer = 'all';
-      refresh();
+      list.classList.add('open'); btn.classList.add('active','expanded');
+      currentTeam = tl; currentEngineer = 'all'; refresh();
     });
   });
 
@@ -338,7 +363,7 @@ function updateEngineerBadges(jobs) {
     if (isCountable(j)) { byEng[eng].total++; if (isCompleted(j)) byEng[eng].completed++; }
   });
   Object.entries(byEng).forEach(([eng, d]) => {
-    const el  = document.getElementById('engpct-' + eng.replace(/\s+/g,'-'));
+    const el = document.getElementById('engpct-' + eng.replace(/\s+/g,'-'));
     if (!el) return;
     const pct = d.total > 0 ? Math.round((d.completed/d.total)*100) : 0;
     el.textContent = pct + '%';
@@ -351,18 +376,23 @@ function updateEngineerBadges(jobs) {
 async function fetchJobs() {
   let startStr, endStr;
 
-  if (currentPeriod === 'specificMonth' && pickerMonth !== null) {
+  if (currentPeriod === 'prevdays') {
+    // Single day — start and end are the same date
+    const d = prevWorkingDays[currentDayIndex];
+    startStr = fmtISO(d);
+    endStr   = fmtISO(d);
+  } else if (currentPeriod === 'specificMonth' && pickerMonth !== null) {
     const firstDay = new Date(pickerYear, pickerMonth, 1);
     const lastDay  = new Date(pickerYear, pickerMonth + 1, 0);
-    startStr = firstDay.toISOString().split('T')[0];
-    endStr   = lastDay.toISOString().split('T')[0];
+    startStr = fmtISO(firstDay);
+    endStr   = fmtISO(lastDay);
   } else {
     const cfg   = periods[currentPeriod];
     const now   = new Date();
     const start = new Date(now);
     start.setDate(start.getDate() - cfg.daysBack);
-    startStr = start.toISOString().split('T')[0];
-    endStr   = now.toISOString().split('T')[0];
+    startStr = fmtISO(start);
+    endStr   = fmtISO(now);
   }
 
   const q = query(
@@ -398,22 +428,36 @@ function buildJobTypeToggles(jobs) {
   container.querySelectorAll('.type-toggle').forEach(btn => {
     btn.addEventListener('click', () => {
       container.querySelectorAll('.type-toggle').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentJobType = btn.dataset.type;
-      refresh();
+      btn.classList.add('active'); currentJobType = btn.dataset.type; refresh();
     });
   });
 }
 
 // ── Aggregate ─────────────────────────────────────────────────────────────
 function aggregateForChart(jobs) {
-  // Specific month: day-by-day (all days incl weekends)
+  // Single day view — show by engineer
+  if (currentPeriod === 'prevdays') {
+    const byEng = {};
+    jobs.forEach(j => {
+      const eng = (j.outcomeResource || 'Unknown').trim();
+      if (!byEng[eng]) byEng[eng] = { total: 0, completed: 0 };
+      if (isCountable(j)) { byEng[eng].total++; if (isCompleted(j)) byEng[eng].completed++; }
+    });
+    const sorted = Object.entries(byEng).sort((a,b) => b[1].total - a[1].total);
+    return {
+      labels:    sorted.map(([eng]) => eng),
+      totals:    sorted.map(([,d]) => d.total),
+      completed: sorted.map(([,d]) => d.completed),
+      chartType: 'bar',
+    };
+  }
+
+  // Specific month: day-by-day
   if (currentPeriod === 'specificMonth' && pickerMonth !== null) {
     const firstDay = new Date(pickerYear, pickerMonth, 1);
     const lastDay  = new Date(pickerYear, pickerMonth + 1, 0);
-    const days = [];
-    const cur  = new Date(firstDay);
-    while (cur <= lastDay) { days.push(cur.toISOString().split('T')[0]); cur.setDate(cur.getDate() + 1); }
+    const days = []; const cur = new Date(firstDay);
+    while (cur <= lastDay) { days.push(fmtISO(cur)); cur.setDate(cur.getDate() + 1); }
     const map = {};
     days.forEach(d => map[d] = { total: 0, completed: 0 });
     jobs.forEach(j => { if (map[j.submissionDate]) { if (isCountable(j)) { map[j.submissionDate].total++; if (isCompleted(j)) map[j.submissionDate].completed++; } } });
@@ -446,7 +490,7 @@ function aggregateForChart(jobs) {
     const map = {}; const keys = [];
     const cur = new Date(start);
     while (cur <= now) {
-      const key = cur.toISOString().split('T')[0];
+      const key = fmtISO(cur);
       map[key]  = { label: cur.toLocaleDateString('en-GB',{day:'2-digit',month:'short'}), total: 0, completed: 0 };
       keys.push(key); cur.setDate(cur.getDate()+7);
     }
@@ -459,9 +503,8 @@ function aggregateForChart(jobs) {
   }
 
   // By day (weekdays)
-  const days = [];
-  const cur  = new Date(start);
-  while (cur <= now) { const day = cur.getDay(); if (day!==0&&day!==6) days.push(cur.toISOString().split('T')[0]); cur.setDate(cur.getDate()+1); }
+  const days = []; const cur = new Date(start);
+  while (cur <= now) { const day = cur.getDay(); if (day!==0&&day!==6) days.push(fmtISO(cur)); cur.setDate(cur.getDate()+1); }
   const map = {};
   days.forEach(d => map[d] = { total: 0, completed: 0 });
   jobs.forEach(j => { if (map[j.submissionDate]) { if (isCountable(j)) { map[j.submissionDate].total++; if (isCompleted(j)) map[j.submissionDate].completed++; } } });
@@ -517,11 +560,11 @@ function buildBreakdown(jobs) {
   const body = document.getElementById('breakdownBody');
   if (!rows.length) { body.innerHTML='<tr><td colspan="6" class="empty-table">No data for this period</td></tr>'; return; }
   body.innerHTML = rows.map(([eng, d]) => {
-    const tl  = teamMap[eng.toLowerCase()] || '<span style="color:var(--text-dim)">—</span>';
+    const tl  = teamMap[eng.toLowerCase()] || '<span style="color:var(--text-dim)">&#8212;</span>';
     const pct = d.total>0?((d.completed/d.total)*100).toFixed(1):0;
     const pctColor = pct>=80?'badge-green':pct>=50?'badge-amber':'badge-blue';
     const types = [...d.types].map(t=>`<span class="badge badge-blue">${esc(t)}</span>`).join(' ');
-    return `<tr><td><strong>${esc(eng)}</strong></td><td>${tl}</td><td>${d.total}</td><td>${d.completed}</td><td><span class="badge ${pctColor}">${pct}%</span></td><td>${types||'—'}</td></tr>`;
+    return `<tr><td><strong>${esc(eng)}</strong></td><td>${tl}</td><td>${d.total}</td><td>${d.completed}</td><td><span class="badge ${pctColor}">${pct}%</span></td><td>${types||'&#8212;'}</td></tr>`;
   }).join('');
 }
 
@@ -536,16 +579,21 @@ function updateStats(jobs) {
 }
 
 function updateSubtitle() {
-  const teamLabel   = currentTeam==='all'?'All Teams':currentTeam;
-  const typeLabel   = currentJobType==='all'?'All Job Types':currentJobType;
+  const teamLabel = currentTeam==='all'?'All Teams':currentTeam;
+  const typeLabel = currentJobType==='all'?'All Job Types':currentJobType;
   let periodLabel;
-  if (currentPeriod === 'specificMonth' && pickerMonth !== null) {
+  if (currentPeriod === 'prevdays') {
+    const d = prevWorkingDays[currentDayIndex];
+    periodLabel = fmtLong(d);
+  } else if (currentPeriod === 'specificMonth' && pickerMonth !== null) {
     periodLabel = `${MONTH_NAMES[pickerMonth]} ${pickerYear}`;
   } else {
     periodLabel = periods[currentPeriod]?.label || '';
   }
   document.getElementById('subtitle').textContent = `${teamLabel} · ${typeLabel} · ${periodLabel}`;
-  document.getElementById('chartTitle').textContent = `Jobs Over Time — ${periodLabel}`;
+  document.getElementById('chartTitle').textContent = currentPeriod === 'prevdays'
+    ? `Jobs by Engineer — ${fmtLong(prevWorkingDays[currentDayIndex])}`
+    : `Jobs Over Time — ${periodLabel}`;
 }
 
 async function refresh() {
@@ -589,17 +637,22 @@ document.querySelectorAll('.period-btn').forEach(btn => {
     btn.classList.add('active');
     currentPeriod = btn.dataset.period;
 
-    const picker = document.getElementById('monthPicker');
+    const picker  = document.getElementById('monthPicker');
+    const dayPills = document.getElementById('dayPills');
+
     if (currentPeriod === 'specificMonth') {
       picker.classList.add('visible');
-      if (pickerMonth === null) {
-        pickerYear  = TODAY.getFullYear();
-        pickerMonth = TODAY.getMonth();
-        document.getElementById('yearLabel').textContent = pickerYear;
-        renderMonthGrid();
-      }
+      dayPills.classList.remove('visible');
+      if (pickerMonth === null) { pickerYear = TODAY.getFullYear(); pickerMonth = TODAY.getMonth(); document.getElementById('yearLabel').textContent = pickerYear; renderMonthGrid(); }
+    } else if (currentPeriod === 'prevdays') {
+      picker.classList.remove('visible');
+      dayPills.classList.add('visible');
+      // Default to most recent day
+      currentDayIndex = 0;
+      buildDayPills();
     } else {
       picker.classList.remove('visible');
+      dayPills.classList.remove('visible');
     }
 
     refresh();
@@ -614,8 +667,9 @@ document.querySelector('.team-btn[data-team="all"]').addEventListener('click', f
   refresh();
 });
 
-function esc(t) { const d=document.createElement('div'); d.textContent=String(t??''); return d.innerHTML; }
+function esc(t) { const d=document.createElement('div'); d.textContent=String(t??'boom'); return d.innerHTML; }
 
+buildDayPills();
 await loadTeamLeaders();
 refresh();
 </script>
