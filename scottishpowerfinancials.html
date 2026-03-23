@@ -63,13 +63,14 @@
             display: grid;
             grid-template-columns: 1fr auto;
             gap: 1.5rem;
-            align-items: start;
+            align-items: stretch;
         }
 
         .averages-strip {
             display: flex;
             flex-wrap: wrap;
             gap: 0.65rem;
+            align-content: flex-start;
         }
 
         .avg-card {
@@ -78,7 +79,7 @@
             border-radius: 12px;
             padding: 0.7rem 0.9rem;
             min-width: 150px;
-            flex: 0 1 auto;
+            flex: 1 1 150px;
         }
         .avg-card.highlight-orange { background: var(--highlight-orange); border-color: var(--warning); }
         .avg-value { font-family: 'DM Mono'; font-size: 1.15rem; color: var(--accent); }
@@ -89,8 +90,11 @@
             border: 1px solid var(--border);
             border-radius: 14px;
             padding: 1rem 1.1rem;
-            min-width: 230px;
-            max-width: 270px;
+            min-width: 260px;
+            max-width: 300px;
+            align-self: stretch;
+            display: flex;
+            flex-direction: column;
         }
         .rolling-panel-title {
             font-size: 0.68rem;
@@ -102,12 +106,22 @@
             padding-bottom: 0.5rem;
             border-bottom: 1px solid var(--border);
         }
+        .rolling-section-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.5rem 0 0.3rem;
+            margin-top: 0.25rem;
+        }
+        .rolling-section-label.transactional { color: var(--purple); }
+        .rolling-section-label.dayrate { color: var(--teal); border-top: 1px solid var(--border); margin-top: 0.5rem; padding-top: 0.6rem; }
         .rolling-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.45rem 0;
-            border-bottom: 1px solid rgba(42,63,95,0.5);
+            padding: 0.38rem 0;
+            border-bottom: 1px solid rgba(42,63,95,0.4);
             gap: 0.5rem;
         }
         .rolling-row:last-child { border-bottom: none; }
@@ -117,7 +131,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 130px;
+            max-width: 150px;
         }
         .rolling-name.highlight { color: var(--warning); }
         .rolling-val {
@@ -409,26 +423,28 @@
             });
         });
 
-        const allNames = [...TRANSACTIONAL, ...DAYRATE].sort();
-        
-        let html = '';
-        allNames.forEach(name => {
-            const s = rollingStats[name];
-            const isHighlighted = HIGHLIGHT_LIST.includes(name);
-            const avg = s && s.count > 0 ? s.total / s.count : null;
-            html += `
-                <div class="rolling-row">
+        const renderRollingSection = (names, labelClass, labelText) => {
+            let html = `<div class="rolling-section-label ${labelClass}">${labelText}</div>`;
+            names.forEach(name => {
+                const s = rollingStats[name];
+                const isHighlighted = HIGHLIGHT_LIST.includes(name);
+                const avg = s && s.count > 0 ? s.total / s.count : null;
+                html += `<div class="rolling-row">
                     <span class="rolling-name ${isHighlighted ? 'highlight' : ''}" title="${name}">${name}</span>
                     ${avg !== null
                         ? `<span class="rolling-val ${avg < 400 ? 'low' : ''}">£${avg.toFixed(0)}</span>`
                         : `<span style="font-size:0.7rem; color:var(--text-muted);">—</span>`
                     }
                 </div>`;
-        });
+            });
+            return html;
+        };
+
+        let html = renderRollingSection(TRANSACTIONAL, 'transactional', '⚡ Transactional');
+        html += renderRollingSection(DAYRATE, 'dayrate', '📅 Day Rate');
 
         container.innerHTML = html || '<div class="rolling-empty">No data in last 30 days.</div>';
     }
-
     window.switchTab = (t) => {
         document.getElementById('panel-entry').style.display = t === 'entry' ? 'block' : 'none';
         document.getElementById('panel-overview').style.display = t === 'overview' ? 'block' : 'none';
