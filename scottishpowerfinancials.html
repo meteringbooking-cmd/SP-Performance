@@ -61,10 +61,45 @@
         /* ── Averages + Rolling Month side-by-side layout ── */
         .averages-row {
             display: grid;
-            grid-template-columns: 1fr auto;
+            grid-template-columns: auto auto 1fr;
             gap: 1.5rem;
             align-items: stretch;
         }
+
+        .summary-col {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+            justify-content: center;
+            min-width: 170px;
+        }
+
+        .summary-stat {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            text-align: center;
+        }
+
+        .summary-stat-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .summary-stat-value {
+            font-family: 'DM Mono';
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .summary-stat-value.transactional { color: var(--purple); }
+        .summary-stat-value.dayrate { color: var(--teal); }
+        .summary-stat-value.overall { color: var(--success); }
 
         .averages-strip {
             display: flex;
@@ -231,6 +266,22 @@
             <div class="averages-row">
                 <!-- Left: compact averages strip -->
                 <div id="averages-container" class="averages-strip"></div>
+
+                <!-- Middle: period summary stats -->
+                <div class="summary-col" id="summary-col">
+                    <div class="summary-stat">
+                        <div class="summary-stat-label">⚡ Transactional Avg</div>
+                        <div class="summary-stat-value transactional" id="sum-transactional">—</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-label">📅 Day Rate Avg</div>
+                        <div class="summary-stat-value dayrate" id="sum-dayrate">—</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-label">📊 Overall Avg</div>
+                        <div class="summary-stat-value overall" id="sum-overall">—</div>
+                    </div>
+                </div>
 
                 <!-- Right: rolling 30-day averages -->
                 <div class="rolling-panel">
@@ -435,6 +486,22 @@
             makeCol('transactional', '⚡ Transactional', t1) +
             makeCol('transactional', '⚡ Transactional', t2) +
             makeCol('dayrate', '📅 Day Rate', DAYRATE);
+
+        // Compute period summary stats
+        const groupAvg = (names) => {
+            let total = 0, days = 0;
+            names.forEach(n => { if (stats[n]) { total += stats[n].total; days += stats[n].count; } });
+            return days > 0 ? total / days : null;
+        };
+
+        const fmt = v => v !== null ? `£${v.toFixed(2)}` : '—';
+        const tAvg = groupAvg(TRANSACTIONAL);
+        const dAvg = groupAvg(DAYRATE);
+        const oAvg = groupAvg([...TRANSACTIONAL, ...DAYRATE]);
+
+        document.getElementById('sum-transactional').textContent = fmt(tAvg);
+        document.getElementById('sum-dayrate').textContent = fmt(dAvg);
+        document.getElementById('sum-overall').textContent = fmt(oAvg);
     }
 
     async function renderRollingMonth() {
