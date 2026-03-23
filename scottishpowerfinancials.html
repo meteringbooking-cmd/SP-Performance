@@ -68,19 +68,38 @@
 
         .averages-strip {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             gap: 0.65rem;
+            align-items: flex-start;
         }
+
+        .avg-col {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 180px;
+            flex-shrink: 0;
+        }
+
+        .avg-col-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding-bottom: 0.3rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .avg-col-label.transactional { color: var(--purple); }
+        .avg-col-label.dayrate { color: var(--teal); }
 
         .avg-card {
             background: var(--bg-dark);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 0.7rem 0.9rem;
-            width: 100%;
+            padding: 0.6rem 0.8rem;
         }
         .avg-card.highlight-orange { background: var(--highlight-orange); border-color: var(--warning); }
-        .avg-value { font-family: 'DM Mono'; font-size: 1.15rem; color: var(--accent); }
+        .avg-value { font-family: 'DM Mono'; font-size: 1.05rem; color: var(--accent); }
 
         /* ── Rolling Month Panel ── */
         .rolling-panel {
@@ -386,19 +405,36 @@
 
     function renderAverages(stats) {
         const container = document.getElementById('averages-container');
-        container.innerHTML = '';
-        Object.keys(stats).sort().forEach(name => {
+
+        const makeCard = (name) => {
             const s = stats[name];
-            if (s.count > 0) {
-                const isHighlighted = HIGHLIGHT_LIST.includes(name);
-                container.innerHTML += `
-                    <div class="avg-card ${isHighlighted ? 'highlight-orange' : ''}">
-                        <div style="font-size:0.65rem; color:var(--text-muted); margin-bottom:0.2rem;">${name}</div>
-                        <div class="avg-value">£${(s.total/s.count).toFixed(2)}</div>
-                        <div style="font-size:0.6rem; color:var(--text-muted);">${s.count} active days</div>
-                    </div>`;
-            }
-        });
+            if (!s || s.count === 0) return '';
+            const isHighlighted = HIGHLIGHT_LIST.includes(name);
+            return `<div class="avg-card ${isHighlighted ? 'highlight-orange' : ''}">
+                <div style="font-size:0.65rem; color:var(--text-muted); margin-bottom:0.2rem;">${name}</div>
+                <div class="avg-value">£${(s.total/s.count).toFixed(2)}</div>
+                <div style="font-size:0.6rem; color:var(--text-muted);">${s.count} active days</div>
+            </div>`;
+        };
+
+        const makeCol = (labelClass, labelText, names) => {
+            const cards = names.map(makeCard).join('');
+            if (!cards) return '';
+            return `<div class="avg-col">
+                <div class="avg-col-label ${labelClass}">${labelText}</div>
+                ${cards}
+            </div>`;
+        };
+
+        // Transactional: split into two stacks of ~4
+        const half = Math.ceil(TRANSACTIONAL.length / 2);
+        const t1 = TRANSACTIONAL.slice(0, half);
+        const t2 = TRANSACTIONAL.slice(half);
+
+        container.innerHTML =
+            makeCol('transactional', '⚡ Transactional', t1) +
+            makeCol('transactional', '⚡ Transactional', t2) +
+            makeCol('dayrate', '📅 Day Rate', DAYRATE);
     }
 
     async function renderRollingMonth() {
