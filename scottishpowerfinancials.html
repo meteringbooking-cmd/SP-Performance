@@ -13,7 +13,7 @@
             --bg-input: #0d1f3a; --text-light: #E8EDF2; --text-muted: #8B9AAE;
             --border: #2a3f5f; --success: #10B981; --warning: #F59E0B; --error: #EF4444;
             --purple: #8B5CF6; --teal: #14b8a6;
-            --highlight-orange: rgba(245, 158, 11, 0.15); /* Faint orange highlight */
+            --highlight-orange: rgba(245, 158, 11, 0.15);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Work Sans', sans-serif; background: var(--bg-dark); color: var(--text-light); min-height: 100vh; }
@@ -53,16 +53,87 @@
         .name-col { text-align: left !important; font-weight: 600; background: var(--bg-card) !important; position: sticky; left: 0; z-index: 2; }
         .type-header { background: #0d1f3a !important; text-align: left !important; color: var(--accent); font-weight: 700; letter-spacing: 1px; }
         
-        /* Highlighting Logic */
         .val-low { color: var(--error); font-weight: 700; }
         .val-good { color: var(--success); }
         .val-empty { color: #2a3f5f; }
         .row-highlight { background-color: var(--highlight-orange) !important; }
 
-        .averages-strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
-        .avg-card { background: var(--bg-dark); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; }
+        /* ── Averages + Rolling Month side-by-side layout ── */
+        .averages-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .averages-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+        }
+
+        .avg-card {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.7rem 0.9rem;
+            min-width: 150px;
+            flex: 0 1 auto;
+        }
         .avg-card.highlight-orange { background: var(--highlight-orange); border-color: var(--warning); }
-        .avg-value { font-family: 'DM Mono'; font-size: 1.3rem; color: var(--accent); }
+        .avg-value { font-family: 'DM Mono'; font-size: 1.15rem; color: var(--accent); }
+
+        /* ── Rolling Month Panel ── */
+        .rolling-panel {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1rem 1.1rem;
+            min-width: 230px;
+            max-width: 270px;
+        }
+        .rolling-panel-title {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .rolling-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.45rem 0;
+            border-bottom: 1px solid rgba(42,63,95,0.5);
+            gap: 0.5rem;
+        }
+        .rolling-row:last-child { border-bottom: none; }
+        .rolling-name {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 130px;
+        }
+        .rolling-name.highlight { color: var(--warning); }
+        .rolling-val {
+            font-family: 'DM Mono';
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .rolling-val.low { color: var(--error); }
+        .rolling-empty {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 1rem 0;
+        }
 
         .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--bg-card); border-left: 4px solid var(--success); padding: 1rem 2rem; border-radius: 8px; display: none; z-index: 999; }
     </style>
@@ -120,7 +191,18 @@
 
         <div class="card">
             <div class="card-title">📈 Averages (Active Days Only)</div>
-            <div id="averages-container" class="averages-strip"></div>
+            <div class="averages-row">
+                <!-- Left: compact averages strip -->
+                <div id="averages-container" class="averages-strip"></div>
+
+                <!-- Right: rolling 30-day averages -->
+                <div class="rolling-panel">
+                    <div class="rolling-panel-title">📅 Rolling Month Avg</div>
+                    <div id="rolling-container">
+                        <div class="rolling-empty">Generate a report to view.</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="card">
@@ -152,8 +234,6 @@
 
     const TRANSACTIONAL = ["Alistair Cavan", "Craig Steel", "Jonathan Chyla", "Mehdi Khamseh", "Muhammed Zafar", "Neil Burns", "Tomas Anderson"].sort();
     const DAYRATE = ["Allan Grant", "Harris Saleem", "Kris Armstrong", "Ryan Clark", "Scott Coyle"].sort();
-    
-    // Highlight List
     const HIGHLIGHT_LIST = ["Allan Grant", "Harris Saleem", "Kris Armstrong", "Ryan Clark", "Scott Coyle"];
 
     function init() {
@@ -161,7 +241,6 @@
         const dGrid = document.getElementById('grid-dayrate');
         TRANSACTIONAL.forEach(n => tGrid.innerHTML += createCard(n, 'transactional'));
         DAYRATE.forEach(n => dGrid.innerHTML += createCard(n, 'dayrate'));
-        
         document.getElementById('entryDate').value = new Date().toISOString().split('T')[0];
         loadDateData();
     }
@@ -252,6 +331,9 @@
         dates.sort();
         renderPivot(dates, dataMap);
         renderAverages(engStats);
+
+        // Rolling month: last 30 days from today
+        await renderRollingMonth();
     };
 
     function renderPivot(dates, dataMap) {
@@ -264,7 +346,6 @@
             list.forEach(name => {
                 const isHighlighted = HIGHLIGHT_LIST.includes(name);
                 const rowClass = isHighlighted ? 'class="row-highlight"' : '';
-                
                 html += `<tr ${rowClass}><td class="name-col ${isHighlighted ? 'row-highlight' : ''}">${name}</td>`;
                 dates.forEach(d => {
                     const val = dataMap[d] ? (dataMap[d][name] || 0) : 0;
@@ -294,12 +375,58 @@
                 const isHighlighted = HIGHLIGHT_LIST.includes(name);
                 container.innerHTML += `
                     <div class="avg-card ${isHighlighted ? 'highlight-orange' : ''}">
-                        <div style="font-size:0.7rem; color:var(--text-muted)">${name}</div>
+                        <div style="font-size:0.65rem; color:var(--text-muted); margin-bottom:0.2rem;">${name}</div>
                         <div class="avg-value">£${(s.total/s.count).toFixed(2)}</div>
-                        <div style="font-size:0.6rem">Avg over ${s.count} active days</div>
+                        <div style="font-size:0.6rem; color:var(--text-muted);">${s.count} active days</div>
                     </div>`;
             }
         });
+    }
+
+    async function renderRollingMonth() {
+        const container = document.getElementById('rolling-container');
+        container.innerHTML = '<div class="rolling-empty" style="padding:0.5rem 0;">Loading…</div>';
+
+        // Calculate rolling 30-day window
+        const today = new Date();
+        const endDate = today.toISOString().split('T')[0];
+        const startDate = new Date(today);
+        startDate.setDate(startDate.getDate() - 29);
+        const startStr = startDate.toISOString().split('T')[0];
+
+        const q = query(collection(db, "SP Financial"), where("date", ">=", startStr), where("date", "<=", endDate));
+        const snap = await getDocs(q);
+
+        const rollingStats = {};
+        snap.forEach(docSnap => {
+            const d = docSnap.data();
+            d.entries.forEach(e => {
+                if (e.amount > 0) {
+                    if (!rollingStats[e.name]) rollingStats[e.name] = { total: 0, count: 0 };
+                    rollingStats[e.name].total += e.amount;
+                    rollingStats[e.name].count++;
+                }
+            });
+        });
+
+        const allNames = [...TRANSACTIONAL, ...DAYRATE].sort();
+        
+        let html = '';
+        allNames.forEach(name => {
+            const s = rollingStats[name];
+            const isHighlighted = HIGHLIGHT_LIST.includes(name);
+            const avg = s && s.count > 0 ? s.total / s.count : null;
+            html += `
+                <div class="rolling-row">
+                    <span class="rolling-name ${isHighlighted ? 'highlight' : ''}" title="${name}">${name}</span>
+                    ${avg !== null
+                        ? `<span class="rolling-val ${avg < 400 ? 'low' : ''}">£${avg.toFixed(0)}</span>`
+                        : `<span style="font-size:0.7rem; color:var(--text-muted);">—</span>`
+                    }
+                </div>`;
+        });
+
+        container.innerHTML = html || '<div class="rolling-empty">No data in last 30 days.</div>';
     }
 
     window.switchTab = (t) => {
