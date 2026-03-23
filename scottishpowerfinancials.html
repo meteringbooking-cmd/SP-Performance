@@ -68,9 +68,8 @@
 
         .averages-strip {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 0.65rem;
-            align-content: flex-start;
         }
 
         .avg-card {
@@ -78,8 +77,7 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 0.7rem 0.9rem;
-            min-width: 150px;
-            flex: 1 1 150px;
+            width: 100%;
         }
         .avg-card.highlight-orange { background: var(--highlight-orange); border-color: var(--warning); }
         .avg-value { font-family: 'DM Mono'; font-size: 1.15rem; color: var(--accent); }
@@ -90,11 +88,17 @@
             border: 1px solid var(--border);
             border-radius: 14px;
             padding: 1rem 1.1rem;
-            min-width: 260px;
-            max-width: 300px;
+            min-width: 480px;
+            max-width: 560px;
             align-self: stretch;
             display: flex;
             flex-direction: column;
+        }
+        .rolling-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            flex: 1;
         }
         .rolling-panel-title {
             font-size: 0.68rem;
@@ -115,7 +119,7 @@
             margin-top: 0.25rem;
         }
         .rolling-section-label.transactional { color: var(--purple); }
-        .rolling-section-label.dayrate { color: var(--teal); border-top: 1px solid var(--border); margin-top: 0.5rem; padding-top: 0.6rem; }
+        .rolling-section-label.dayrate { color: var(--teal); }
         .rolling-row {
             display: flex;
             justify-content: space-between;
@@ -212,8 +216,8 @@
                 <!-- Right: rolling 30-day averages -->
                 <div class="rolling-panel">
                     <div class="rolling-panel-title">📅 Rolling Month Avg</div>
-                    <div id="rolling-container">
-                        <div class="rolling-empty">Generate a report to view.</div>
+                    <div class="rolling-sections" id="rolling-container">
+                        <div class="rolling-empty" style="grid-column:1/-1;">Generate a report to view.</div>
                     </div>
                 </div>
             </div>
@@ -424,7 +428,7 @@
         });
 
         const renderRollingSection = (names, labelClass, labelText) => {
-            let html = `<div class="rolling-section-label ${labelClass}">${labelText}</div>`;
+            let html = `<div><div class="rolling-section-label ${labelClass}">${labelText}</div>`;
             names.forEach(name => {
                 const s = rollingStats[name];
                 const isHighlighted = HIGHLIGHT_LIST.includes(name);
@@ -437,6 +441,7 @@
                     }
                 </div>`;
             });
+            html += `</div>`;
             return html;
         };
 
