@@ -61,7 +61,7 @@
         /* ── Averages + Rolling Month side-by-side layout ── */
         .averages-row {
             display: grid;
-            grid-template-columns: auto auto 1fr;
+            grid-template-columns: 1fr auto 1fr;
             gap: 1.5rem;
             align-items: stretch;
         }
@@ -70,7 +70,6 @@
             display: flex;
             flex-direction: column;
             gap: 0.65rem;
-            justify-content: center;
             min-width: 170px;
         }
 
@@ -80,6 +79,10 @@
             border-radius: 12px;
             padding: 0.75rem 1rem;
             text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .summary-stat-label {
@@ -105,15 +108,15 @@
             display: flex;
             flex-direction: row;
             gap: 0.65rem;
-            align-items: flex-start;
+            align-items: stretch;
+            height: 100%;
         }
 
         .avg-col {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
-            width: 180px;
-            flex-shrink: 0;
+            flex: 1;
         }
 
         .avg-col-label {
@@ -132,6 +135,10 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 0.6rem 0.8rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .avg-card.highlight-orange { background: var(--highlight-orange); border-color: var(--warning); }
         .avg-value { font-family: 'DM Mono'; font-size: 1.05rem; color: var(--accent); }
@@ -142,8 +149,7 @@
             border: 1px solid var(--border);
             border-radius: 14px;
             padding: 1rem 1.1rem;
-            min-width: 480px;
-            max-width: 560px;
+            width: 100%;
             align-self: stretch;
             display: flex;
             flex-direction: column;
@@ -153,6 +159,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
             flex: 1;
+            align-content: start;
         }
         .rolling-panel-title {
             font-size: 0.68rem;
