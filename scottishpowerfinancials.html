@@ -45,6 +45,68 @@
         .btn-primary { background: var(--accent); color: white; }
         .btn-secondary { background: var(--bg-dark); color: var(--text-light); border: 1px solid var(--border); }
 
+        /* ── Name Filter ── */
+        .filter-bar {
+            margin-bottom: 1rem;
+        }
+        .filter-bar-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.6rem;
+        }
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        .filter-chip {
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            border: 1.5px solid var(--border);
+            background: var(--bg-dark);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            white-space: nowrap;
+        }
+        .filter-chip:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .filter-chip.active {
+            background: rgba(0, 163, 224, 0.15);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .filter-chip.chip-all {
+            border-color: var(--text-muted);
+        }
+        .filter-chip.chip-all.active {
+            background: rgba(139, 154, 174, 0.15);
+            border-color: var(--text-muted);
+            color: var(--text-light);
+        }
+        .filter-chip.chip-transactional.active {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: var(--purple);
+            color: var(--purple);
+        }
+        .filter-chip.chip-dayrate.active {
+            background: rgba(20, 184, 166, 0.15);
+            border-color: var(--teal);
+            color: var(--teal);
+        }
+        .filter-chip.chip-orange.active {
+            background: var(--highlight-orange);
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
         /* Pivot Table Styling */
         .matrix-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
         .matrix-table { width: 100%; border-collapse: collapse; background: var(--bg-dark); font-size: 0.85rem; }
@@ -139,8 +201,13 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            cursor: pointer;
+            transition: 0.15s;
         }
+        .avg-card:hover { border-color: var(--accent); }
+        .avg-card.selected { border-color: var(--accent); background: rgba(0,163,224,0.08); }
         .avg-card.highlight-orange { background: var(--highlight-orange); border-color: var(--warning); }
+        .avg-card.highlight-orange.selected { background: rgba(245,158,11,0.25); border-color: var(--warning); box-shadow: 0 0 0 2px var(--warning); }
         .avg-value { font-family: 'DM Mono'; font-size: 1.05rem; color: var(--accent); }
 
         /* ── Rolling Month Panel ── */
@@ -188,8 +255,13 @@
             padding: 0.38rem 0;
             border-bottom: 1px solid rgba(42,63,95,0.4);
             gap: 0.5rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.12s;
         }
         .rolling-row:last-child { border-bottom: none; }
+        .rolling-row:hover { background: rgba(0,163,224,0.06); padding-left: 4px; padding-right: 4px; }
+        .rolling-row.selected { background: rgba(0,163,224,0.1); padding-left: 4px; padding-right: 4px; }
         .rolling-name {
             font-size: 0.78rem;
             color: var(--text-light);
@@ -213,6 +285,34 @@
             text-align: center;
             padding: 1rem 0;
         }
+
+        /* ── Active filter banner ── */
+        .filter-active-banner {
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 1rem;
+            background: rgba(0,163,224,0.08);
+            border: 1px solid var(--accent);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .filter-active-banner.visible { display: flex; }
+        .filter-clear-btn {
+            margin-left: auto;
+            padding: 0.25rem 0.7rem;
+            border-radius: 6px;
+            border: 1px solid var(--accent);
+            background: transparent;
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .filter-clear-btn:hover { background: rgba(0,163,224,0.15); }
 
         .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--bg-card); border-left: 4px solid var(--success); padding: 1rem 2rem; border-radius: 8px; display: none; z-index: 999; }
     </style>
@@ -271,10 +371,7 @@
         <div class="card">
             <div class="card-title">📈 Averages (Active Days Only)</div>
             <div class="averages-row">
-                <!-- Left: compact averages strip -->
                 <div id="averages-container" class="averages-strip"></div>
-
-                <!-- Middle: period summary stats -->
                 <div class="summary-col" id="summary-col">
                     <div class="summary-stat">
                         <div class="summary-stat-label">⚡ Transactional Avg</div>
@@ -289,10 +386,8 @@
                         <div class="summary-stat-value overall" id="sum-overall">—</div>
                     </div>
                 </div>
-
-                <!-- Right: rolling 30-day averages -->
                 <div class="rolling-panel">
-                    <div class="rolling-panel-title">📅 Rolling Month Avg</div>
+                    <div class="rolling-panel-title">📅 Rolling Month Avg <span style="font-size:0.6rem; color:var(--text-muted); font-weight:400; margin-left:0.4rem;">— click a name to filter</span></div>
                     <div class="rolling-sections" id="rolling-container">
                         <div class="rolling-empty" style="grid-column:1/-1;">Generate a report to view.</div>
                     </div>
@@ -302,6 +397,19 @@
 
         <div class="card">
             <div class="card-title">📆 Daily Revenue Pivot Table</div>
+
+            <!-- Active filter banner -->
+            <div class="filter-active-banner" id="filter-banner">
+                <span id="filter-banner-text">Showing: All Engineers</span>
+                <button class="filter-clear-btn" onclick="clearFilter()">✕ Clear Filter</button>
+            </div>
+
+            <!-- Name filter chips -->
+            <div class="filter-bar" id="filter-bar" style="display:none;">
+                <div class="filter-bar-label">Filter by engineer</div>
+                <div class="filter-chips" id="filter-chips"></div>
+            </div>
+
             <div class="matrix-wrap" id="matrix-container">
                 <div style="padding: 2rem; text-align: center; color: var(--text-muted);">Select dates and click Generate.</div>
             </div>
@@ -330,6 +438,11 @@
     const TRANSACTIONAL = ["Alistair Cavan", "Craig Steel", "Jonathan Chyla", "Mehdi Khamseh", "Muhammed Zafar", "Neil Burns", "Tomas Anderson"].sort();
     const DAYRATE = ["Allan Grant", "Harris Saleem", "Kris Armstrong", "Ryan Clark", "Scott Coyle"].sort();
     const HIGHLIGHT_LIST = ["Allan Grant", "Harris Saleem", "Kris Armstrong", "Ryan Clark", "Scott Coyle"];
+
+    // State
+    let lastDates = [];
+    let lastDataMap = {};
+    let activeFilter = null; // null = all, string = name
 
     function init() {
         const tGrid = document.getElementById('grid-transactional');
@@ -424,38 +537,118 @@
         });
 
         dates.sort();
-        renderPivot(dates, dataMap);
-        renderAverages(engStats);
+        lastDates = dates;
+        lastDataMap = dataMap;
+        activeFilter = null;
 
-        // Rolling month: last 30 days from today
+        buildFilterChips();
+        renderPivot(dates, dataMap, null);
+        renderAverages(engStats);
         await renderRollingMonth();
     };
 
-    function renderPivot(dates, dataMap) {
+    // ── Filter chip builder ──
+    function buildFilterChips() {
+        const bar = document.getElementById('filter-bar');
+        const chipsEl = document.getElementById('filter-chips');
+        bar.style.display = 'block';
+
+        let html = `<span class="filter-chip chip-all active" data-name="all" onclick="applyFilter('all')">All</span>`;
+        TRANSACTIONAL.forEach(name => {
+            html += `<span class="filter-chip chip-transactional" data-name="${name}" onclick="applyFilter('${name}')">${name}</span>`;
+        });
+        DAYRATE.forEach(name => {
+            const isOrange = HIGHLIGHT_LIST.includes(name);
+            html += `<span class="filter-chip ${isOrange ? 'chip-orange' : 'chip-dayrate'}" data-name="${name}" onclick="applyFilter('${name}')">${name}</span>`;
+        });
+        chipsEl.innerHTML = html;
+    }
+
+    window.applyFilter = (name) => {
+        activeFilter = name === 'all' ? null : name;
+        // Update chip active states
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            const chipName = chip.dataset.name;
+            chip.classList.toggle('active', chipName === (activeFilter || 'all'));
+        });
+        // Update rolling row highlights
+        document.querySelectorAll('.rolling-row').forEach(row => {
+            row.classList.toggle('selected', activeFilter && row.dataset.name === activeFilter);
+        });
+        // Update avg-card highlights
+        document.querySelectorAll('.avg-card').forEach(card => {
+            if (activeFilter) {
+                card.classList.toggle('selected', card.dataset.name === activeFilter);
+            } else {
+                card.classList.remove('selected');
+            }
+        });
+        renderPivot(lastDates, lastDataMap, activeFilter);
+        updateBanner();
+    };
+
+    window.clearFilter = () => applyFilter('all');
+
+    function updateBanner() {
+        const banner = document.getElementById('filter-banner');
+        const text = document.getElementById('filter-banner-text');
+        if (activeFilter) {
+            banner.classList.add('visible');
+            const type = TRANSACTIONAL.includes(activeFilter) ? '⚡ Transactional' : '📅 Day Rate';
+            text.textContent = `Showing: ${activeFilter} · ${type}`;
+        } else {
+            banner.classList.remove('visible');
+        }
+    }
+
+    function renderPivot(dates, dataMap, filterName) {
+        // Determine which names to show
+        let transactionalList = TRANSACTIONAL;
+        let dayrateList = DAYRATE;
+        let singleMode = false;
+
+        if (filterName) {
+            singleMode = true;
+            transactionalList = TRANSACTIONAL.includes(filterName) ? [filterName] : [];
+            dayrateList = DAYRATE.includes(filterName) ? [filterName] : [];
+        }
+
         let html = `<table class="matrix-table"><thead><tr><th class="name-col">Engineer Name</th>`;
         dates.forEach(d => html += `<th>${d.split('-').slice(1).reverse().join('/')}</th>`);
+
+        // If single mode, add a total column
+        if (singleMode) {
+            html += `<th style="color:var(--success); background:rgba(16,185,129,0.06);">Total</th><th style="color:var(--accent); background:rgba(0,163,224,0.06);">Avg</th>`;
+        }
         html += `</tr></thead><tbody>`;
 
         const renderSection = (title, list) => {
-            html += `<tr><td colspan="${dates.length + 1}" class="type-header">${title}</td></tr>`;
+            if (list.length === 0) return;
+            html += `<tr><td colspan="${dates.length + 1 + (singleMode ? 2 : 0)}" class="type-header">${title}</td></tr>`;
             list.forEach(name => {
                 const isHighlighted = HIGHLIGHT_LIST.includes(name);
                 const rowClass = isHighlighted ? 'class="row-highlight"' : '';
                 html += `<tr ${rowClass}><td class="name-col ${isHighlighted ? 'row-highlight' : ''}">${name}</td>`;
+                let rowTotal = 0, rowCount = 0;
                 dates.forEach(d => {
                     const val = dataMap[d] ? (dataMap[d][name] || 0) : 0;
+                    if (val > 0) { rowTotal += val; rowCount++; }
                     let style = '';
                     if (val > 0 && val < 400) style = 'class="val-low"';
                     else if (val >= 400) style = 'class="val-good"';
                     else style = 'class="val-empty"';
                     html += `<td ${style}>${val > 0 ? '£' + val.toFixed(0) : '-'}</td>`;
                 });
+                if (singleMode) {
+                    html += `<td style="color:var(--success); font-weight:700; font-family:'DM Mono';">${rowTotal > 0 ? '£'+rowTotal.toFixed(0) : '-'}</td>`;
+                    html += `<td style="color:var(--accent); font-family:'DM Mono';">${rowCount > 0 ? '£'+(rowTotal/rowCount).toFixed(0) : '-'}</td>`;
+                }
                 html += `</tr>`;
             });
         };
 
-        renderSection('⚡ TRANSACTIONAL', TRANSACTIONAL);
-        renderSection('📅 DAY RATE', DAYRATE);
+        if (transactionalList.length > 0) renderSection('⚡ TRANSACTIONAL', transactionalList);
+        if (dayrateList.length > 0) renderSection('📅 DAY RATE', dayrateList);
         
         html += `</tbody></table>`;
         document.getElementById('matrix-container').innerHTML = html;
@@ -468,7 +661,7 @@
             const s = stats[name];
             if (!s || s.count === 0) return '';
             const isHighlighted = HIGHLIGHT_LIST.includes(name);
-            return `<div class="avg-card ${isHighlighted ? 'highlight-orange' : ''}">
+            return `<div class="avg-card ${isHighlighted ? 'highlight-orange' : ''}" data-name="${name}" onclick="applyFilter('${name}')">
                 <div style="font-size:0.65rem; color:var(--text-muted); margin-bottom:0.2rem;">${name}</div>
                 <div class="avg-value">£${(s.total/s.count).toFixed(2)}</div>
                 <div style="font-size:0.6rem; color:var(--text-muted);">${s.count} active days</div>
@@ -484,7 +677,6 @@
             </div>`;
         };
 
-        // Transactional: split into two stacks of ~4
         const half = Math.ceil(TRANSACTIONAL.length / 2);
         const t1 = TRANSACTIONAL.slice(0, half);
         const t2 = TRANSACTIONAL.slice(half);
@@ -494,7 +686,6 @@
             makeCol('transactional', '⚡ Transactional', t2) +
             makeCol('dayrate', '📅 Day Rate', DAYRATE);
 
-        // Compute period summary stats
         const groupAvg = (names) => {
             let total = 0, days = 0;
             names.forEach(n => { if (stats[n]) { total += stats[n].total; days += stats[n].count; } });
@@ -515,7 +706,6 @@
         const container = document.getElementById('rolling-container');
         container.innerHTML = '<div class="rolling-empty" style="padding:0.5rem 0;">Loading…</div>';
 
-        // Calculate rolling 30-day window
         const today = new Date();
         const endDate = today.toISOString().split('T')[0];
         const startDate = new Date(today);
@@ -543,7 +733,7 @@
                 const s = rollingStats[name];
                 const isHighlighted = HIGHLIGHT_LIST.includes(name);
                 const avg = s && s.count > 0 ? s.total / s.count : null;
-                html += `<div class="rolling-row">
+                html += `<div class="rolling-row" data-name="${name}" onclick="applyFilter('${name}')">
                     <span class="rolling-name ${isHighlighted ? 'highlight' : ''}" title="${name}">${name}</span>
                     ${avg !== null
                         ? `<span class="rolling-val ${avg < 400 ? 'low' : ''}">£${avg.toFixed(0)}</span>`
@@ -560,6 +750,7 @@
 
         container.innerHTML = html || '<div class="rolling-empty">No data in last 30 days.</div>';
     }
+
     window.switchTab = (t) => {
         document.getElementById('panel-entry').style.display = t === 'entry' ? 'block' : 'none';
         document.getElementById('panel-overview').style.display = t === 'overview' ? 'block' : 'none';
