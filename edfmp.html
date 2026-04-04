@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDF · Field Management Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --edf-red: #E2001A;
+  --edf-dark: #0D0F14;
+  --edf-panel: #13161E;
+  --edf-card: #1A1E2A;
+  --edf-border: #252B3B;
+  --edf-border-light: #2E3650;
+  --edf-text: #CDD5E0;
+  --edf-muted: #5A6480;
+  --edf-accent: #3B82F6;
+  --edf-green: #22C55E;
+  --edf-amber: #F59E0B;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'Syne', sans-serif;
+  --job-value: 71.92;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--sans);
+  background: var(--edf-dark);
+  color: var(--edf-text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid var(--edf-border);
+  background: var(--edf-panel);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo-mark {
+  width: 38px;
+  height: 38px;
+  background: var(--edf-red);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: #fff;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.header-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.header-sub {
+  font-size: 0.65rem;
+  font-family: var(--mono);
+  color: var(--edf-muted);
+  letter-spacing: 0.1em;
+  margin-top: 1px;
+}
+
+.header-tabs {
+  display: flex;
+  gap: 0.35rem;
+  margin-left: auto;
+}
+
+.htab {
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--edf-border);
+  background: transparent;
+  color: var(--edf-muted);
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.15s;
+  letter-spacing: 0.02em;
+}
+.htab:hover { border-color: var(--edf-border-light); color: var(--edf-text); }
+.htab.active { border-color: var(--edf-red); color: #fff; background: rgba(226,0,26,0.1); }
+
+/* ── Layout ── */
+.page { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+/* ── Cards ── */
+.card {
+  background: var(--edf-card);
+  border: 1px solid var(--edf-border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--edf-muted);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--edf-border); }
+
+/* ── Paste Area ── */
+.paste-zone {
+  border: 2px dashed var(--edf-border-light);
+  border-radius: 12px;
+  padding: 1.5rem;
+  background: rgba(59,130,246,0.03);
+  transition: 0.2s;
+}
+.paste-zone:focus-within { border-color: var(--edf-accent); background: rgba(59,130,246,0.06); }
+
+.paste-zone textarea {
+  width: 100%;
+  min-height: 160px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--edf-text);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  resize: vertical;
+  placeholder-color: var(--edf-muted);
+}
+.paste-zone textarea::placeholder { color: var(--edf-muted); }
+
+.paste-hint {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--edf-muted);
+  margin-bottom: 0.75rem;
+}
+
+.paste-hint code {
+  background: var(--edf-border);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  color: var(--edf-accent);
+}
+
+.btn-row { display: flex; gap: 0.75rem; margin-top: 1rem; align-items: center; flex-wrap: wrap; }
+
+.btn {
+  padding: 0.65rem 1.4rem;
+  border: none;
+  border-radius: 9px;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.15s;
+  letter-spacing: 0.03em;
+}
+.btn-primary { background: var(--edf-red); color: #fff; }
+.btn-primary:hover { background: #c0001a; }
+.btn-secondary { background: var(--edf-border); color: var(--edf-text); }
+.btn-secondary:hover { background: var(--edf-border-light); }
+.btn-outline { background: transparent; border: 1.5px solid var(--edf-border-light); color: var(--edf-muted); }
+.btn-outline:hover { border-color: var(--edf-accent); color: var(--edf-accent); }
+
+/* ── Preview Table ── */
+.preview-info {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--edf-green);
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.preview-info span { display: flex; align-items: center; gap: 0.4rem; }
+.preview-info .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+.tbl-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--edf-border); }
+table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+thead th {
+  background: var(--edf-panel);
+  padding: 0.7rem 1rem;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--edf-muted);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--edf-border);
+  white-space: nowrap;
+}
+tbody tr { border-bottom: 1px solid var(--edf-border); transition: 0.1s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(255,255,255,0.02); }
+tbody td { padding: 0.65rem 1rem; color: var(--edf-text); }
+td.mono { font-family: var(--mono); }
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-family: var(--mono);
+  font-weight: 500;
+}
+.badge-completed { background: rgba(34,197,94,0.12); color: var(--edf-green); border: 1px solid rgba(34,197,94,0.25); }
+.badge-other { background: rgba(90,100,128,0.2); color: var(--edf-muted); border: 1px solid var(--edf-border); }
+.val-cell { font-family: var(--mono); font-weight: 600; color: var(--edf-green); }
+.val-cell.zero { color: var(--edf-muted); }
+
+/* ── Overview Tab ── */
+.date-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
+.field-group { display: flex; flex-direction: column; gap: 0.4rem; }
+.field-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--edf-muted); text-transform: uppercase; }
+input[type=date] {
+  background: var(--edf-panel);
+  border: 1.5px solid var(--edf-border-light);
+  border-radius: 9px;
+  color: var(--edf-text);
+  padding: 0.6rem 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  outline: none;
+  transition: 0.15s;
+}
+input[type=date]:focus { border-color: var(--edf-accent); }
+
+/* ── Summary Stats Row ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.stat-box {
+  background: var(--edf-panel);
+  border: 1px solid var(--edf-border);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+}
+.stat-box-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--edf-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.stat-box-value {
+  font-family: var(--mono);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #fff;
+}
+.stat-box-value.green { color: var(--edf-green); }
+.stat-box-value.red { color: var(--edf-red); }
+.stat-box-value.blue { color: var(--edf-accent); }
+
+/* ── Engineer Summary Cards ── */
+.eng-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.eng-summary-card {
+  background: var(--edf-panel);
+  border: 1px solid var(--edf-border);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  transition: 0.15s;
+}
+.eng-summary-card:hover { border-color: var(--edf-border-light); }
+.eng-name { font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 0.6rem; }
+.eng-stats { display: flex; flex-direction: column; gap: 0.25rem; }
+.eng-stat-row { display: flex; justify-content: space-between; align-items: center; }
+.eng-stat-label { font-family: var(--mono); font-size: 0.65rem; color: var(--edf-muted); }
+.eng-stat-val { font-family: var(--mono); font-size: 0.82rem; font-weight: 600; }
+.eng-stat-val.money { color: var(--edf-green); }
+.eng-stat-val.jobs { color: var(--edf-accent); }
+.eng-total-bar { height: 3px; background: var(--edf-border); border-radius: 2px; margin-top: 0.75rem; overflow: hidden; }
+.eng-total-fill { height: 100%; background: var(--edf-green); border-radius: 2px; transition: width 0.4s ease; }
+
+/* ── Daily Breakdown Table ── */
+.daily-section { margin-top: 0; }
+.day-block { margin-bottom: 1.25rem; }
+.day-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  background: var(--edf-panel);
+  border: 1px solid var(--edf-border);
+  border-radius: 10px 10px 0 0;
+  border-bottom: none;
+}
+.day-date { font-family: var(--mono); font-size: 0.78rem; font-weight: 600; color: #fff; }
+.day-total { font-family: var(--mono); font-size: 0.78rem; color: var(--edf-green); margin-left: auto; }
+.day-jobs { font-family: var(--mono); font-size: 0.72rem; color: var(--edf-muted); }
+
+.day-table-wrap { border-radius: 0 0 10px 10px; border: 1px solid var(--edf-border); overflow: hidden; }
+.day-table { width: 100%; border-collapse: collapse; }
+.day-table td { padding: 0.55rem 1rem; border-bottom: 1px solid var(--edf-border); font-size: 0.8rem; }
+.day-table tr:last-child td { border-bottom: none; }
+.day-table .eng-cell { font-weight: 600; color: var(--edf-text); }
+.day-table .jobs-cell { font-family: var(--mono); color: var(--edf-accent); font-size: 0.78rem; }
+.day-table .val-cell-day { font-family: var(--mono); font-weight: 700; color: var(--edf-green); text-align: right; }
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--edf-muted);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+.empty-state .big { font-size: 2rem; margin-bottom: 0.75rem; }
+
+/* ── No data banner ── */
+.no-data-banner {
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--edf-amber);
+  margin-bottom: 1rem;
+  display: none;
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--edf-card);
+  border: 1px solid var(--edf-green);
+  border-left: 4px solid var(--edf-green);
+  padding: 0.85rem 1.5rem;
+  border-radius: 10px;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--edf-green);
+  display: none;
+  z-index: 999;
+  white-space: nowrap;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-mark">EDF</div>
+  <div>
+    <div class="header-title">Field Management Portal</div>
+    <div class="header-sub">COMPLETED JOBS · £71.92 / JOB</div>
+  </div>
+  <div class="header-tabs">
+    <button class="htab active" onclick="switchTab('entry')" id="tab-entry">📥 Data Entry</button>
+    <button class="htab" onclick="switchTab('overview')" id="tab-overview">📊 Overview</button>
+  </div>
+</div>
+
+<!-- ══════════════ ENTRY TAB ══════════════ -->
+<div class="page" id="panel-entry">
+  <div class="card">
+    <div class="section-label">Paste Job Data</div>
+    <div class="paste-hint">
+      Paste columns from your spreadsheet — format: <code>Job Date</code> <code>Job Status</code> <code>Engineer</code><br>
+      Only rows with status <strong style="color:var(--edf-green)">Completed</strong> will be counted (£71.92 each). Header row is detected and skipped automatically.
+    </div>
+    <div class="paste-zone">
+      <textarea id="pasteInput" placeholder="Job Date	Job Status	Engineer
+01/04/2025	Completed	John Smith
+01/04/2025	Cancelled	Jane Doe
+02/04/2025	Completed	John Smith
+..."></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="processData()">⚡ Process Data</button>
+      <button class="btn btn-outline" onclick="clearAll()">✕ Clear</button>
+      <span id="parse-status" style="font-family:var(--mono); font-size:0.75rem; color:var(--edf-muted);"></span>
+    </div>
+  </div>
+
+  <div id="preview-section" style="display:none;">
+    <div class="card">
+      <div class="section-label">Parsed Preview</div>
+      <div class="preview-info" id="preview-info"></div>
+      <div class="tbl-wrap">
+        <table id="preview-table">
+          <thead>
+            <tr>
+              <th>Job Date</th>
+              <th>Engineer</th>
+              <th>Status</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody id="preview-body"></tbody>
+        </table>
+      </div>
+      <div class="btn-row" style="margin-top:1rem;">
+        <button class="btn btn-primary" onclick="saveToStorage(); switchTab('overview');">💾 Save & View Overview</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ OVERVIEW TAB ══════════════ -->
+<div class="page" id="panel-overview" style="display:none;">
+  <div class="card">
+    <div class="section-label">Date Range Filter</div>
+    <div class="date-row">
+      <div class="field-group">
+        <div class="field-label">Start Date</div>
+        <input type="date" id="ovStart">
+      </div>
+      <div class="field-group">
+        <div class="field-label">End Date</div>
+        <input type="date" id="ovEnd">
+      </div>
+      <button class="btn btn-primary" onclick="generateOverview()">Generate Report</button>
+      <button class="btn btn-outline" onclick="setAllDates()">All Dates</button>
+    </div>
+  </div>
+
+  <div id="no-data-banner" class="no-data-banner">
+    ⚠ No data loaded. Go to Data Entry tab and paste your job data first.
+  </div>
+
+  <div id="overview-content" style="display:none;">
+    <!-- Summary stats -->
+    <div class="stats-row" id="stats-row"></div>
+
+    <!-- Engineer totals -->
+    <div class="card">
+      <div class="section-label">Engineer Summary — Period Total</div>
+      <div class="eng-summary-grid" id="eng-summary-grid"></div>
+    </div>
+
+    <!-- Daily breakdown -->
+    <div class="card">
+      <div class="section-label">Daily Breakdown</div>
+      <div class="daily-section" id="daily-section"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+// ── State ──
+let parsedRows = []; // { date: 'YYYY-MM-DD', engineer: string, status: string, value: number }
+const JOB_VALUE = 71.92;
+
+// ── Tab switching ──
+function switchTab(t) {
+  document.getElementById('panel-entry').style.display = t === 'entry' ? 'block' : 'none';
+  document.getElementById('panel-overview').style.display = t === 'overview' ? 'block' : 'none';
+  document.querySelectorAll('.htab').forEach(b => b.classList.toggle('active', b.id === 'tab-'+t));
+  if (t === 'overview') initOverview();
+}
+
+// ── Parse date string to YYYY-MM-DD ──
+function parseDate(str) {
+  str = str.trim();
+  // Try DD/MM/YYYY or DD-MM-YYYY
+  let m = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+  if (m) {
+    let y = m[3].length === 2 ? '20'+m[3] : m[3];
+    return `${y}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  }
+  // Try YYYY-MM-DD or YYYY/MM/DD
+  m = str.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+  if (m) return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+  // Try MM/DD/YYYY
+  m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m) return `${m[3]}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`;
+  return null;
+}
+
+function fmtDate(isoStr) {
+  if (!isoStr) return '';
+  const [y, mo, d] = isoStr.split('-');
+  return `${d}/${mo}/${y}`;
+}
+
+function fmtMoney(n) {
+  return '£' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+// ── Process pasted data ──
+function processData() {
+  const raw = document.getElementById('pasteInput').value.trim();
+  if (!raw) { showToast('Nothing to process'); return; }
+
+  const lines = raw.split('\n').filter(l => l.trim());
+  const rows = [];
+  let skipped = 0;
+  let headerSkipped = false;
+
+  for (const line of lines) {
+    // Split by tab; fallback to multiple spaces
+    let parts = line.split('\t');
+    if (parts.length < 2) parts = line.split(/\s{2,}/);
+    if (parts.length < 2) { skipped++; continue; }
+
+    // Detect header row
+    const first = parts[0].trim().toLowerCase();
+    if (!headerSkipped && (first.includes('date') || first.includes('job'))) {
+      headerSkipped = true;
+      continue;
+    }
+
+    // Try to figure out column order
+    // Expected: Date, Status, Engineer OR Date, Engineer, Status
+    let dateStr, statusStr, engStr;
+
+    // Heuristic: find date column (has / or - with numbers), status (completed/cancelled etc), engineer (name)
+    const cols = parts.map(p => p.trim());
+
+    // Find date column
+    let dateIdx = -1, statusIdx = -1, engIdx = -1;
+    for (let i = 0; i < cols.length; i++) {
+      if (dateIdx === -1 && parseDate(cols[i])) dateIdx = i;
+    }
+    for (let i = 0; i < cols.length; i++) {
+      if (i === dateIdx) continue;
+      const lc = cols[i].toLowerCase();
+      if (statusIdx === -1 && (lc.includes('complet') || lc.includes('cancel') || lc.includes('pending') || lc.includes('abort') || lc.includes('reject') || lc.includes('in progress') || lc === 'open' || lc === 'closed')) {
+        statusIdx = i;
+      }
+    }
+    // Engineer is whatever's left
+    for (let i = 0; i < cols.length; i++) {
+      if (i !== dateIdx && i !== statusIdx) { engIdx = i; break; }
+    }
+
+    if (dateIdx === -1 || engIdx === -1) { skipped++; continue; }
+
+    dateStr = parseDate(cols[dateIdx]);
+    engStr = cols[engIdx];
+    statusStr = statusIdx !== -1 ? cols[statusIdx] : '';
+
+    if (!dateStr || !engStr) { skipped++; continue; }
+
+    const isCompleted = statusStr.toLowerCase().includes('complet');
+    rows.push({
+      date: dateStr,
+      engineer: engStr,
+      status: statusStr || 'Unknown',
+      completed: isCompleted,
+      value: isCompleted ? JOB_VALUE : 0
+    });
+  }
+
+  parsedRows = rows;
+
+  const completed = rows.filter(r => r.completed).length;
+  const total = completed * JOB_VALUE;
+
+  // Render preview
+  const infoEl = document.getElementById('preview-info');
+  infoEl.innerHTML = `
+    <span><span class="dot"></span>${rows.length} rows parsed</span>
+    <span style="color:var(--edf-green)"><span class="dot"></span>${completed} completed jobs</span>
+    <span style="color:var(--edf-amber)"><span class="dot"></span>${rows.length - completed} ignored</span>
+    <span style="color:var(--edf-accent)"><span class="dot"></span>Total: ${fmtMoney(total)}</span>
+  `;
+
+  const tbody = document.getElementById('preview-body');
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="mono">${fmtDate(r.date)}</td>
+      <td>${r.engineer}</td>
+      <td><span class="badge ${r.completed ? 'badge-completed' : 'badge-other'}">${r.completed ? '✓' : '—'} ${r.status}</span></td>
+      <td class="${r.completed ? 'val-cell' : 'val-cell zero'} mono">${r.completed ? fmtMoney(r.value) : '—'}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('preview-section').style.display = 'block';
+  document.getElementById('parse-status').textContent = `${rows.length} rows · ${completed} completed`;
+  showToast(`Parsed ${rows.length} rows`);
+}
+
+// ── Save to localStorage ──
+function saveToStorage() {
+  localStorage.setItem('edfmp_data', JSON.stringify(parsedRows));
+  showToast('Data saved ✓');
+}
+
+function loadFromStorage() {
+  const d = localStorage.getItem('edfmp_data');
+  return d ? JSON.parse(d) : [];
+}
+
+// ── Clear ──
+function clearAll() {
+  document.getElementById('pasteInput').value = '';
+  document.getElementById('preview-section').style.display = 'none';
+  document.getElementById('parse-status').textContent = '';
+  parsedRows = [];
+}
+
+// ── Init overview ──
+function initOverview() {
+  const data = loadFromStorage();
+  if (!parsedRows.length && data.length) parsedRows = data;
+
+  if (!parsedRows.length) {
+    document.getElementById('no-data-banner').style.display = 'block';
+    document.getElementById('overview-content').style.display = 'none';
+    return;
+  }
+  document.getElementById('no-data-banner').style.display = 'none';
+
+  // Set date defaults
+  const dates = parsedRows.map(r => r.date).filter(Boolean).sort();
+  const minDate = dates[0] || '';
+  const maxDate = dates[dates.length-1] || '';
+  if (!document.getElementById('ovStart').value) document.getElementById('ovStart').value = minDate;
+  if (!document.getElementById('ovEnd').value) document.getElementById('ovEnd').value = maxDate;
+
+  generateOverview();
+}
+
+function setAllDates() {
+  const data = parsedRows.length ? parsedRows : loadFromStorage();
+  if (!data.length) return;
+  const dates = data.map(r => r.date).sort();
+  document.getElementById('ovStart').value = dates[0];
+  document.getElementById('ovEnd').value = dates[dates.length-1];
+  generateOverview();
+}
+
+// ── Generate Overview ──
+function generateOverview() {
+  const allData = parsedRows.length ? parsedRows : loadFromStorage();
+  if (!allData.length) {
+    document.getElementById('no-data-banner').style.display = 'block';
+    document.getElementById('overview-content').style.display = 'none';
+    return;
+  }
+
+  const start = document.getElementById('ovStart').value;
+  const end = document.getElementById('ovEnd').value;
+
+  const filtered = allData.filter(r => {
+    if (start && r.date < start) return false;
+    if (end && r.date > end) return false;
+    return true;
+  });
+
+  const completed = filtered.filter(r => r.completed);
+  const totalJobs = completed.length;
+  const totalValue = totalJobs * JOB_VALUE;
+  const engineers = [...new Set(completed.map(r => r.engineer))].sort();
+  const uniqueDays = [...new Set(completed.map(r => r.date))].length;
+
+  // Stats
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-box"><div class="stat-box-label">Total Revenue</div><div class="stat-box-value green">${fmtMoney(totalValue)}</div></div>
+    <div class="stat-box"><div class="stat-box-label">Completed Jobs</div><div class="stat-box-value blue">${totalJobs}</div></div>
+    <div class="stat-box"><div class="stat-box-label">Active Days</div><div class="stat-box-value">${uniqueDays}</div></div>
+    <div class="stat-box"><div class="stat-box-label">Engineers Active</div><div class="stat-box-value">${engineers.length}</div></div>
+    <div class="stat-box"><div class="stat-box-label">Avg Jobs / Day</div><div class="stat-box-value">${uniqueDays ? (totalJobs/uniqueDays).toFixed(1) : '—'}</div></div>
+    <div class="stat-box"><div class="stat-box-label">Avg Per Engineer</div><div class="stat-box-value green">${engineers.length ? fmtMoney(totalValue/engineers.length) : '—'}</div></div>
+  `;
+
+  // Engineer summary
+  const engData = {};
+  engineers.forEach(e => { engData[e] = { jobs: 0, days: new Set() }; });
+  completed.forEach(r => {
+    engData[r.engineer].jobs++;
+    engData[r.engineer].days.add(r.date);
+  });
+  const maxJobs = Math.max(...Object.values(engData).map(e => e.jobs));
+
+  document.getElementById('eng-summary-grid').innerHTML = engineers.map(e => {
+    const d = engData[e];
+    const val = d.jobs * JOB_VALUE;
+    const pct = maxJobs > 0 ? (d.jobs / maxJobs * 100) : 0;
+    return `
+      <div class="eng-summary-card">
+        <div class="eng-name">${e}</div>
+        <div class="eng-stats">
+          <div class="eng-stat-row">
+            <span class="eng-stat-label">Total Earnings</span>
+            <span class="eng-stat-val money">${fmtMoney(val)}</span>
+          </div>
+          <div class="eng-stat-row">
+            <span class="eng-stat-label">Jobs Completed</span>
+            <span class="eng-stat-val jobs">${d.jobs}</span>
+          </div>
+          <div class="eng-stat-row">
+            <span class="eng-stat-label">Active Days</span>
+            <span class="eng-stat-val" style="color:var(--edf-muted)">${d.days.size}</span>
+          </div>
+          <div class="eng-stat-row">
+            <span class="eng-stat-label">Avg / Day</span>
+            <span class="eng-stat-val money">${fmtMoney(val / d.days.size)}</span>
+          </div>
+        </div>
+        <div class="eng-total-bar"><div class="eng-total-fill" style="width:${pct}%"></div></div>
+      </div>
+    `;
+  }).join('');
+
+  // Daily breakdown
+  const byDate = {};
+  completed.forEach(r => {
+    if (!byDate[r.date]) byDate[r.date] = {};
+    if (!byDate[r.date][r.engineer]) byDate[r.date][r.engineer] = 0;
+    byDate[r.date][r.engineer]++;
+  });
+
+  const sortedDates = Object.keys(byDate).sort();
+  const dailyHtml = sortedDates.map(date => {
+    const dayEngineers = Object.entries(byDate[date]).sort((a,b) => b[1]-a[1]);
+    const dayJobs = dayEngineers.reduce((s, [,j]) => s+j, 0);
+    const dayVal = dayJobs * JOB_VALUE;
+    return `
+      <div class="day-block">
+        <div class="day-header">
+          <span class="day-date">📅 ${fmtDate(date)}</span>
+          <span class="day-jobs">${dayJobs} jobs</span>
+          <span class="day-total">${fmtMoney(dayVal)}</span>
+        </div>
+        <div class="day-table-wrap">
+          <table class="day-table">
+            ${dayEngineers.map(([eng, jobs]) => `
+              <tr>
+                <td class="eng-cell">${eng}</td>
+                <td class="jobs-cell">${jobs} job${jobs!==1?'s':''}</td>
+                <td class="val-cell-day">${fmtMoney(jobs * JOB_VALUE)}</td>
+              </tr>
+            `).join('')}
+          </table>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('daily-section').innerHTML = dailyHtml || '<div class="empty-state"><div class="big">📋</div>No completed jobs in this date range.</div>';
+  document.getElementById('overview-content').style.display = 'block';
+}
+
+// ── Toast ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => t.style.display = 'none', 2800);
+}
+
+// ── Load saved data on start ──
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = loadFromStorage();
+  if (saved.length) parsedRows = saved;
+});
+</script>
+</body>
+</html>
