@@ -1486,7 +1486,7 @@
             const end   = document.getElementById('overtimeEnd').value;
             if (start && end) {
                 const hrs  = calcHours(start, end);
-                const rate = dow === 0 ? 37.50 : dow === 6 ? 28.13 : 24.94;
+                const rate = dow === 0 ? 39.90384615 : dow === 6 ? 29.92788462 : 24.93990385;;
                 const amt  = hrs * rate;
                 const day  = dow === 0 ? 'Sunday' : dow === 6 ? 'Saturday' : 'Weekday';
                 html  += `<div class="payment-line"><span>Overtime (${hrs.toFixed(2)} hrs @ £${rate} – ${day})</span><span>£${amt.toFixed(2)}</span></div>`;
