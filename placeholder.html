@@ -149,7 +149,7 @@
         }
         .error-message.show { display: block; }
 
-        /* ── Dashboard ── */
+        /* ── Headers & Layout ── */
         header { margin-bottom: 3rem; }
 
         .header-content {
@@ -192,6 +192,101 @@
         }
         .logout-btn:hover { border-color: var(--error); color: var(--error); }
 
+        /* ── HUB CARDS (Replacing Quick Links) ── */
+        .hub-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .hub-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            width: 100%;
+        }
+
+        .hub-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--card-accent, var(--accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+        }
+
+        .hub-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .hub-card:hover::before { transform: scaleX(1); }
+
+        .hub-card-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            background: rgba(0, 163, 224, 0.08);
+            border: 1px solid rgba(0, 163, 224, 0.15);
+            color: var(--card-accent, var(--accent));
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .hub-card-icon svg { width: 28px; height: 28px; stroke-width: 2; }
+
+        .hub-card:hover:not(.locked) .hub-card-icon {
+            background: var(--card-accent, var(--accent));
+            color: white;
+            transform: scale(1.1);
+            border-color: transparent;
+            box-shadow: 0 8px 20px -8px var(--card-accent, var(--accent));
+        }
+
+        .hub-card-label { font-family: 'Work Sans', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--text-light); margin-bottom: 0.5rem; text-transform: uppercase; }
+        .hub-card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+        
+        .hub-card-arrow {
+            position: absolute;
+            bottom: 20px; right: 20px;
+            color: var(--card-accent, var(--accent));
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: all 0.2s;
+        }
+        .hub-card:hover:not(.locked) .hub-card-arrow { opacity: 1; transform: translate(2px,-2px); }
+
+        /* Notification Badge & Locks */
+        .nav-badge {
+            position: absolute; top: 16px; right: 16px; background: var(--error); color: white;
+            font-family: 'DM Mono', monospace; font-size: 0.7rem; padding: 4px 8px; border-radius: 8px;
+            font-weight: 700; animation: pulse 2s infinite; border: 2px solid var(--bg-card);
+        }
+        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+
+        .hub-card.locked { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.8); }
+        .hub-card.locked:hover { background: var(--bg-card); transform: none; box-shadow: none; border-color: var(--border); }
+        .hub-card.locked::before { display: none; }
+
+        .lock-overlay {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--error);
+            margin-top: 12px;
+            text-transform: uppercase;
+        }
+
+        /* ── BONUS SCREEN COMPONENTS ── */
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -200,31 +295,6 @@
             margin-bottom: 2rem;
         }
 
-        /* ── QUICK LINKS (Resources & Documents) ── */
-        .quick-links-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-        .quick-link-card { 
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; 
-            padding: 1.5rem; cursor: pointer; transition: all 0.3s; position: relative; text-align: center; 
-        }
-        .quick-link-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        
-        .quick-link-icon { 
-            display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; 
-            border-radius: 12px; background: rgba(0, 163, 224, 0.1); color: var(--accent); 
-            margin-bottom: 1rem; transition: all 0.3s; 
-        }
-        .quick-link-icon svg { width: 24px; height: 24px; stroke-width: 2; }
-        .quick-link-card:hover .quick-link-icon { background: var(--accent); color: white; transform: scale(1.1); }
-        .quick-link-title { font-weight: 600; font-size: 1rem; color: var(--text-light); }
-
-        .nav-badge {
-            position: absolute; top: -10px; right: -10px; background: var(--error); color: white;
-            font-family: 'DM Mono', monospace; font-size: 0.7rem; padding: 4px 8px; border-radius: 8px;
-            font-weight: 700; animation: pulse 2s infinite; border: 2px solid var(--bg-card);
-        }
-        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
-
-        /* ── Main Dashboard UI ── */
         .date-range-section { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
         .button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
@@ -313,7 +383,7 @@
 
         footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); font-size: 0.9rem; }
 
-        /* ── Modal ── */
+        /* ── Modals ── */
         .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: 2rem; backdrop-filter: blur(4px); }
         .modal.show { display: flex; animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -388,6 +458,15 @@
         .changes-log { margin-top: 1rem; padding: 1rem; background: rgba(0, 163, 224, 0.1); border-left: 3px solid var(--accent); border-radius: 8px; }
         .changes-log-title { font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; font-size: 0.9rem; }
         .changes-log-item { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.25rem; }
+        
+        /* ── Capacity modal (iframe) ── */
+        .capacity-modal-box { background: var(--bg-card); border: 1px solid var(--border); width: 95%; max-width: 1100px; height: 88vh; display: flex; flex-direction: column; border-radius: 20px; overflow: hidden;}
+        .capacity-iframe { flex: 1; width: 100%; border: none; background: white; display: block; }
+        .modal-overlay { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.open { display: flex; animation: fadeIn 0.3s ease-out; }
+        
+        .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); background: var(--bg-dark); flex-shrink: 0; }
+        .modal-head-title { font-family: 'Work Sans', sans-serif; font-weight: 700; font-size: 1.2rem; }
 
         @media (max-width: 768px) {
             body { padding: 1.5rem; }
@@ -432,7 +511,7 @@
         </div>
     </div>
 
-    <div id="dashboardPage" class="page">
+    <div id="hubScreen" class="page">
         <header>
             <div class="header-content">
                 <div class="welcome-section">
@@ -448,41 +527,98 @@
 
         <main>
             <div id="globalLockWarning" class="error-message" style="margin-bottom: 2rem; font-size: 1rem;">
-                ⚠ ACCESS LOCKED: You have unread documents. Please review them in the resources below to unlock your performance data and payments.
+                ⚠ ACCESS LOCKED: You have unread documents. Please review them in the resources below to unlock your bonus breakdown.
             </div>
 
-            <div class="quick-links-grid">
-                <div class="quick-link-card" onclick="openDocsModal('DNO Guides')">
+            <div class="hub-grid">
+                
+                <button id="btn-view-bonus" class="hub-card" style="--card-accent:#00A3E0;" onclick="checkLock(showBonusScreen)">
+                    <span class="hub-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                        </svg>
+                    </span>
+                    <div class="hub-card-label">View Bonus</div>
+                    <div id="lock-msg-bonus" class="hub-card-desc">Daily breakdown, earnings summary, and additional payment submissions.</div>
+                    <span class="hub-card-arrow">↗</span>
+                </button>
+
+                <button class="hub-card" style="--card-accent:#10B981;" onclick="openCapacityModal()">
+                    <span class="hub-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                        </svg>
+                    </span>
+                    <div class="hub-card-label">View Capacity</div>
+                    <div class="hub-card-desc">Check scheduling and operational capacity for your team.</div>
+                    <span class="hub-card-arrow">↗</span>
+                </button>
+
+                <button class="hub-card" style="--card-accent:#F59E0B;" onclick="window.open('https://www.dropbox.com/scl/fi/emgvkowu2fppdqirw5z7l/NGU-POL22-Daily-Contract-Works-Bonus-Policy.doc?rlkey=beqimr8t3xiljxi6tygtdmqio&st=kexfrkp7&dl=0','_blank')">
+                    <span class="hub-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                        </svg>
+                    </span>
+                    <div class="hub-card-label">Bonus Policy</div>
+                    <div class="hub-card-desc">Read the full daily contract works bonus policy document.</div>
+                    <span class="hub-card-arrow">↗</span>
+                </button>
+
+                <button class="hub-card" style="--card-accent:#fb923c;" onclick="openDocsModal('DNO Guides')">
                     <span id="badge-DNO" class="nav-badge" style="display:none;">NEW</span>
-                    <div class="quick-link-icon">
+                    <span class="hub-card-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
                         </svg>
-                    </div>
-                    <div class="quick-link-title">DNO Guides</div>
-                </div>
-                
-                <div class="quick-link-card" onclick="openDocsModal('Vehicle Documents')">
+                    </span>
+                    <div class="hub-card-label">DNO Reporting Guide</div>
+                    <div class="hub-card-desc">Access the DNO reporting information pack and guidelines.</div>
+                    <span class="hub-card-arrow">↗</span>
+                </button>
+
+                <button class="hub-card" style="--card-accent:#8B5CF6;" onclick="openDocsModal('Vehicle Documents')">
                     <span id="badge-Vehicle" class="nav-badge" style="display:none;">NEW</span>
-                    <div class="quick-link-icon">
+                    <span class="hub-card-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
                         </svg>
-                    </div>
-                    <div class="quick-link-title">Vehicle Documents</div>
-                </div>
+                    </span>
+                    <div class="hub-card-label">Vehicle Documents</div>
+                    <div class="hub-card-desc">Access your vehicle documentation and compliance records.</div>
+                    <span class="hub-card-arrow">↗</span>
+                </button>
 
-                <div class="quick-link-card" onclick="openDocsModal('Toolbox Talks')">
+                <button class="hub-card" style="--card-accent:#3b82f6;" onclick="openDocsModal('Toolbox Talks')">
                     <span id="badge-Toolbox" class="nav-badge" style="display:none;">NEW</span>
-                    <div class="quick-link-icon">
+                    <span class="hub-card-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.492-3.053c.203-.25.465-.453.766-.58l.185-.078a1.5 1.5 0 0 1 1.947.697l2.046 4.331m-8.437-5.492L5.42 15.17m5.998-5.998A5.25 5.25 0 0 0 5.42 3.92a5.25 5.25 0 0 0-1.5 3.5m0 0a5.25 5.25 0 0 0 1.5 3.5m0 0-3 3A2.652 2.652 0 0 0 6.178 21l3-3m0 0A5.25 5.25 0 0 0 11.42 9.17" />
                         </svg>
-                    </div>
-                    <div class="quick-link-title">Toolbox Talks</div>
+                    </span>
+                    <div class="hub-card-label">Toolbox Talks</div>
+                    <div class="hub-card-desc">Access safety briefings, procedural updates, and toolbox talk documents.</div>
+                    <span class="hub-card-arrow">↗</span>
+                </button>
+
+            </div>
+        </main>
+        <footer>NGU - Scottish Power - Engineer Dashboard - Barry Dixon</footer>
+    </div>
+
+    <div id="bonusScreen" class="page">
+        <header>
+            <div class="header-content">
+                <button class="btn btn-secondary" style="width: auto; padding: 0.5rem 1.5rem;" onclick="showHub()">← Back to Hub</button>
+                <div class="header-right">
+                    <img src="https://www.dropbox.com/scl/fi/kkujm1u6y7vvnp7luq8d7/ngu-main-white.png?rlkey=kgq2uh48qh4xssh4vlbz868lr&st=6cy1lbvp&dl=1" alt="NGU Logo" class="ngu-logo">
                 </div>
             </div>
+            <h1>Bonus Breakdown</h1>
+            <p class="subtitle">Review your daily jobs and earnings</p>
+        </header>
 
+        <main>
             <div class="card">
                 <div class="date-range-section">
                     <div class="form-group">
@@ -495,7 +631,7 @@
                     </div>
                 </div>
                 <div class="button-group">
-                    <button id="showBreakdownBtn" class="btn btn-primary">Show Daily Breakdown</button>
+                    <button id="showBreakdownBtn" class="btn btn-primary">Load Breakdown</button>
                     <button id="submitPaymentsBtn" class="btn btn-secondary">Submit Additional Payments</button>
                 </div>
             </div>
@@ -530,7 +666,6 @@
                 </div>
             </div>
         </main>
-
         <footer>NGU - Scottish Power - Engineer Dashboard - Barry Dixon</footer>
     </div>
 </div>
@@ -655,6 +790,16 @@
     </div>
 </div>
 
+<div id="capacityModal" class="modal-overlay">
+    <div class="capacity-modal-box">
+        <div class="modal-head">
+            <div class="modal-head-title" style="color: var(--accent); padding-left:1rem;">📅 Capacity View</div>
+            <button class="close-btn" id="closeCapacityModal" style="margin-right:1rem;">×</button>
+        </div>
+        <iframe id="capacityIframe" class="capacity-iframe" src="" title="Capacity"></iframe>
+    </div>
+</div>
+
 <script type="module">
     import { initializeApp }    from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getFirestore, collection, query, where, getDocs, addDoc, serverTimestamp, orderBy } 
@@ -680,6 +825,7 @@
     // ── DOM refs ───────────────────────────────────────────────────────────────
     const loginPage              = document.getElementById('loginPage');
     const dashboardPage          = document.getElementById('dashboardPage');
+    const bonusScreen            = document.getElementById('bonusScreen');
     const loginForm              = document.getElementById('loginForm');
     const loginError             = document.getElementById('loginError');
     const engineerNameSpan       = document.getElementById('engineerName');
@@ -711,6 +857,12 @@
     let currentDocsCategory = '';
     let pendingSigDocId = null;
 
+    // ── Init dates ──
+    const today = new Date(), lastWeek = new Date(today);
+    lastWeek.setDate(lastWeek.getDate() - 7);
+    startDateInput.valueAsDate = lastWeek;
+    endDateInput.valueAsDate   = today;
+
     // ── Session restore & Daily Check ──
     const todayStr = new Date().toDateString();
     const savedUser = localStorage.getItem('sp_username');
@@ -737,6 +889,12 @@
             }
         }
     });
+
+    // ── Utility ──
+    function setScreen(id) {
+        document.querySelectorAll('.page').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
 
     // ── Average bonuses ────────────────────────────────────────────────────────
     async function loadAverageBonuses() {
@@ -794,19 +952,54 @@
             document.getElementById('badge-DNO').style.display = hasNewDNO ? 'block' : 'none';
 
             isPortalLocked = unreadCount > 0;
+            const bonusBtn = document.getElementById('btn-view-bonus');
+            const msgBonus = document.getElementById('lock-msg-bonus');
 
             if (isPortalLocked) {
-                showBreakdownBtn.disabled = true;
-                submitPaymentsBtn.disabled = true;
+                bonusBtn.classList.add('locked');
+                msgBonus.innerHTML = '<div class="lock-overlay">⚠ ACCESS LOCKED: PLEASE READ NEW DOCUMENTS FIRST</div>';
                 globalLockWarning.style.display = 'block';
-                resultsSection.classList.remove('show'); // Hide results if locked
             } else {
-                showBreakdownBtn.disabled = false;
-                submitPaymentsBtn.disabled = false;
+                bonusBtn.classList.remove('locked');
+                msgBonus.innerText = 'Daily breakdown, earnings summary, and additional payment submissions.';
                 globalLockWarning.style.display = 'none';
             }
         } catch (e) { console.error("Error checking unread docs:", e); }
     }
+
+    // ── OVERRIDE CLICK HANDLER FOR LOCKED BUTTONS ──
+    window.checkLock = function(targetFunction) {
+        if (isPortalLocked) {
+            alert("Action Required: You have unread documents.\n\nPlease check Toolbox Talks, Vehicle Documents, or DNO Guides to unlock your performance data.");
+            return;
+        }
+        targetFunction();
+    };
+
+    // ── UI Navigation ──
+    window.showHub = function() {
+        setScreen('dashboardPage');
+        refreshDocumentStatus();
+    };
+    
+    window.showBonusScreen = function() {
+        setScreen('bonusScreen');
+    };
+
+    window.openCapacityModal = function() {
+        const modal  = document.getElementById('capacityModal');
+        const iframe = document.getElementById('capacityIframe');
+        if (!iframe.getAttribute('data-loaded')) {
+            iframe.src = 'https://oes-performance.vercel.app/capacity2.html';
+            iframe.setAttribute('data-loaded', '1');
+        }
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    };
+    document.getElementById('closeCapacityModal').addEventListener('click', () => {
+        document.getElementById('capacityModal').classList.remove('open');
+        document.body.style.overflow = '';
+    });
 
     // ── DYNAMIC DOCUMENT VIEWER ──
     window.openDocsModal = async function(category) {
@@ -971,8 +1164,7 @@
         currentUser = null;
         localStorage.removeItem('sp_username');
         localStorage.removeItem('sp_login_date');
-        dashboardPage.classList.remove('active');
-        loginPage.classList.add('active');
+        setScreen('loginScreen');
         resultsSection.classList.remove('show');
         resultsContainer.innerHTML = '';
     });
