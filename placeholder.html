@@ -177,7 +177,7 @@
         .day-header { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--accent); display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
         .day-section.holiday-day .day-header { color: var(--holiday); }
         
-        .attendance-badge { display: inline-block; padding: 0.35rem 0.85rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .attendance-badge { display: inline-block; padding: 0.35rem 0.85rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
         .attendance-badge.present  { background: var(--success); color: white; }
         .attendance-badge.holiday  { background: var(--holiday); color: white; }
         .attendance-badge.sick     { background: var(--error);   color: white; }
@@ -631,30 +631,32 @@
 </div>
 
 <div id="capacityModal" class="modal">
-    <div class="capacity-modal-box">
+    <div class="modal-content" style="max-width: 1100px; padding:0; overflow:hidden;">
         <div class="modal-header" style="margin: 0; padding: 1.5rem; border-bottom: 1px solid var(--border); background: var(--bg-dark);">
             <h2 class="modal-title" style="color: var(--accent);">📅 Capacity View</h2>
             <button class="close-btn" id="closeCapacityModal">×</button>
         </div>
-        <iframe id="capacityIframe" class="capacity-iframe" src="" title="Capacity"></iframe>
+        <iframe id="capacityIframe" class="capacity-iframe" src="" title="Capacity" style="width:100%; height:75vh; border:none; background:white;"></iframe>
     </div>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script type="module">
+    import { initializeApp }    from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, query, where, getDocs, addDoc, serverTimestamp, orderBy } 
+        from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-<script>
     const firebaseConfig = {
         apiKey:            "AIzaSyCMmUOdW2uEIGVd6XQfWXKF8eaFmwEog1g",
         authDomain:        "oesperformance-a54c0.firebaseapp.com",
         projectId:         "oesperformance-a54c0",
         storageBucket:     "oesperformance-a54c0.firebasestorage.app",
         messagingSenderId: "484894102454",
-        appId:             "1:484894102454:web:17535ee497eac2d90d6717"
+        appId:             "1:484894102454:web:17535ee497eac2d90d6717",
+        measurementId:     "G-R56BGZYV8N"
     };
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
 
     // ── Constants ──────────────────────────────────────────────────────────────
     const BONUS_THRESHOLD = 6;
@@ -663,8 +665,8 @@
     // ── DOM refs ───────────────────────────────────────────────────────────────
     const loginPage              = document.getElementById('loginPage');
     const welcomeScreen          = document.getElementById('welcomeScreen');
-    const dashboardPage          = document.getElementById('dashboardPage'); // Now acts as Hub
-    const bonusScreen            = document.getElementById('bonusScreen');   // The Breakdown
+    const hubScreen              = document.getElementById('hubScreen');
+    const bonusScreen            = document.getElementById('bonusScreen');
     
     const loginForm              = document.getElementById('loginForm');
     const loginError             = document.getElementById('loginError');
@@ -699,24 +701,38 @@
     let currentDocsCategory = '';
     let pendingSigDocId = null;
 
-    // ── Init dates ──
+    // ── Utility ────────────────────────────────────────────────────────────────
+    function setScreen(id) {
+        document.querySelectorAll('.page').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    window.togglePw = function() {
+        const inp = document.getElementById('password');
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+    };
+
+    function showLoginError(msg) {
+        loginError.textContent = msg;
+        loginError.classList.add('show');
+    }
+
+    // ── Init dates ─────────────────────────────────────────────────────────────
     const today = new Date(), lastWeek = new Date(today);
     lastWeek.setDate(lastWeek.getDate() - 7);
     startDateInput.valueAsDate = lastWeek;
     endDateInput.valueAsDate   = today;
 
-    // ── Session restore & Daily Check ──
+    // ── Session restore & Daily Check ──────────────────────────────────────────
     const todayStr = new Date().toDateString();
     const savedUser = localStorage.getItem('sp_username');
     const savedDate = localStorage.getItem('sp_login_date');
 
     if (savedUser && savedDate === todayStr) { 
         currentUser = { name: savedUser };
-        loginPage.classList.remove('active');
-        dashboardPage.classList.add('active');
-        engineerNameSpan.textContent = currentUser.name;
-        loadAverageBonuses();
-        refreshDocumentStatus();
+        loadAverageBonuses().then(() => {
+            showHub();
+        });
     } else {
         localStorage.removeItem('sp_username');
         localStorage.removeItem('sp_login_date');
@@ -732,21 +748,10 @@
         }
     });
 
-    // ── Utility ──
-    function setScreen(id) {
-        document.querySelectorAll('.page').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-    }
-
-    window.togglePw = function() {
-        const inp = document.getElementById('password');
-        inp.type = inp.type === 'password' ? 'text' : 'password';
-    };
-
     // ── Average bonuses ────────────────────────────────────────────────────────
     async function loadAverageBonuses() {
         try {
-            const snap = await db.collection('Average Bonuses').get();
+            const snap = await getDocs(collection(db, 'Average Bonuses'));
             averageBonuses = {};
             snap.forEach(doc => {
                 const d = doc.data();
@@ -774,12 +779,12 @@
             : 0;
     }
 
-    // ── CHECK FOR NEW DOCUMENTS & UPDATE LOCKS ──
+    // ── CHECK FOR NEW DOCUMENTS & UPDATE LOCKS ─────────────────────────────────
     async function refreshDocumentStatus() {
         if (!currentUser) return;
         
         try {
-            const snapshot = await db.collection("portal_documents").get();
+            const snapshot = await getDocs(collection(db, "portal_documents"));
             const viewedDocs = JSON.parse(localStorage.getItem(`viewed_${currentUser.name}`) || "[]");
             
             let hasNewToolbox = false, hasNewVehicle = false, hasNewDNO = false, unreadCount = 0;
@@ -803,18 +808,21 @@
             const msgBonus = document.getElementById('lock-msg-bonus');
 
             if (isPortalLocked) {
-                bonusBtn.classList.add('locked');
-                msgBonus.innerHTML = '<div class="lock-overlay">⚠ ACCESS LOCKED: PLEASE READ NEW DOCUMENTS FIRST</div>';
+                if(bonusBtn) bonusBtn.classList.add('locked');
+                if(msgBonus) msgBonus.innerHTML = '<div class="lock-overlay">⚠ ACCESS LOCKED: PLEASE READ NEW DOCUMENTS FIRST</div>';
                 globalLockWarning.style.display = 'block';
+                showBreakdownBtn.disabled = true;
+                submitPaymentsBtn.disabled = true;
             } else {
-                bonusBtn.classList.remove('locked');
-                msgBonus.innerText = 'Daily breakdown, earnings summary, and additional payment submissions.';
+                if(bonusBtn) bonusBtn.classList.remove('locked');
+                if(msgBonus) msgBonus.innerText = 'Daily breakdown, earnings summary, and additional payment submissions.';
                 globalLockWarning.style.display = 'none';
+                showBreakdownBtn.disabled = false;
+                submitPaymentsBtn.disabled = false;
             }
         } catch (e) { console.error("Error checking unread docs:", e); }
     }
 
-    // ── OVERRIDE CLICK HANDLER FOR LOCKED BUTTONS ──
     window.checkLock = function(targetFunction) {
         if (isPortalLocked) {
             alert("Action Required: You have unread documents.\n\nPlease check Toolbox Talks, Vehicle Documents, or DNO Guides to unlock your performance data.");
@@ -823,9 +831,10 @@
         targetFunction();
     };
 
-    // ── UI Navigation ──
+    // ── UI Navigation ──────────────────────────────────────────────────────────
     window.showHub = function() {
-        setScreen('dashboardPage');
+        setScreen('hubScreen');
+        engineerNameSpan.textContent = currentUser.name;
         refreshDocumentStatus();
     };
     
@@ -833,22 +842,60 @@
         setScreen('bonusScreen');
     };
 
-    window.openCapacityModal = function() {
-        const modal  = document.getElementById('capacityModal');
-        const iframe = document.getElementById('capacityIframe');
-        if (!iframe.getAttribute('data-loaded')) {
-            iframe.src = 'https://oes-performance.vercel.app/capacity2.html';
-            iframe.setAttribute('data-loaded', '1');
-        }
-        modal.classList.add('show');
-        document.body.style.overflow = 'hidden';
+    window.handleLogout = function() {
+        currentUser = null;
+        localStorage.removeItem('sp_username');
+        localStorage.removeItem('sp_login_date');
+        setScreen('loginPage');
+        resultsSection.classList.remove('show');
+        resultsContainer.innerHTML = '';
     };
-    document.getElementById('closeCapacityModal').addEventListener('click', () => {
-        document.getElementById('capacityModal').classList.remove('show');
-        document.body.style.overflow = '';
+
+    // ── Login ──────────────────────────────────────────────────────────────────
+    loginForm.addEventListener('submit', async e => {
+        e.preventDefault();
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+
+        try {
+            const q    = query(collection(db, 'SP Engineers'), where('name', '==', username));
+            const snap = await getDocs(q);
+
+            if (snap.empty) { showLoginError('Invalid username or password'); return; }
+
+            let authenticated = false, engineerData = null;
+            snap.forEach(doc => {
+                const d = doc.data();
+                if (d.password === password) { authenticated = true; engineerData = d; }
+            });
+
+            if (!authenticated) { showLoginError('Invalid username or password'); return; }
+
+            currentUser = { username, name: engineerData.name, email: engineerData.email };
+            
+            // Save login details
+            localStorage.setItem('sp_username', engineerData.name);
+            localStorage.setItem('sp_login_date', new Date().toDateString());
+
+            await loadAverageBonuses();
+
+            document.getElementById('welcomeName').textContent = currentUser.name.toUpperCase();
+            setScreen('welcomeScreen');
+            
+            setTimeout(() => {
+                showHub();
+            }, 1500);
+
+            loginForm.reset();
+            loginError.classList.remove('show');
+
+        } catch (err) {
+            console.error(err);
+            showLoginError('Login error. Please try again.');
+        }
     });
 
-    // ── DYNAMIC DOCUMENT VIEWER ──
+    // ── DYNAMIC DOCUMENT VIEWER ────────────────────────────────────────────────
     window.openDocsModal = async function(category) {
         currentDocsCategory = category;
         const modal = document.getElementById('docsModal');
@@ -861,10 +908,8 @@
         document.body.style.overflow = 'hidden';
 
         try {
-            const snapshot = await db.collection("portal_documents")
-                                     .where("category", "==", category)
-                                     .orderBy("uploadedAt", "desc")
-                                     .get();
+            const q = query(collection(db, "portal_documents"), where("category", "==", category), orderBy("uploadedAt", "desc"));
+            const snapshot = await getDocs(q);
 
             if (snapshot.empty) {
                 container.innerHTML = '<div class="no-results"><p>No documents found in this folder.</p></div>';
@@ -908,7 +953,7 @@
         document.body.style.overflow = '';
     });
 
-    // ── SIGNATURE MODAL LOGIC ──
+    // ── SIGNATURE MODAL LOGIC ──────────────────────────────────────────────────
     window.handleDocClick = function(docId, docName, isUnread) {
         if (isUnread) {
             pendingSigDocId = docId;
@@ -942,11 +987,11 @@
             
             // Save signature to Database for compliance
             try {
-                await db.collection("document_signatures").add({
+                await addDoc(collection(db, "document_signatures"), {
                     engineerName: currentUser.name,
                     documentId: pendingSigDocId,
                     documentName: document.getElementById('sigDocName').innerText,
-                    signedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    signedAt: serverTimestamp()
                 });
             } catch(e) { console.error("Could not save signature to DB", e); }
 
@@ -962,61 +1007,21 @@
         }
     });
 
-    // ── Login ──────────────────────────────────────────────────────────────────
-    loginForm.addEventListener('submit', async e => {
-        e.preventDefault();
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value;
-
-        try {
-            const snap = await db.collection('SP Engineers').where('name', '==', username).get();
-
-            if (snap.empty) { showLoginError('Invalid username or password'); return; }
-
-            let authenticated = false, engineerData = null;
-            snap.forEach(doc => {
-                const d = doc.data();
-                if (d.password === password) { authenticated = true; engineerData = d; }
-            });
-
-            if (!authenticated) { showLoginError('Invalid username or password'); return; }
-
-            currentUser = { username, name: engineerData.name, email: engineerData.email };
-            
-            // Save login details
-            localStorage.setItem('sp_username', engineerData.name);
-            localStorage.setItem('sp_login_date', new Date().toDateString());
-
-            await loadAverageBonuses();
-            await refreshDocumentStatus();
-
-            document.getElementById('welcomeName').textContent = currentUser.name.toUpperCase();
-            setScreen('welcomeScreen');
-            setTimeout(() => setScreen('dashboardPage'), 1500);
-
-            loginForm.reset();
-            loginError.classList.remove('show');
-
-        } catch (err) {
-            console.error(err);
-            showLoginError('Login error. Please try again.');
+    // ── Capacity Modal ─────────────────────────────────────────────────────────
+    window.openCapacityModal = function() {
+        const modal  = document.getElementById('capacityModal');
+        const iframe = document.getElementById('capacityIframe');
+        if (!iframe.getAttribute('data-loaded')) {
+            iframe.src = 'https://oes-performance.vercel.app/capacity2.html';
+            iframe.setAttribute('data-loaded', '1');
         }
-    });
-
-    function showLoginError(msg) {
-        loginError.textContent = msg;
-        loginError.classList.add('show');
-    }
-
-    // ── Logout ─────────────────────────────────────────────────────────────────
-    window.handleLogout = function() {
-        currentUser = null;
-        localStorage.removeItem('sp_username');
-        localStorage.removeItem('sp_login_date');
-        setScreen('loginPage');
-        resultsSection.classList.remove('show');
-        resultsContainer.innerHTML = '';
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
     };
+    document.getElementById('closeCapacityModal').addEventListener('click', () => {
+        document.getElementById('capacityModal').classList.remove('show');
+        document.body.style.overflow = '';
+    });
 
     // ── Show Daily Breakdown ───────────────────────────────────────────────────
     showBreakdownBtn.addEventListener('click', async () => {
@@ -1033,8 +1038,10 @@
         resultsContainer.innerHTML = '';
 
         try {
-            // ── Fetch Sureserve jobs ──
-            const sureserveSnap = await db.collection('SP-SureserveData').where('resource', '==', currentUser.name).get();
+            // Fetch Sureserve jobs
+            const sureserveSnap = await getDocs(
+                query(collection(db, 'SP-SureserveData'), where('resource', '==', currentUser.name))
+            );
 
             const sureserveDataByDate = {};
             sureserveSnap.forEach(doc => {
@@ -1046,9 +1053,10 @@
                 }
             });
 
-            // ── Fetch SP Submitted Data ──
-            const submittedSnap = await db.collection('SP Submitted Data').where('outcomeResource', '==', currentUser.name).get();
-            
+            // Fetch SP Submitted Data
+            const submittedSnap = await getDocs(
+                query(collection(db, 'SP Submitted Data'), where('outcomeResource', '==', currentUser.name))
+            );
             const dataByDate = {};
             let totalJobs = 0;
             submittedSnap.forEach(doc => {
@@ -1060,22 +1068,24 @@
                 }
             });
 
-            // ── Fetch Additional Payments ──
-            const paymentsSnap = await db.collection('SP Additional Payment').where('engineerName', '==', currentUser.name).get();
-            
+            // Fetch Additional Payments
+            const paymentsSnap = await getDocs(
+                query(collection(db, 'SP Additional Payment'), where('engineerName', '==', currentUser.name))
+            );
             additionalPayments = [];
             paymentsSnap.forEach(doc => additionalPayments.push(doc.data()));
 
-            // ── Fetch Attendance ──
-            const attendanceSnap = await db.collection('SP Attendance').where('engineerName', '==', currentUser.name).get();
-            
+            // Fetch Attendance
+            const attendanceSnap = await getDocs(
+                query(collection(db, 'SP Attendance'), where('engineerName', '==', currentUser.name))
+            );
             const attendanceData = {};
             attendanceSnap.forEach(doc => {
                 const d = doc.data();
                 if (d.date) attendanceData[d.date] = d.attendance;
             });
 
-            // ── Calculate & display ──
+            // Calculate & display
             const periodTotals = calculatePeriodTotals(sureserveDataByDate, additionalPayments, startDate, endDate, attendanceData);
             displayResults(dataByDate, totalJobs, startDate, endDate, attendanceData, sureserveDataByDate);
             updatePeriodSummary(periodTotals);
@@ -1098,12 +1108,10 @@
         let approvedCount         = 0;
         let totalHolidayBonus     = 0;
 
-        // Iterate ALL attendance dates in range
         Object.entries(attendanceData).forEach(([stdDate, attendance]) => {
             if (!isDateInRange(stdDate, startDate, endDate)) return;
 
             const isHoliday = (attendance === 'H' || attendance === 'H/H');
-
             if (isHoliday) {
                 const displayDate = convertToDisplayDate(stdDate);
                 const avg = getAverageBonusForDate(currentUser.name, displayDate);
@@ -1115,7 +1123,6 @@
             }
         });
 
-        // Normal working days with Sureserve data
         Object.entries(sureserveDataByDate).forEach(([date, dayJobs]) => {
             const stdDate    = convertToStandardDate(date);
             const attendance = stdDate ? attendanceData[stdDate] : null;
@@ -1136,7 +1143,6 @@
             }
         });
 
-        // Approved additional payments
         additionalPayments.forEach(payment => {
             if (isDateInRange(payment.paymentDate, startDate, endDate)) {
                 const status = payment.status || 'Awaiting Approval';
@@ -1157,7 +1163,6 @@
         periodApprovedCount.textContent    = `${totals.approvedPaymentsCount} submission${totals.approvedPaymentsCount !== 1 ? 's' : ''}`;
     }
 
-    // ── Bonus Summary Card (normal working days) ───────────────────────────────
     function createBonusSummary(date, sureserveJobs) {
         const completedJobs = sureserveJobs.filter(j => isCompleted(j.status));
         if (completedJobs.length === 0) return null;
@@ -1242,7 +1247,6 @@
         return bonusDiv;
     }
 
-    // ── Holiday Bonus Card ─────────────────────────────────────────────────────
     function createHolidayBonusSummary(date, attendance) {
         const avg = getAverageBonusForDate(currentUser.name, date);
         const isHalfDay    = attendance === 'H/H';
@@ -1286,7 +1290,6 @@
         return div;
     }
 
-    // ── Display Results ────────────────────────────────────────────────────────
     function displayResults(dataByDate, totalJobs, startDate, endDate, attendanceData, sureserveDataByDate) {
         resultsContainer.innerHTML = '';
         totalRecords.textContent = `${totalJobs} jobs`;
@@ -1375,7 +1378,7 @@
         });
     }
 
-    // ── Helpers ────────────────────────────────────────────────────────────────
+    // ── Utility Formatting ─────────────────────────────────────────────────────
     function isDateInRange(dateStr, startStr, endStr) {
         if (!dateStr) return false;
         let date;
@@ -1444,7 +1447,7 @@
         return div.innerHTML;
     }
 
-    // ── Additional Payment Card ────────────────────────────────────────────────
+    // ── Additional Payment Component ───────────────────────────────────────────
     function createAdditionalPaymentCard(payment) {
         const card   = document.createElement('div');
         const status = payment.status || 'Awaiting Approval';
@@ -1504,7 +1507,7 @@
         return card;
     }
 
-    // ── Payments Modal ─────────────────────────────────────────────────────────
+    // ── Payments Form Submission ───────────────────────────────────────────────
     function resetModal() {
         paymentsForm.reset();
         document.getElementById('overtimeSection').classList.remove('show');
@@ -1613,7 +1616,6 @@
         return (endMins - startMins) / 60;
     }
 
-    // ── Submit Payment ─────────────────────────────────────────────────────────
     paymentsForm.addEventListener('submit', async e => {
         e.preventDefault();
 
@@ -1631,7 +1633,7 @@
             workingAway: document.querySelector('input[name="workingAway"]:checked').value === 'yes',
             overtime:    document.querySelector('input[name="overtime"]:checked').value   === 'yes',
             status:      'Awaiting Approval',
-            timestamp:   firebase.firestore.FieldValue.serverTimestamp()
+            timestamp:   serverTimestamp()
         };
 
         const notes = document.getElementById('paymentNotes').value.trim();
@@ -1673,7 +1675,7 @@
         paymentData.totalAmount = total;
 
         try {
-            await db.collection('SP Additional Payment').add(paymentData);
+            await addDoc(collection(db, 'SP Additional Payment'), paymentData);
             alert('Additional payment submitted successfully!');
             paymentsModal.classList.remove('show');
             resetModal();
