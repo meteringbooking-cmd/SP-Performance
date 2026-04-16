@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Engineer Portal - Scottish Power</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,87 +49,51 @@
 
         .container { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
 
+        /* ── Page Transitions ── */
         .page { display: none; }
-        .page.active { display: block; animation: fadeInUp 0.6s ease-out; }
-
+        .page.active { display: block; animation: fadeInUp 0.5s ease-out; }
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ── Login ── */
+        /* ── Login Screen ── */
         .login-wrapper { display: flex; align-items: center; justify-content: center; min-height: 80vh; }
-
         .login-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 3rem;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px;
+            padding: 3rem; width: 100%; max-width: 450px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-
         .login-header { text-align: center; margin-bottom: 2.5rem; }
-
         .logo {
-            width: 80px; height: 80px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            border-radius: 16px;
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'DM Mono', monospace;
-            font-weight: 500; font-size: 2rem;
-            box-shadow: 0 8px 24px rgba(0, 163, 224, 0.3);
-            margin: 0 auto 1.5rem;
+            width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 16px; display: flex; align-items: center; justify-content: center;
+            font-family: 'DM Mono', monospace; font-weight: 500; font-size: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 163, 224, 0.3); margin: 0 auto 1.5rem;
         }
-
         .login-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
         .login-subtitle { color: var(--text-muted); font-size: 0.95rem; }
-
+        
         .form-group { margin-bottom: 1.5rem; }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--text-light);
-            font-size: 0.95rem;
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-light); font-size: 0.95rem; }
+        input[type="text"], input[type="password"], input[type="date"], textarea, select {
+            width: 100%; padding: 1rem; background: var(--bg-dark); border: 2px solid var(--border);
+            border-radius: 12px; color: var(--text-light); font-family: 'Work Sans', sans-serif;
+            font-size: 1rem; transition: all 0.3s ease;
         }
-
-        input[type="text"],
-        input[type="password"],
-        input[type="date"],
-        textarea {
-            width: 100%;
-            padding: 1rem;
-            background: var(--bg-dark);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            color: var(--text-light);
-            font-family: 'Work Sans', sans-serif;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
         textarea { resize: vertical; min-height: 80px; }
-        textarea:focus, input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.1);
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.1); }
+        
+        .pw-wrap { position: relative; }
+        .pw-toggle {
+            position: absolute; right: 0; top: 0; bottom: 0; width: 50px;
+            background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer;
         }
+        .pw-toggle:hover { color: var(--accent); }
 
         .btn {
-            width: 100%;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Work Sans', sans-serif;
+            width: 100%; padding: 1rem 2rem; border: none; border-radius: 12px;
+            font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; font-family: 'Work Sans', sans-serif;
         }
-
         .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; }
         .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0, 163, 224, 0.3); }
         .btn-secondary { background: var(--bg-dark); color: var(--text-light); border: 2px solid var(--border); }
@@ -137,134 +101,53 @@
         .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
 
         .error-message {
-            display: none;
-            padding: 1rem;
-            background: rgba(239, 68, 68, 0.1);
-            border: 2px solid var(--error);
-            border-radius: 12px;
-            color: var(--error);
-            text-align: center;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
+            display: none; padding: 1rem; background: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--error); border-radius: 12px; color: var(--error); text-align: center; font-size: 0.9rem; margin-bottom: 1rem;
         }
         .error-message.show { display: block; }
 
-        /* ── Headers & Layout ── */
+        /* ── Welcome Screen ── */
+        .welcome-inner { text-align: center; }
+        .welcome-icon { font-size: 4rem; margin-bottom: 1.5rem; }
+        .welcome-name { font-size: 2.5rem; font-weight: 700; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem; }
+        .welcome-sub { color: var(--text-muted); font-size: 1.1rem; }
+
+        /* ── Dashboard Headers ── */
         header { margin-bottom: 3rem; }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .welcome-section { display: flex; align-items: center; gap: 1.5rem; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .welcome-section h1 { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.02em; background: linear-gradient(135deg, var(--text-light) 0%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { font-family: 'DM Mono', monospace; color: var(--text-muted); font-size: 0.95rem; letter-spacing: 0.05em; text-transform: uppercase; }
         .header-right { display: flex; align-items: center; gap: 1.5rem; }
         .ngu-logo { height: 50px; width: auto; }
-
-        h1 {
-            font-size: 2.25rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, var(--text-light) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .subtitle {
-            font-family: 'DM Mono', monospace;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            letter-spacing: 0.05em;
-        }
-
-        .logout-btn {
-            padding: 0.75rem 1.5rem;
-            background: var(--bg-dark);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            color: var(--text-light);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+        .logout-btn { padding: 0.75rem 1.5rem; background: var(--bg-dark); border: 2px solid var(--border); border-radius: 12px; color: var(--text-light); font-weight: 600; cursor: pointer; transition: all 0.3s; }
         .logout-btn:hover { border-color: var(--error); color: var(--error); }
 
-        /* ── HUB CARDS (Replacing Quick Links) ── */
-        .hub-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
+        /* ── Hub Grid & Cards ── */
+        .hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
         .hub-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-            width: 100%;
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+            padding: 2rem 1.5rem; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden;
+            text-align: left; text-decoration: none; width: 100%; display: block;
         }
-
         .hub-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-            background: var(--card-accent, var(--accent));
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s;
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: var(--card-accent, var(--accent)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
         }
-
-        .hub-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .hub-card:hover::before { transform: scaleX(1); }
+        .hub-card:hover:not(.locked) { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .hub-card:hover:not(.locked)::before { transform: scaleX(1); }
 
         .hub-card-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 54px;
-            height: 54px;
-            border-radius: 14px;
-            background: rgba(0, 163, 224, 0.08);
-            border: 1px solid rgba(0, 163, 224, 0.15);
-            color: var(--card-accent, var(--accent));
-            margin-bottom: 1.5rem;
-            transition: all 0.3s ease;
+            display: inline-flex; align-items: center; justify-content: center; width: 54px; height: 54px;
+            border-radius: 14px; background: rgba(0, 163, 224, 0.08); border: 1px solid rgba(0, 163, 224, 0.15);
+            color: var(--card-accent, var(--accent)); margin-bottom: 1.5rem; transition: all 0.3s ease;
         }
-
         .hub-card-icon svg { width: 28px; height: 28px; stroke-width: 2; }
-
         .hub-card:hover:not(.locked) .hub-card-icon {
-            background: var(--card-accent, var(--accent));
-            color: white;
-            transform: scale(1.1);
-            border-color: transparent;
-            box-shadow: 0 8px 20px -8px var(--card-accent, var(--accent));
+            background: var(--card-accent, var(--accent)); color: white; transform: scale(1.1); border-color: transparent; box-shadow: 0 8px 20px -8px var(--card-accent, var(--accent));
         }
 
         .hub-card-label { font-family: 'Work Sans', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--text-light); margin-bottom: 0.5rem; text-transform: uppercase; }
         .hub-card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
-        
-        .hub-card-arrow {
-            position: absolute;
-            bottom: 20px; right: 20px;
-            color: var(--card-accent, var(--accent));
-            font-size: 1.2rem;
-            opacity: 0;
-            transition: all 0.2s;
-        }
-        .hub-card:hover:not(.locked) .hub-card-arrow { opacity: 1; transform: translate(2px,-2px); }
 
         /* Notification Badge & Locks */
         .nav-badge {
@@ -277,48 +160,24 @@
         .hub-card.locked { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.8); }
         .hub-card.locked:hover { background: var(--bg-card); transform: none; box-shadow: none; border-color: var(--border); }
         .hub-card.locked::before { display: none; }
+        .lock-overlay { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--error); margin-top: 12px; text-transform: uppercase; }
 
-        .lock-overlay {
-            font-family: 'DM Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--error);
-            margin-top: 12px;
-            text-transform: uppercase;
-        }
-
-        /* ── BONUS SCREEN COMPONENTS ── */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-        }
-
+        /* ── Bonus Breakdown Components ── */
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; margin-bottom: 2rem; }
         .date-range-section { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
         .button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
         .results-section { display: none; }
         .results-section.show { display: block; }
-
-        .results-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border);
-        }
-
+        .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
         .results-title { font-size: 1.5rem; font-weight: 600; }
-
-        .record-count {
-            font-family: 'DM Mono', monospace; color: var(--accent); font-size: 0.9rem;
-            padding: 0.5rem 1rem; background: rgba(0, 163, 224, 0.1); border-radius: 8px;
-        }
+        .record-count { font-family: 'DM Mono', monospace; color: var(--accent); font-size: 0.9rem; padding: 0.5rem 1rem; background: rgba(0, 163, 224, 0.1); border-radius: 8px; }
 
         .day-section { margin-bottom: 2rem; padding: 1.5rem; background: var(--bg-dark); border-radius: 12px; border-left: 4px solid var(--accent); }
         .day-section.holiday-day { border-left-color: var(--holiday); }
         .day-header { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--accent); display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
         .day-section.holiday-day .day-header { color: var(--holiday); }
-
-        .attendance-badge { display: inline-block; padding: 0.35rem 0.85rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+        
+        .attendance-badge { display: inline-block; padding: 0.35rem 0.85rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
         .attendance-badge.present  { background: var(--success); color: white; }
         .attendance-badge.holiday  { background: var(--holiday); color: white; }
         .attendance-badge.sick     { background: var(--error);   color: white; }
@@ -327,7 +186,6 @@
         .job-grid { display: grid; gap: 1rem; }
         .job-card { padding: 1.25rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; transition: all 0.3s ease; }
         .job-card:hover { border-color: var(--accent); transform: translateX(4px); }
-
         .job-detail { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
         .job-detail:last-child { margin-bottom: 0; }
         .job-label { font-weight: 600; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -338,7 +196,6 @@
         .status-pending   { background: rgba(245, 158, 11, 0.2);  color: var(--warning); }
         .status-cancelled { background: rgba(239, 68, 68, 0.2);   color: var(--error); }
 
-        /* ── Holiday Bonus ── */
         .holiday-bonus-summary { margin-top: 1.5rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%); border: 2px solid var(--holiday); border-radius: 12px; }
         .holiday-bonus-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
         .holiday-bonus-title  { font-size: 1.1rem; font-weight: 700; color: var(--holiday); }
@@ -347,37 +204,56 @@
         .holiday-bonus-row { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-muted); }
         .holiday-bonus-note { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem; }
 
-        /* ── Bonus Summary ── */
         .bonus-summary { margin-top: 1.5rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%); border: 2px solid var(--bonus); border-radius: 12px; }
         .bonus-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
         .bonus-title        { font-size: 1.1rem; font-weight: 700; color: var(--bonus); }
         .bonus-total-points { font-family: 'DM Mono', monospace; font-size: 1.5rem; font-weight: 700; color: var(--bonus); }
-
         .bonus-jobs-list { display: grid; gap: 0.75rem; margin-bottom: 1.25rem; }
         .bonus-job-item { display: grid; grid-template-columns: auto 1fr auto; gap: 1rem; padding: 0.75rem; background: var(--bg-card); border-radius: 8px; border-left: 3px solid var(--success); font-size: 0.9rem; }
         .bonus-job-item.no-points { border-left-color: var(--warning); }
-
         .bonus-job-ref    { font-family: 'DM Mono', monospace; font-weight: 600; color: var(--text-light); }
         .bonus-job-desc   { color: var(--text-muted); }
         .bonus-job-points { font-family: 'DM Mono', monospace; font-weight: 700; color: var(--success); white-space: nowrap; }
         .bonus-job-points.unknown { color: var(--warning); }
-
         .bonus-unrecognised-header { font-size: 0.85rem; font-weight: 700; color: var(--warning); text-transform: uppercase; letter-spacing: 0.05em; margin: 1rem 0 0.5rem; padding: 0.5rem 0.75rem; background: rgba(245, 158, 11, 0.1); border-radius: 6px; }
         .bonus-calculation { padding: 1.25rem; background: var(--bg-dark); border-radius: 10px; margin-top: 1rem; }
         .bonus-calc-row { display: flex; justify-content: space-between; padding: 0.5rem 0; font-size: 0.95rem; }
         .bonus-calc-row.highlight { font-weight: 700; font-size: 1.05rem; margin-top: 0.75rem; padding-top: 1rem; border-top: 2px solid var(--border); }
         .bonus-calc-row.total     { color: var(--success); font-size: 1.25rem; margin-top: 0.5rem; }
-
         .bonus-threshold-message { padding: 1rem; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--error); border-radius: 8px; color: var(--error); text-align: center; font-weight: 600; margin-top: 1rem; }
         .bonus-unlocked-message { padding: 1rem; background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success); border-radius: 8px; color: var(--success); text-align: center; font-weight: 600; margin-top: 1rem; }
         .bonus-warning-message { padding: 0.75rem 1rem; background: rgba(245, 158, 11, 0.1); border: 1px solid var(--warning); border-radius: 8px; color: var(--warning); font-size: 0.85rem; margin-top: 0.75rem; }
+
+        .additional-payment-card { margin-top: 1rem; padding: 1.5rem; background: var(--bg-dark); border-radius: 12px; transition: all 0.3s ease; }
+        .additional-payment-card.awaiting         { border: 2px solid var(--warning); }
+        .additional-payment-card.approved         { border: 2px solid var(--success); }
+        .additional-payment-card.approved-changes { border: 2px solid var(--accent); }
+        .additional-payment-card.denied           { border: 2px solid var(--error); }
+        .additional-payment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
+        .additional-payment-title { font-weight: 700; font-size: 1.05rem; }
+        .status-badge-payment { display: inline-block; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .status-awaiting-payment         { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .status-approved-payment         { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .status-approved-changes-payment { background: rgba(0, 163, 224, 0.2);  color: var(--accent); }
+        .status-denied-payment           { background: rgba(239, 68, 68, 0.2);  color: var(--error); }
+        .payment-details { display: grid; gap: 0.5rem; }
+        .payment-detail-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+        .payment-detail-row:last-child { border-bottom: none; }
+        .payment-notes { margin-top: 1rem; padding: 1rem; background: rgba(0, 163, 224, 0.05); border-left: 3px solid var(--accent); border-radius: 8px; }
+        .payment-notes-title { font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .payment-notes-text { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; white-space: pre-wrap; }
+        .denial-reason { margin-top: 1rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-left: 3px solid var(--error); border-radius: 8px; }
+        .denial-reason-title { font-weight: 600; color: var(--error); margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .denial-reason-text { color: var(--text-muted); font-size: 0.9rem; }
+        .changes-log { margin-top: 1rem; padding: 1rem; background: rgba(0, 163, 224, 0.1); border-left: 3px solid var(--accent); border-radius: 8px; }
+        .changes-log-title { font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .changes-log-item { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.25rem; }
 
         .no-results { text-align: center; padding: 3rem; color: var(--text-muted); }
         .no-results-icon { font-size: 3rem; margin-bottom: 1rem; }
 
         .loading { display: none; text-align: center; padding: 2rem; }
         .loading.show { display: block; }
-
         .spinner { width: 48px; height: 48px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -386,40 +262,28 @@
         /* ── Modals ── */
         .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: 2rem; backdrop-filter: blur(4px); }
         .modal.show { display: flex; animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         .modal-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5); animation: slideUp 0.4s ease-out; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
         .modal-title { font-size: 1.5rem; font-weight: 700; }
-
         .close-btn { width: 36px; height: 36px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; line-height: 1; }
         .close-btn:hover { border-color: var(--error); color: var(--error); }
 
         .question-group { margin-bottom: 1.5rem; padding: 1.25rem; background: var(--bg-dark); border-radius: 12px; border-left: 3px solid var(--accent); }
         .question-label { display: block; margin-bottom: 0.75rem; font-weight: 600; color: var(--text-light); font-size: 1rem; }
-
         .radio-group { display: flex; gap: 1.5rem; margin-bottom: 1rem; }
         .radio-option { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
         .radio-option input[type="radio"] { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; }
         .radio-option label { margin: 0; cursor: pointer; font-weight: 500; }
-
         .conditional-section { display: none; margin-top: 1rem; padding: 1rem; background: var(--bg-card); border-radius: 8px; }
         .conditional-section.show { display: block; }
         .time-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
-        input[type="time"], input[type="number"], select { width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 2px solid var(--border); border-radius: 8px; color: var(--text-light); font-family: 'Work Sans', sans-serif; font-size: 0.95rem; transition: all 0.3s ease; }
-        select { cursor: pointer; }
-        input[type="time"]:focus, input[type="number"]:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.1); }
-
         .jobs-container { display: none; }
         .jobs-container.show { display: block; }
-
         .job-entry { padding: 1rem; background: var(--bg-dark); border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--border); }
         .job-entry-header { font-weight: 600; color: var(--accent); margin-bottom: 0.75rem; font-size: 0.9rem; }
         .job-inputs { display: grid; gap: 0.75rem; }
-
         .modal-actions { display: flex; gap: 1rem; margin-top: 2rem; }
 
         .payment-summary { margin-top: 1.5rem; padding: 1.25rem; background: rgba(0, 163, 224, 0.1); border: 2px solid var(--accent); border-radius: 12px; display: none; }
@@ -428,45 +292,8 @@
         .payment-line { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.95rem; }
         .payment-line.total { margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--border); font-weight: 700; font-size: 1.1rem; color: var(--success); }
 
-        .status-badge-payment { display: inline-block; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-        .status-awaiting-payment         { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
-        .status-approved-payment         { background: rgba(16, 185, 129, 0.2); color: var(--success); }
-        .status-approved-changes-payment { background: rgba(0, 163, 224, 0.2);  color: var(--accent); }
-        .status-denied-payment           { background: rgba(239, 68, 68, 0.2);  color: var(--error); }
-
-        .additional-payment-card { margin-bottom: 1rem; padding: 1.5rem; background: var(--bg-dark); border-radius: 12px; transition: all 0.3s ease; }
-        .additional-payment-card.awaiting         { border: 2px solid var(--warning); }
-        .additional-payment-card.approved         { border: 2px solid var(--success); }
-        .additional-payment-card.approved-changes { border: 2px solid var(--accent); }
-        .additional-payment-card.denied           { border: 2px solid var(--error); }
-
-        .additional-payment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
-        .additional-payment-title { font-weight: 700; font-size: 1.05rem; }
-
-        .payment-details { display: grid; gap: 0.5rem; }
-        .payment-detail-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
-        .payment-detail-row:last-child { border-bottom: none; }
-
-        .payment-notes { margin-top: 1rem; padding: 1rem; background: rgba(0, 163, 224, 0.05); border-left: 3px solid var(--accent); border-radius: 8px; }
-        .payment-notes-title { font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; font-size: 0.9rem; }
-        .payment-notes-text { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; white-space: pre-wrap; }
-
-        .denial-reason { margin-top: 1rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-left: 3px solid var(--error); border-radius: 8px; }
-        .denial-reason-title { font-weight: 600; color: var(--error); margin-bottom: 0.5rem; font-size: 0.9rem; }
-        .denial-reason-text { color: var(--text-muted); font-size: 0.9rem; }
-
-        .changes-log { margin-top: 1rem; padding: 1rem; background: rgba(0, 163, 224, 0.1); border-left: 3px solid var(--accent); border-radius: 8px; }
-        .changes-log-title { font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; font-size: 0.9rem; }
-        .changes-log-item { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.25rem; }
-        
-        /* ── Capacity modal (iframe) ── */
         .capacity-modal-box { background: var(--bg-card); border: 1px solid var(--border); width: 95%; max-width: 1100px; height: 88vh; display: flex; flex-direction: column; border-radius: 20px; overflow: hidden;}
         .capacity-iframe { flex: 1; width: 100%; border: none; background: white; display: block; }
-        .modal-overlay { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 20px; }
-        .modal-overlay.open { display: flex; animation: fadeIn 0.3s ease-out; }
-        
-        .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); background: var(--bg-dark); flex-shrink: 0; }
-        .modal-head-title { font-family: 'Work Sans', sans-serif; font-weight: 700; font-size: 1.2rem; }
 
         @media (max-width: 768px) {
             body { padding: 1.5rem; }
@@ -503,10 +330,23 @@
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" required autocomplete="current-password">
+                        <div class="pw-wrap">
+                            <input type="password" id="password" required autocomplete="current-password">
+                            <button type="button" class="pw-toggle" onclick="togglePw()">👁️</button>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Sign In</button>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="welcomeScreen" class="page">
+        <div class="login-wrapper">
+            <div class="welcome-inner">
+                <div class="welcome-icon">👷</div>
+                <div class="welcome-name" id="welcomeName"></div>
+                <div class="welcome-sub">Loading your dashboard...</div>
             </div>
         </div>
     </div>
@@ -518,7 +358,7 @@
                     <h1>Welcome, <span id="engineerName"></span></h1>
                 </div>
                 <div class="header-right">
-                    <button id="logoutBtn" class="logout-btn">Logout</button>
+                    <button class="logout-btn" onclick="handleLogout()">Logout</button>
                     <img src="https://www.dropbox.com/scl/fi/kkujm1u6y7vvnp7luq8d7/ngu-main-white.png?rlkey=kgq2uh48qh4xssh4vlbz868lr&st=6cy1lbvp&dl=1" alt="NGU Logo" class="ngu-logo">
                 </div>
             </div>
@@ -589,7 +429,7 @@
                     <span class="hub-card-arrow">↗</span>
                 </button>
 
-                <button class="hub-card" style="--card-accent:#3b82f6;" onclick="openDocsModal('Toolbox Talks')">
+                <button class="hub-card" style="--card-accent:#ef4444;" onclick="openDocsModal('Toolbox Talks')">
                     <span id="badge-Toolbox" class="nav-badge" style="display:none;">NEW</span>
                     <span class="hub-card-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -609,7 +449,7 @@
     <div id="bonusScreen" class="page">
         <header>
             <div class="header-content">
-                <button class="btn btn-secondary" style="width: auto; padding: 0.5rem 1.5rem;" onclick="showHub()">← Back to Hub</button>
+                <button class="btn btn-secondary" style="width: auto; padding: 0.5rem 1.5rem;" onclick="setScreen('hubScreen')">← Back to Hub</button>
                 <div class="header-right">
                     <img src="https://www.dropbox.com/scl/fi/kkujm1u6y7vvnp7luq8d7/ngu-main-white.png?rlkey=kgq2uh48qh4xssh4vlbz868lr&st=6cy1lbvp&dl=1" alt="NGU Logo" class="ngu-logo">
                 </div>
@@ -790,33 +630,31 @@
     </div>
 </div>
 
-<div id="capacityModal" class="modal-overlay">
+<div id="capacityModal" class="modal">
     <div class="capacity-modal-box">
-        <div class="modal-head">
-            <div class="modal-head-title" style="color: var(--accent); padding-left:1rem;">📅 Capacity View</div>
-            <button class="close-btn" id="closeCapacityModal" style="margin-right:1rem;">×</button>
+        <div class="modal-header" style="margin: 0; padding: 1.5rem; border-bottom: 1px solid var(--border); background: var(--bg-dark);">
+            <h2 class="modal-title" style="color: var(--accent);">📅 Capacity View</h2>
+            <button class="close-btn" id="closeCapacityModal">×</button>
         </div>
         <iframe id="capacityIframe" class="capacity-iframe" src="" title="Capacity"></iframe>
     </div>
 </div>
 
-<script type="module">
-    import { initializeApp }    from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getFirestore, collection, query, where, getDocs, addDoc, serverTimestamp, orderBy } 
-        from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
+<script>
     const firebaseConfig = {
         apiKey:            "AIzaSyCMmUOdW2uEIGVd6XQfWXKF8eaFmwEog1g",
         authDomain:        "oesperformance-a54c0.firebaseapp.com",
         projectId:         "oesperformance-a54c0",
         storageBucket:     "oesperformance-a54c0.firebasestorage.app",
         messagingSenderId: "484894102454",
-        appId:             "1:484894102454:web:17535ee497eac2d90d6717",
-        measurementId:     "G-R56BGZYV8N"
+        appId:             "1:484894102454:web:17535ee497eac2d90d6717"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db  = getFirestore(app);
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
     // ── Constants ──────────────────────────────────────────────────────────────
     const BONUS_THRESHOLD = 6;
@@ -824,12 +662,14 @@
 
     // ── DOM refs ───────────────────────────────────────────────────────────────
     const loginPage              = document.getElementById('loginPage');
-    const dashboardPage          = document.getElementById('dashboardPage');
-    const bonusScreen            = document.getElementById('bonusScreen');
+    const welcomeScreen          = document.getElementById('welcomeScreen');
+    const dashboardPage          = document.getElementById('dashboardPage'); // Now acts as Hub
+    const bonusScreen            = document.getElementById('bonusScreen');   // The Breakdown
+    
     const loginForm              = document.getElementById('loginForm');
     const loginError             = document.getElementById('loginError');
     const engineerNameSpan       = document.getElementById('engineerName');
-    const logoutBtn              = document.getElementById('logoutBtn');
+    
     const startDateInput         = document.getElementById('startDate');
     const endDateInput           = document.getElementById('endDate');
     const showBreakdownBtn       = document.getElementById('showBreakdownBtn');
@@ -838,10 +678,12 @@
     const resultsSection         = document.getElementById('resultsSection');
     const resultsContainer       = document.getElementById('resultsContainer');
     const totalRecords           = document.getElementById('totalRecords');
+    
     const paymentsModal          = document.getElementById('paymentsModal');
     const closeModal             = document.getElementById('closeModal');
     const cancelPayment          = document.getElementById('cancelPayment');
     const paymentsForm           = document.getElementById('paymentsForm');
+    
     const periodBonusTotal       = document.getElementById('periodBonusTotal');
     const periodBonusPoints      = document.getElementById('periodBonusPoints');
     const periodApprovedPayments = document.getElementById('periodApprovedPayments');
@@ -885,7 +727,7 @@
             const checkDate = localStorage.getItem('sp_login_date');
             if (checkDate && checkDate !== new Date().toDateString()) {
                 alert("Session expired. It's a new day! Please log in again.");
-                logoutBtn.click();
+                handleLogout();
             }
         }
     });
@@ -896,10 +738,15 @@
         document.getElementById(id).classList.add('active');
     }
 
+    window.togglePw = function() {
+        const inp = document.getElementById('password');
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+    };
+
     // ── Average bonuses ────────────────────────────────────────────────────────
     async function loadAverageBonuses() {
         try {
-            const snap = await getDocs(collection(db, 'Average Bonuses'));
+            const snap = await db.collection('Average Bonuses').get();
             averageBonuses = {};
             snap.forEach(doc => {
                 const d = doc.data();
@@ -932,7 +779,7 @@
         if (!currentUser) return;
         
         try {
-            const snapshot = await getDocs(collection(db, "portal_documents"));
+            const snapshot = await db.collection("portal_documents").get();
             const viewedDocs = JSON.parse(localStorage.getItem(`viewed_${currentUser.name}`) || "[]");
             
             let hasNewToolbox = false, hasNewVehicle = false, hasNewDNO = false, unreadCount = 0;
@@ -993,11 +840,11 @@
             iframe.src = 'https://oes-performance.vercel.app/capacity2.html';
             iframe.setAttribute('data-loaded', '1');
         }
-        modal.classList.add('open');
+        modal.classList.add('show');
         document.body.style.overflow = 'hidden';
     };
     document.getElementById('closeCapacityModal').addEventListener('click', () => {
-        document.getElementById('capacityModal').classList.remove('open');
+        document.getElementById('capacityModal').classList.remove('show');
         document.body.style.overflow = '';
     });
 
@@ -1014,8 +861,10 @@
         document.body.style.overflow = 'hidden';
 
         try {
-            const q = query(collection(db, "portal_documents"), where("category", "==", category), orderBy("uploadedAt", "desc"));
-            const snapshot = await getDocs(q);
+            const snapshot = await db.collection("portal_documents")
+                                     .where("category", "==", category)
+                                     .orderBy("uploadedAt", "desc")
+                                     .get();
 
             if (snapshot.empty) {
                 container.innerHTML = '<div class="no-results"><p>No documents found in this folder.</p></div>';
@@ -1093,11 +942,11 @@
             
             // Save signature to Database for compliance
             try {
-                await addDoc(collection(db, "document_signatures"), {
+                await db.collection("document_signatures").add({
                     engineerName: currentUser.name,
                     documentId: pendingSigDocId,
                     documentName: document.getElementById('sigDocName').innerText,
-                    signedAt: serverTimestamp()
+                    signedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
             } catch(e) { console.error("Could not save signature to DB", e); }
 
@@ -1120,8 +969,7 @@
         const password = document.getElementById('password').value;
 
         try {
-            const q    = query(collection(db, 'SP Engineers'), where('name', '==', username));
-            const snap = await getDocs(q);
+            const snap = await db.collection('SP Engineers').where('name', '==', username).get();
 
             if (snap.empty) { showLoginError('Invalid username or password'); return; }
 
@@ -1140,11 +988,12 @@
             localStorage.setItem('sp_login_date', new Date().toDateString());
 
             await loadAverageBonuses();
-            refreshDocumentStatus();
+            await refreshDocumentStatus();
 
-            loginPage.classList.remove('active');
-            dashboardPage.classList.add('active');
-            engineerNameSpan.textContent = currentUser.name;
+            document.getElementById('welcomeName').textContent = currentUser.name.toUpperCase();
+            setScreen('welcomeScreen');
+            setTimeout(() => setScreen('dashboardPage'), 1500);
+
             loginForm.reset();
             loginError.classList.remove('show');
 
@@ -1160,14 +1009,14 @@
     }
 
     // ── Logout ─────────────────────────────────────────────────────────────────
-    logoutBtn.addEventListener('click', () => {
+    window.handleLogout = function() {
         currentUser = null;
         localStorage.removeItem('sp_username');
         localStorage.removeItem('sp_login_date');
-        setScreen('loginScreen');
+        setScreen('loginPage');
         resultsSection.classList.remove('show');
         resultsContainer.innerHTML = '';
-    });
+    };
 
     // ── Show Daily Breakdown ───────────────────────────────────────────────────
     showBreakdownBtn.addEventListener('click', async () => {
@@ -1185,9 +1034,7 @@
 
         try {
             // ── Fetch Sureserve jobs ──
-            const sureserveSnap = await getDocs(
-                query(collection(db, 'SP-SureserveData'), where('resource', '==', currentUser.name))
-            );
+            const sureserveSnap = await db.collection('SP-SureserveData').where('resource', '==', currentUser.name).get();
 
             const sureserveDataByDate = {};
             sureserveSnap.forEach(doc => {
@@ -1200,9 +1047,8 @@
             });
 
             // ── Fetch SP Submitted Data ──
-            const submittedSnap = await getDocs(
-                query(collection(db, 'SP Submitted Data'), where('outcomeResource', '==', currentUser.name))
-            );
+            const submittedSnap = await db.collection('SP Submitted Data').where('outcomeResource', '==', currentUser.name).get();
+            
             const dataByDate = {};
             let totalJobs = 0;
             submittedSnap.forEach(doc => {
@@ -1215,16 +1061,14 @@
             });
 
             // ── Fetch Additional Payments ──
-            const paymentsSnap = await getDocs(
-                query(collection(db, 'SP Additional Payment'), where('engineerName', '==', currentUser.name))
-            );
+            const paymentsSnap = await db.collection('SP Additional Payment').where('engineerName', '==', currentUser.name).get();
+            
             additionalPayments = [];
             paymentsSnap.forEach(doc => additionalPayments.push(doc.data()));
 
             // ── Fetch Attendance ──
-            const attendanceSnap = await getDocs(
-                query(collection(db, 'SP Attendance'), where('engineerName', '==', currentUser.name))
-            );
+            const attendanceSnap = await db.collection('SP Attendance').where('engineerName', '==', currentUser.name).get();
+            
             const attendanceData = {};
             attendanceSnap.forEach(doc => {
                 const d = doc.data();
@@ -1261,7 +1105,6 @@
             const isHoliday = (attendance === 'H' || attendance === 'H/H');
 
             if (isHoliday) {
-                // Holiday day — always use average bonus regardless of Sureserve data
                 const displayDate = convertToDisplayDate(stdDate);
                 const avg = getAverageBonusForDate(currentUser.name, displayDate);
                 if (avg > 0) {
@@ -1277,7 +1120,6 @@
             const stdDate    = convertToStandardDate(date);
             const attendance = stdDate ? attendanceData[stdDate] : null;
 
-            // Skip holiday days — already handled above
             if (attendance === 'H' || attendance === 'H/H') return;
 
             const completedJobs = dayJobs.filter(j => isCompleted(j.status));
@@ -1789,7 +1631,7 @@
             workingAway: document.querySelector('input[name="workingAway"]:checked').value === 'yes',
             overtime:    document.querySelector('input[name="overtime"]:checked').value   === 'yes',
             status:      'Awaiting Approval',
-            timestamp:   serverTimestamp()
+            timestamp:   firebase.firestore.FieldValue.serverTimestamp()
         };
 
         const notes = document.getElementById('paymentNotes').value.trim();
@@ -1831,7 +1673,7 @@
         paymentData.totalAmount = total;
 
         try {
-            await addDoc(collection(db, 'SP Additional Payment'), paymentData);
+            await db.collection('SP Additional Payment').add(paymentData);
             alert('Additional payment submitted successfully!');
             paymentsModal.classList.remove('show');
             resetModal();
