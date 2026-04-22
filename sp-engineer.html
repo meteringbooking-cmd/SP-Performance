@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Engineer Portal - Scottish Power</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,235 +49,143 @@
 
         .container { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
 
+        /* ── Page Transitions ── */
         .page { display: none; }
-        .page.active { display: block; animation: fadeInUp 0.6s ease-out; }
-
+        .page.active { display: block; animation: fadeInUp 0.5s ease-out; }
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ── Login ── */
+        /* ── Login Screen ── */
         .login-wrapper { display: flex; align-items: center; justify-content: center; min-height: 80vh; }
-
         .login-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 3rem;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px;
+            padding: 3rem; width: 100%; max-width: 450px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-
         .login-header { text-align: center; margin-bottom: 2.5rem; }
-
         .logo {
-            width: 80px; height: 80px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            border-radius: 16px;
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'DM Mono', monospace;
-            font-weight: 500; font-size: 2rem;
-            box-shadow: 0 8px 24px rgba(0, 163, 224, 0.3);
-            margin: 0 auto 1.5rem;
+            width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 16px; display: flex; align-items: center; justify-content: center;
+            font-family: 'DM Mono', monospace; font-weight: 500; font-size: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 163, 224, 0.3); margin: 0 auto 1.5rem;
         }
-
         .login-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
         .login-subtitle { color: var(--text-muted); font-size: 0.95rem; }
-
+        
         .form-group { margin-bottom: 1.5rem; }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--text-light);
-            font-size: 0.95rem;
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-light); font-size: 0.95rem; }
+        input[type="text"], input[type="password"], input[type="date"], textarea, select {
+            width: 100%; padding: 1rem; background: var(--bg-dark); border: 2px solid var(--border);
+            border-radius: 12px; color: var(--text-light); font-family: 'Work Sans', sans-serif;
+            font-size: 1rem; transition: all 0.3s ease;
         }
-
-        input[type="text"],
-        input[type="password"],
-        input[type="date"],
-        textarea {
-            width: 100%;
-            padding: 1rem;
-            background: var(--bg-dark);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            color: var(--text-light);
-            font-family: 'Work Sans', sans-serif;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
         textarea { resize: vertical; min-height: 80px; }
-        textarea:focus, input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.1);
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.1); }
+        
+        .pw-wrap { position: relative; }
+        .pw-toggle {
+            position: absolute; right: 0; top: 0; bottom: 0; width: 50px;
+            background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer;
         }
+        .pw-toggle:hover { color: var(--accent); }
 
         .btn {
-            width: 100%;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Work Sans', sans-serif;
+            width: 100%; padding: 1rem 2rem; border: none; border-radius: 12px;
+            font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; font-family: 'Work Sans', sans-serif;
         }
-
         .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; }
         .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0, 163, 224, 0.3); }
         .btn-secondary { background: var(--bg-dark); color: var(--text-light); border: 2px solid var(--border); }
-        .btn-secondary:hover { border-color: var(--accent); background: var(--bg-card); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-secondary:hover:not(:disabled) { border-color: var(--accent); background: var(--bg-card); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
 
         .error-message {
-            display: none;
-            padding: 1rem;
-            background: rgba(239, 68, 68, 0.1);
-            border: 2px solid var(--error);
-            border-radius: 12px;
-            color: var(--error);
-            text-align: center;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
+            display: none; padding: 1rem; background: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--error); border-radius: 12px; color: var(--error); text-align: center; font-size: 0.9rem; margin-bottom: 1rem;
         }
         .error-message.show { display: block; }
 
-        /* ── Dashboard ── */
+        /* ── Welcome Screen ── */
+        .welcome-inner { text-align: center; }
+        .welcome-icon { font-size: 4rem; margin-bottom: 1.5rem; }
+        .welcome-name { font-size: 2.5rem; font-weight: 700; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem; }
+        .welcome-sub { color: var(--text-muted); font-size: 1.1rem; }
+
+        /* ── Dashboard Headers ── */
         header { margin-bottom: 3rem; }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .welcome-section { display: flex; align-items: center; gap: 1.5rem; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .welcome-section h1 { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.02em; background: linear-gradient(135deg, var(--text-light) 0%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { font-family: 'DM Mono', monospace; color: var(--text-muted); font-size: 0.95rem; letter-spacing: 0.05em; text-transform: uppercase; }
         .header-right { display: flex; align-items: center; gap: 1.5rem; }
         .ngu-logo { height: 50px; width: auto; }
-
-        h1 {
-            font-size: 2.25rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, var(--text-light) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .subtitle {
-            font-family: 'DM Mono', monospace;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            letter-spacing: 0.05em;
-        }
-
-        .logout-btn {
-            padding: 0.75rem 1.5rem;
-            background: var(--bg-dark);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            color: var(--text-light);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+        .logout-btn { padding: 0.75rem 1.5rem; background: var(--bg-dark); border: 2px solid var(--border); border-radius: 12px; color: var(--text-light); font-weight: 600; cursor: pointer; transition: all 0.3s; }
         .logout-btn:hover { border-color: var(--error); color: var(--error); }
 
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
+        /* ── Hub Grid & Cards ── */
+        .hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .hub-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+            padding: 2rem 1.5rem; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden;
+            text-align: left; text-decoration: none; width: 100%; display: block;
+        }
+        .hub-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: var(--card-accent, var(--accent)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
+        }
+        .hub-card:hover:not(.locked) { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .hub-card:hover:not(.locked)::before { transform: scaleX(1); }
+
+        .hub-card-icon {
+            display: inline-flex; align-items: center; justify-content: center; width: 54px; height: 54px;
+            border-radius: 14px; background: rgba(0, 163, 224, 0.08); border: 1px solid rgba(0, 163, 224, 0.15);
+            color: var(--card-accent, var(--accent)); margin-bottom: 1.5rem; transition: all 0.3s ease;
+        }
+        .hub-card-icon svg { width: 28px; height: 28px; stroke-width: 2; }
+        .hub-card:hover:not(.locked) .hub-card-icon {
+            background: var(--card-accent, var(--accent)); color: white; transform: scale(1.1); border-color: transparent; box-shadow: 0 8px 20px -8px var(--card-accent, var(--accent));
         }
 
+        .hub-card-label { font-family: 'Work Sans', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--text-light); margin-bottom: 0.5rem; text-transform: uppercase; }
+        .hub-card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+
+        /* Notification Badge & Locks */
+        .nav-badge {
+            position: absolute; top: 16px; right: 16px; background: var(--error); color: white;
+            font-family: 'DM Mono', monospace; font-size: 0.7rem; padding: 4px 8px; border-radius: 8px;
+            font-weight: 700; animation: pulse 2s infinite; border: 2px solid var(--bg-card);
+        }
+        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+
+        .hub-card.locked { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.8); }
+        .hub-card.locked:hover { background: var(--bg-card); transform: none; box-shadow: none; border-color: var(--border); }
+        .hub-card.locked::before { display: none; }
+        .lock-overlay { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--error); margin-top: 12px; text-transform: uppercase; }
+
+        /* ── Bonus Breakdown Components ── */
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; margin-bottom: 2rem; }
         .date-range-section { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
         .button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
         .results-section { display: none; }
         .results-section.show { display: block; }
-
-        .results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border);
-        }
-
+        .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
         .results-title { font-size: 1.5rem; font-weight: 600; }
+        .record-count { font-family: 'DM Mono', monospace; color: var(--accent); font-size: 0.9rem; padding: 0.5rem 1rem; background: rgba(0, 163, 224, 0.1); border-radius: 8px; }
 
-        .record-count {
-            font-family: 'DM Mono', monospace;
-            color: var(--accent);
-            font-size: 0.9rem;
-            padding: 0.5rem 1rem;
-            background: rgba(0, 163, 224, 0.1);
-            border-radius: 8px;
-        }
-
-        .day-section {
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: var(--bg-dark);
-            border-radius: 12px;
-            border-left: 4px solid var(--accent);
-        }
-
-        /* Holiday days get a purple left border */
-        .day-section.holiday-day {
-            border-left-color: var(--holiday);
-        }
-
-        .day-header {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--accent);
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
+        .day-section { margin-bottom: 2rem; padding: 1.5rem; background: var(--bg-dark); border-radius: 12px; border-left: 4px solid var(--accent); }
+        .day-section.holiday-day { border-left-color: var(--holiday); }
+        .day-header { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--accent); display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
         .day-section.holiday-day .day-header { color: var(--holiday); }
-
-        .attendance-badge {
-            display: inline-block;
-            padding: 0.35rem 0.85rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            white-space: nowrap;
-        }
+        
+        .attendance-badge { display: inline-block; padding: 0.35rem 0.85rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
         .attendance-badge.present  { background: var(--success); color: white; }
         .attendance-badge.holiday  { background: var(--holiday); color: white; }
         .attendance-badge.sick     { background: var(--error);   color: white; }
         .attendance-badge.other    { background: var(--warning); color: white; }
 
         .job-grid { display: grid; gap: 1rem; }
-
-        .job-card {
-            padding: 1.25rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
+        .job-card { padding: 1.25rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; transition: all 0.3s ease; }
         .job-card:hover { border-color: var(--accent); transform: translateX(4px); }
-
         .job-detail { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
         .job-detail:last-child { margin-bottom: 0; }
         .job-label { font-weight: 600; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -288,14 +196,7 @@
         .status-pending   { background: rgba(245, 158, 11, 0.2);  color: var(--warning); }
         .status-cancelled { background: rgba(239, 68, 68, 0.2);   color: var(--error); }
 
-        /* ── Holiday Bonus ── */
-        .holiday-bonus-summary {
-            margin-top: 1.5rem;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
-            border: 2px solid var(--holiday);
-            border-radius: 12px;
-        }
+        .holiday-bonus-summary { margin-top: 1.5rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%); border: 2px solid var(--holiday); border-radius: 12px; }
         .holiday-bonus-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
         .holiday-bonus-title  { font-size: 1.1rem; font-weight: 700; color: var(--holiday); }
         .holiday-bonus-amount { font-family: 'DM Mono', monospace; font-size: 1.5rem; font-weight: 700; color: var(--holiday); }
@@ -303,265 +204,96 @@
         .holiday-bonus-row { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-muted); }
         .holiday-bonus-note { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem; }
 
-        /* ── Bonus Summary ── */
-        .bonus-summary {
-            margin-top: 1.5rem;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
-            border: 2px solid var(--bonus);
-            border-radius: 12px;
-        }
-
-        .bonus-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.25rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border);
-        }
+        .bonus-summary { margin-top: 1.5rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%); border: 2px solid var(--bonus); border-radius: 12px; }
+        .bonus-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
         .bonus-title        { font-size: 1.1rem; font-weight: 700; color: var(--bonus); }
         .bonus-total-points { font-family: 'DM Mono', monospace; font-size: 1.5rem; font-weight: 700; color: var(--bonus); }
-
         .bonus-jobs-list { display: grid; gap: 0.75rem; margin-bottom: 1.25rem; }
-
-        .bonus-job-item {
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            gap: 1rem;
-            padding: 0.75rem;
-            background: var(--bg-card);
-            border-radius: 8px;
-            border-left: 3px solid var(--success);
-            font-size: 0.9rem;
-        }
+        .bonus-job-item { display: grid; grid-template-columns: auto 1fr auto; gap: 1rem; padding: 0.75rem; background: var(--bg-card); border-radius: 8px; border-left: 3px solid var(--success); font-size: 0.9rem; }
         .bonus-job-item.no-points { border-left-color: var(--warning); }
-
         .bonus-job-ref    { font-family: 'DM Mono', monospace; font-weight: 600; color: var(--text-light); }
         .bonus-job-desc   { color: var(--text-muted); }
         .bonus-job-points { font-family: 'DM Mono', monospace; font-weight: 700; color: var(--success); white-space: nowrap; }
         .bonus-job-points.unknown { color: var(--warning); }
-
-        .bonus-unrecognised-header {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--warning);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin: 1rem 0 0.5rem;
-            padding: 0.5rem 0.75rem;
-            background: rgba(245, 158, 11, 0.1);
-            border-radius: 6px;
-        }
-
+        .bonus-unrecognised-header { font-size: 0.85rem; font-weight: 700; color: var(--warning); text-transform: uppercase; letter-spacing: 0.05em; margin: 1rem 0 0.5rem; padding: 0.5rem 0.75rem; background: rgba(245, 158, 11, 0.1); border-radius: 6px; }
         .bonus-calculation { padding: 1.25rem; background: var(--bg-dark); border-radius: 10px; margin-top: 1rem; }
-
         .bonus-calc-row { display: flex; justify-content: space-between; padding: 0.5rem 0; font-size: 0.95rem; }
         .bonus-calc-row.highlight { font-weight: 700; font-size: 1.05rem; margin-top: 0.75rem; padding-top: 1rem; border-top: 2px solid var(--border); }
         .bonus-calc-row.total     { color: var(--success); font-size: 1.25rem; margin-top: 0.5rem; }
+        .bonus-threshold-message { padding: 1rem; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--error); border-radius: 8px; color: var(--error); text-align: center; font-weight: 600; margin-top: 1rem; }
+        .bonus-unlocked-message { padding: 1rem; background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success); border-radius: 8px; color: var(--success); text-align: center; font-weight: 600; margin-top: 1rem; }
+        .bonus-warning-message { padding: 0.75rem 1rem; background: rgba(245, 158, 11, 0.1); border: 1px solid var(--warning); border-radius: 8px; color: var(--warning); font-size: 0.85rem; margin-top: 0.75rem; }
 
-        .bonus-threshold-message {
-            padding: 1rem;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid var(--error);
-            border-radius: 8px;
-            color: var(--error);
-            text-align: center;
-            font-weight: 600;
-            margin-top: 1rem;
-        }
-
-        .bonus-unlocked-message {
-            padding: 1rem;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid var(--success);
-            border-radius: 8px;
-            color: var(--success);
-            text-align: center;
-            font-weight: 600;
-            margin-top: 1rem;
-        }
-
-        .bonus-warning-message {
-            padding: 0.75rem 1rem;
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid var(--warning);
-            border-radius: 8px;
-            color: var(--warning);
-            font-size: 0.85rem;
-            margin-top: 0.75rem;
-        }
+        .additional-payment-card { margin-top: 1rem; padding: 1.5rem; background: var(--bg-dark); border-radius: 12px; transition: all 0.3s ease; }
+        .additional-payment-card.awaiting         { border: 2px solid var(--warning); }
+        .additional-payment-card.approved         { border: 2px solid var(--success); }
+        .additional-payment-card.approved-changes { border: 2px solid var(--accent); }
+        .additional-payment-card.denied           { border: 2px solid var(--error); }
+        .additional-payment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
+        .additional-payment-title { font-weight: 700; font-size: 1.05rem; }
+        .status-badge-payment { display: inline-block; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .status-awaiting-payment         { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .status-approved-payment         { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .status-approved-changes-payment { background: rgba(0, 163, 224, 0.2);  color: var(--accent); }
+        .status-denied-payment           { background: rgba(239, 68, 68, 0.2);  color: var(--error); }
+        .payment-details { display: grid; gap: 0.5rem; }
+        .payment-detail-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+        .payment-detail-row:last-child { border-bottom: none; }
+        .payment-notes { margin-top: 1rem; padding: 1rem; background: rgba(0, 163, 224, 0.05); border-left: 3px solid var(--accent); border-radius: 8px; }
+        .payment-notes-title { font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .payment-notes-text { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; white-space: pre-wrap; }
+        .denial-reason { margin-top: 1rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-left: 3px solid var(--error); border-radius: 8px; }
+        .denial-reason-title { font-weight: 600; color: var(--error); margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .denial-reason-text { color: var(--text-muted); font-size: 0.9rem; }
+        .changes-log { margin-top: 1rem; padding: 1rem; background: rgba(0, 163, 224, 0.1); border-left: 3px solid var(--accent); border-radius: 8px; }
+        .changes-log-title { font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .changes-log-item { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.25rem; }
 
         .no-results { text-align: center; padding: 3rem; color: var(--text-muted); }
         .no-results-icon { font-size: 3rem; margin-bottom: 1rem; }
 
         .loading { display: none; text-align: center; padding: 2rem; }
         .loading.show { display: block; }
-
-        .spinner {
-            width: 48px; height: 48px;
-            border: 4px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
+        .spinner { width: 48px; height: 48px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        footer {
-            margin-top: 4rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border);
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
+        footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); font-size: 0.9rem; }
 
-        /* ── Modal ── */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            backdrop-filter: blur(4px);
-        }
+        /* ── Modals ── */
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: 2rem; backdrop-filter: blur(4px); }
         .modal.show { display: flex; animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .modal-content {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 2.5rem;
-            width: 100%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            animation: slideUp 0.4s ease-out;
-        }
+        .modal-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5); animation: slideUp 0.4s ease-out; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border);
-        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
         .modal-title { font-size: 1.5rem; font-weight: 700; }
-
-        .close-btn {
-            width: 36px; height: 36px;
-            background: var(--bg-dark);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-muted);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex; align-items: center; justify-content: center;
-            line-height: 1;
-        }
+        .close-btn { width: 36px; height: 36px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; line-height: 1; }
         .close-btn:hover { border-color: var(--error); color: var(--error); }
 
-        .question-group {
-            margin-bottom: 1.5rem;
-            padding: 1.25rem;
-            background: var(--bg-dark);
-            border-radius: 12px;
-            border-left: 3px solid var(--accent);
-        }
+        .question-group { margin-bottom: 1.5rem; padding: 1.25rem; background: var(--bg-dark); border-radius: 12px; border-left: 3px solid var(--accent); }
         .question-label { display: block; margin-bottom: 0.75rem; font-weight: 600; color: var(--text-light); font-size: 1rem; }
-
         .radio-group { display: flex; gap: 1.5rem; margin-bottom: 1rem; }
         .radio-option { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
         .radio-option input[type="radio"] { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; }
         .radio-option label { margin: 0; cursor: pointer; font-weight: 500; }
-
         .conditional-section { display: none; margin-top: 1rem; padding: 1rem; background: var(--bg-card); border-radius: 8px; }
         .conditional-section.show { display: block; }
-
         .time-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
-        input[type="time"],
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 0.75rem;
-            background: var(--bg-dark);
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-light);
-            font-family: 'Work Sans', sans-serif;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-        select { cursor: pointer; }
-        input[type="time"]:focus, input[type="number"]:focus, select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.1);
-        }
 
         .jobs-container { display: none; }
         .jobs-container.show { display: block; }
-
         .job-entry { padding: 1rem; background: var(--bg-dark); border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--border); }
         .job-entry-header { font-weight: 600; color: var(--accent); margin-bottom: 0.75rem; font-size: 0.9rem; }
         .job-inputs { display: grid; gap: 0.75rem; }
-
         .modal-actions { display: flex; gap: 1rem; margin-top: 2rem; }
 
-        .payment-summary {
-            margin-top: 1.5rem;
-            padding: 1.25rem;
-            background: rgba(0, 163, 224, 0.1);
-            border: 2px solid var(--accent);
-            border-radius: 12px;
-            display: none;
-        }
+        .payment-summary { margin-top: 1.5rem; padding: 1.25rem; background: rgba(0, 163, 224, 0.1); border: 2px solid var(--accent); border-radius: 12px; display: none; }
         .payment-summary.show { display: block; }
         .payment-summary-title { font-weight: 700; color: var(--accent); margin-bottom: 1rem; font-size: 1.1rem; }
-
         .payment-line { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.95rem; }
         .payment-line.total { margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--border); font-weight: 700; font-size: 1.1rem; color: var(--success); }
 
-        .status-badge-payment { display: inline-block; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-        .status-awaiting-payment         { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
-        .status-approved-payment         { background: rgba(16, 185, 129, 0.2); color: var(--success); }
-        .status-approved-changes-payment { background: rgba(0, 163, 224, 0.2);  color: var(--accent); }
-        .status-denied-payment           { background: rgba(239, 68, 68, 0.2);  color: var(--error); }
-
-        .additional-payment-card { margin-bottom: 1rem; padding: 1.5rem; background: var(--bg-dark); border-radius: 12px; transition: all 0.3s ease; }
-        .additional-payment-card.awaiting         { border: 2px solid var(--warning); }
-        .additional-payment-card.approved         { border: 2px solid var(--success); }
-        .additional-payment-card.approved-changes { border: 2px solid var(--accent); }
-        .additional-payment-card.denied           { border: 2px solid var(--error); }
-
-        .additional-payment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
-        .additional-payment-title { font-weight: 700; font-size: 1.05rem; }
-
-        .payment-details { display: grid; gap: 0.5rem; }
-        .payment-detail-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
-        .payment-detail-row:last-child { border-bottom: none; }
-
-        .payment-notes { margin-top: 1rem; padding: 1rem; background: rgba(0, 163, 224, 0.05); border-left: 3px solid var(--accent); border-radius: 8px; }
-        .payment-notes-title { font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; font-size: 0.9rem; }
-        .payment-notes-text { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; white-space: pre-wrap; }
-
-        .denial-reason { margin-top: 1rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-left: 3px solid var(--error); border-radius: 8px; }
-        .denial-reason-title { font-weight: 600; color: var(--error); margin-bottom: 0.5rem; font-size: 0.9rem; }
-        .denial-reason-text { color: var(--text-muted); font-size: 0.9rem; }
-
-        .changes-log { margin-top: 1rem; padding: 1rem; background: rgba(0, 163, 224, 0.1); border-left: 3px solid var(--accent); border-radius: 8px; }
-        .changes-log-title { font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; font-size: 0.9rem; }
-        .changes-log-item { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.25rem; }
+        .capacity-modal-box { background: var(--bg-card); border: 1px solid var(--border); width: 95%; max-width: 1100px; height: 88vh; display: flex; flex-direction: column; border-radius: 20px; overflow: hidden;}
+        .capacity-iframe { flex: 1; width: 100%; border: none; background: white; display: block; }
 
         @media (max-width: 768px) {
             body { padding: 1.5rem; }
@@ -582,7 +314,6 @@
 <body>
 <div class="container">
 
-    <!-- ── Login Page ── -->
     <div id="loginPage" class="page active">
         <div class="login-wrapper">
             <div class="login-card">
@@ -599,7 +330,10 @@
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" required autocomplete="current-password">
+                        <div class="pw-wrap">
+                            <input type="password" id="password" required autocomplete="current-password">
+                            <button type="button" class="pw-toggle" onclick="togglePw()">👁️</button>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Sign In</button>
                 </form>
@@ -607,19 +341,110 @@
         </div>
     </div>
 
-    <!-- ── Dashboard Page ── -->
-    <div id="dashboardPage" class="page">
+    <div id="welcomeScreen" class="page">
+        <div class="login-wrapper">
+            <div class="welcome-inner">
+                <div class="welcome-icon">👷</div>
+                <div class="welcome-name" id="welcomeName"></div>
+                <div class="welcome-sub">Loading your dashboard...</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="hubScreen" class="page">
         <header>
             <div class="header-content">
                 <div class="welcome-section">
                     <h1>Welcome, <span id="engineerName"></span></h1>
                 </div>
                 <div class="header-right">
-                    <button id="logoutBtn" class="logout-btn">Logout</button>
+                    <button class="logout-btn" onclick="handleLogout()">Logout</button>
                     <img src="https://www.dropbox.com/scl/fi/kkujm1u6y7vvnp7luq8d7/ngu-main-white.png?rlkey=kgq2uh48qh4xssh4vlbz868lr&st=6cy1lbvp&dl=1" alt="NGU Logo" class="ngu-logo">
                 </div>
             </div>
             <p class="subtitle">ENGINEER DASHBOARD</p>
+        </header>
+
+        <main>
+            <div id="globalLockWarning" class="error-message" style="margin-bottom: 2rem; font-size: 1rem;">
+                ⚠ ACCESS LOCKED: You have unread documents. Please review them in the resources below to unlock your bonus breakdown.
+            </div>
+
+            <div class="hub-grid">
+                
+                <button id="btn-view-bonus" class="hub-card" style="--card-accent:#00A3E0;" onclick="checkLock(showBonusScreen)">
+                    <span class="hub-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                        </svg>
+                    </span>
+                    <div class="hub-card-label">View Bonus</div>
+                    <div id="lock-msg-bonus" class="hub-card-desc">Daily breakdown, earnings summary, and additional payment submissions.</div>
+                    <span class="hub-card-arrow">↗</span>
+                </button>
+
+                <button class="hub-card" style="--card-accent:#10B981;" onclick="openCapacityModal()">
+                    <span class="hub-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                        </svg>
+                    </span>
+                    <div class="hub-card-label">View Capacity</div>
+                    <div class="hub-card-desc">Check scheduling and operational capacity for your team.</div>
+                    <span class="hub-card-arrow">↗</span>
+                </button>
+
+                <button class="hub-card" style="--card-accent:#fb923c;" onclick="openDocsModal('DNO Guides')">
+                    <span id="badge-DNO" class="nav-badge" style="display:none;">NEW</span>
+                    <span class="hub-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
+                        </svg>
+                    </span>
+                    <div class="hub-card-label">DNO Reporting Guide</div>
+                    <div class="hub-card-desc">Access the DNO reporting information pack and guidelines.</div>
+                    <span class="hub-card-arrow">↗</span>
+                </button>
+
+                <button class="hub-card" style="--card-accent:#8B5CF6;" onclick="openDocsModal('Vehicle Documents')">
+                    <span id="badge-Vehicle" class="nav-badge" style="display:none;">NEW</span>
+                    <span class="hub-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
+                        </svg>
+                    </span>
+                    <div class="hub-card-label">Vehicle Documents</div>
+                    <div class="hub-card-desc">Access your vehicle documentation and compliance records.</div>
+                    <span class="hub-card-arrow">↗</span>
+                </button>
+
+                <button class="hub-card" style="--card-accent:#ef4444;" onclick="openDocsModal('Toolbox Talks')">
+                    <span id="badge-Toolbox" class="nav-badge" style="display:none;">NEW</span>
+                    <span class="hub-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.492-3.053c.203-.25.465-.453.766-.58l.185-.078a1.5 1.5 0 0 1 1.947.697l2.046 4.331m-8.437-5.492L5.42 15.17m5.998-5.998A5.25 5.25 0 0 0 5.42 3.92a5.25 5.25 0 0 0-1.5 3.5m0 0a5.25 5.25 0 0 0 1.5 3.5m0 0-3 3A2.652 2.652 0 0 0 6.178 21l3-3m0 0A5.25 5.25 0 0 0 11.42 9.17" />
+                        </svg>
+                    </span>
+                    <div class="hub-card-label">Toolbox Talks</div>
+                    <div class="hub-card-desc">Access safety briefings, procedural updates, and toolbox talk documents.</div>
+                    <span class="hub-card-arrow">↗</span>
+                </button>
+
+            </div>
+        </main>
+        <footer>NGU - Scottish Power - Engineer Dashboard - Barry Dixon</footer>
+    </div>
+
+    <div id="bonusScreen" class="page">
+        <header>
+            <div class="header-content">
+                <button class="btn btn-secondary" style="width: auto; padding: 0.5rem 1.5rem;" onclick="showHub()">← Back to Hub</button>
+                <div class="header-right">
+                    <img src="https://www.dropbox.com/scl/fi/kkujm1u6y7vvnp7luq8d7/ngu-main-white.png?rlkey=kgq2uh48qh4xssh4vlbz868lr&st=6cy1lbvp&dl=1" alt="NGU Logo" class="ngu-logo">
+                </div>
+            </div>
+            <h1>Bonus Breakdown</h1>
+            <p class="subtitle">Review your daily jobs and earnings</p>
         </header>
 
         <main>
@@ -635,7 +460,7 @@
                     </div>
                 </div>
                 <div class="button-group">
-                    <button id="showBreakdownBtn" class="btn btn-primary">Show Daily Breakdown</button>
+                    <button id="showBreakdownBtn" class="btn btn-primary">Load Breakdown</button>
                     <button id="submitPaymentsBtn" class="btn btn-secondary">Submit Additional Payments</button>
                 </div>
             </div>
@@ -646,7 +471,6 @@
             </div>
 
             <div id="resultsSection" class="results-section">
-                <!-- Period Summary Card -->
                 <div class="card" id="periodSummaryCard" style="margin-bottom: 1.5rem;">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
                         <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(245,158,11,0.1) 0%, rgba(245,158,11,0.05) 100%); border: 2px solid var(--bonus); border-radius: 12px;">
@@ -671,12 +495,10 @@
                 </div>
             </div>
         </main>
-
         <footer>NGU - Scottish Power - Engineer Dashboard - Barry Dixon</footer>
     </div>
 </div>
 
-<!-- ── Additional Payments Modal ── -->
 <div id="paymentsModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -768,10 +590,48 @@
     </div>
 </div>
 
-<!-- Firebase SDK -->
+<div id="docsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title" id="docsModalTitle" style="color: var(--accent);">📄 Documents</h2>
+            <button class="close-btn" id="closeDocsModal">×</button>
+        </div>
+        <div id="docsListContainer"></div>
+    </div>
+</div>
+
+<div id="signatureModal" class="modal" style="z-index: 1010;">
+    <div class="modal-content" style="max-width: 440px;">
+        <div class="modal-header">
+            <h2 class="modal-title" style="color: var(--accent);">✍️ Acknowledgment</h2>
+            <button class="close-btn" id="closeSigModal">×</button>
+        </div>
+        <p style="margin-bottom: 1.5rem; color: var(--text-muted); line-height: 1.5;">
+            By signing below, you confirm that you have fully read and understood the contents of the following document:<br>
+            <strong id="sigDocName" style="color: var(--text-light); font-size: 1.1rem; display:block; margin-top: 0.5rem;"></strong>
+        </p>
+        <div class="form-group">
+            <label>Type your username to sign</label>
+            <input type="text" id="signatureInput" placeholder="e.g. John Doe">
+        </div>
+        <div id="sigError" class="error-message"></div>
+        <button class="btn btn-primary" id="submitSigBtn">Sign & Confirm</button>
+    </div>
+</div>
+
+<div id="capacityModal" class="modal">
+    <div class="capacity-modal-box">
+        <div class="modal-header" style="margin: 0; padding: 1.5rem; border-bottom: 1px solid var(--border); background: var(--bg-dark);">
+            <h2 class="modal-title" style="color: var(--accent);">📅 Capacity View</h2>
+            <button class="close-btn" id="closeCapacityModal">×</button>
+        </div>
+        <iframe id="capacityIframe" class="capacity-iframe" src="" title="Capacity" style="width:100%; height:75vh; border:none; background:white;"></iframe>
+    </div>
+</div>
+
 <script type="module">
     import { initializeApp }    from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getFirestore, collection, query, where, getDocs, addDoc, serverTimestamp }
+    import { getFirestore, collection, query, where, getDocs, addDoc, serverTimestamp, orderBy } 
         from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
     const firebaseConfig = {
@@ -793,11 +653,14 @@
 
     // ── DOM refs ───────────────────────────────────────────────────────────────
     const loginPage              = document.getElementById('loginPage');
-    const dashboardPage          = document.getElementById('dashboardPage');
+    const welcomeScreen          = document.getElementById('welcomeScreen');
+    const hubScreen              = document.getElementById('hubScreen');
+    const bonusScreen            = document.getElementById('bonusScreen');
+    
     const loginForm              = document.getElementById('loginForm');
     const loginError             = document.getElementById('loginError');
     const engineerNameSpan       = document.getElementById('engineerName');
-    const logoutBtn              = document.getElementById('logoutBtn');
+    
     const startDateInput         = document.getElementById('startDate');
     const endDateInput           = document.getElementById('endDate');
     const showBreakdownBtn       = document.getElementById('showBreakdownBtn');
@@ -806,19 +669,73 @@
     const resultsSection         = document.getElementById('resultsSection');
     const resultsContainer       = document.getElementById('resultsContainer');
     const totalRecords           = document.getElementById('totalRecords');
+    
     const paymentsModal          = document.getElementById('paymentsModal');
     const closeModal             = document.getElementById('closeModal');
     const cancelPayment          = document.getElementById('cancelPayment');
     const paymentsForm           = document.getElementById('paymentsForm');
+    
     const periodBonusTotal       = document.getElementById('periodBonusTotal');
     const periodBonusPoints      = document.getElementById('periodBonusPoints');
     const periodApprovedPayments = document.getElementById('periodApprovedPayments');
     const periodApprovedCount    = document.getElementById('periodApprovedCount');
+    const globalLockWarning      = document.getElementById('globalLockWarning');
 
     // ── State ──────────────────────────────────────────────────────────────────
     let currentUser        = null;
     let additionalPayments = [];
     let averageBonuses     = {};
+    let isPortalLocked     = false;
+
+    let currentDocsCategory = '';
+    let pendingSigDocId = null;
+
+    // ── Utility ────────────────────────────────────────────────────────────────
+    function setScreen(id) {
+        document.querySelectorAll('.page').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    window.togglePw = function() {
+        const inp = document.getElementById('password');
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+    };
+
+    function showLoginError(msg) {
+        loginError.textContent = msg;
+        loginError.classList.add('show');
+    }
+
+    // ── Init dates ─────────────────────────────────────────────────────────────
+    const today = new Date(), lastWeek = new Date(today);
+    lastWeek.setDate(lastWeek.getDate() - 7);
+    startDateInput.valueAsDate = lastWeek;
+    endDateInput.valueAsDate   = today;
+
+    // ── Session restore & Daily Check ──────────────────────────────────────────
+    const todayStr = new Date().toDateString();
+    const savedUser = localStorage.getItem('sp_username');
+    const savedDate = localStorage.getItem('sp_login_date');
+
+    if (savedUser && savedDate === todayStr) { 
+        currentUser = { name: savedUser };
+        loadAverageBonuses().then(() => {
+            showHub();
+        });
+    } else {
+        localStorage.removeItem('sp_username');
+        localStorage.removeItem('sp_login_date');
+    }
+
+    window.addEventListener('focus', () => {
+        if (currentUser) {
+            const checkDate = localStorage.getItem('sp_login_date');
+            if (checkDate && checkDate !== new Date().toDateString()) {
+                alert("Session expired. It's a new day! Please log in again.");
+                handleLogout();
+            }
+        }
+    });
 
     // ── Average bonuses ────────────────────────────────────────────────────────
     async function loadAverageBonuses() {
@@ -851,6 +768,74 @@
             : 0;
     }
 
+    // ── CHECK FOR NEW DOCUMENTS & UPDATE LOCKS ─────────────────────────────────
+    async function refreshDocumentStatus() {
+        if (!currentUser) return;
+        
+        try {
+            const snapshot = await getDocs(collection(db, "portal_documents"));
+            const viewedDocs = JSON.parse(localStorage.getItem(`viewed_${currentUser.name}`) || "[]");
+            
+            let hasNewToolbox = false, hasNewVehicle = false, hasNewDNO = false, unreadCount = 0;
+
+            snapshot.forEach(doc => {
+                if (!viewedDocs.includes(doc.id)) {
+                    const cat = doc.data().category;
+                    if (cat === "Toolbox Talks") hasNewToolbox = true;
+                    if (cat === "Vehicle Documents") hasNewVehicle = true;
+                    if (cat === "DNO Guides") hasNewDNO = true;
+                    unreadCount++;
+                }
+            });
+
+            document.getElementById('badge-Toolbox').style.display = hasNewToolbox ? 'block' : 'none';
+            document.getElementById('badge-Vehicle').style.display = hasNewVehicle ? 'block' : 'none';
+            document.getElementById('badge-DNO').style.display = hasNewDNO ? 'block' : 'none';
+
+            isPortalLocked = unreadCount > 0;
+            const bonusBtn = document.getElementById('btn-view-bonus');
+            const msgBonus = document.getElementById('lock-msg-bonus');
+
+            if (isPortalLocked) {
+                bonusBtn.classList.add('locked');
+                msgBonus.innerHTML = '<div class="lock-overlay">⚠ ACCESS LOCKED: PLEASE READ NEW DOCUMENTS FIRST</div>';
+                globalLockWarning.style.display = 'block';
+            } else {
+                bonusBtn.classList.remove('locked');
+                msgBonus.innerText = 'Daily breakdown, earnings summary, and additional payment submissions.';
+                globalLockWarning.style.display = 'none';
+            }
+        } catch (e) { console.error("Error checking unread docs:", e); }
+    }
+
+    window.checkLock = function(targetFunction) {
+        if (isPortalLocked) {
+            alert("Action Required: You have unread documents.\n\nPlease check Toolbox Talks, Vehicle Documents, or DNO Guides to unlock your performance data.");
+            return;
+        }
+        targetFunction();
+    };
+
+    // ── UI Navigation ──────────────────────────────────────────────────────────
+    window.showHub = function() {
+        setScreen('hubScreen');
+        engineerNameSpan.textContent = currentUser.name;
+        refreshDocumentStatus();
+    };
+    
+    window.showBonusScreen = function() {
+        setScreen('bonusScreen');
+    };
+
+    window.handleLogout = function() {
+        currentUser = null;
+        localStorage.removeItem('sp_username');
+        localStorage.removeItem('sp_login_date');
+        setScreen('loginPage');
+        resultsSection.classList.remove('show');
+        resultsContainer.innerHTML = '';
+    };
+
     // ── Login ──────────────────────────────────────────────────────────────────
     loginForm.addEventListener('submit', async e => {
         e.preventDefault();
@@ -872,11 +857,20 @@
             if (!authenticated) { showLoginError('Invalid username or password'); return; }
 
             currentUser = { username, name: engineerData.name, email: engineerData.email };
+            
+            // Save login details
+            localStorage.setItem('sp_username', engineerData.name);
+            localStorage.setItem('sp_login_date', new Date().toDateString());
+
             await loadAverageBonuses();
 
-            loginPage.classList.remove('active');
-            dashboardPage.classList.add('active');
-            engineerNameSpan.textContent = currentUser.name;
+            document.getElementById('welcomeName').textContent = currentUser.name.toUpperCase();
+            setScreen('welcomeScreen');
+            
+            setTimeout(() => {
+                showHub();
+            }, 1500);
+
             loginForm.reset();
             loginError.classList.remove('show');
 
@@ -886,22 +880,138 @@
         }
     });
 
-    function showLoginError(msg) {
-        loginError.textContent = msg;
-        loginError.classList.add('show');
-    }
+    // ── DYNAMIC DOCUMENT VIEWER ────────────────────────────────────────────────
+    window.openDocsModal = async function(category) {
+        currentDocsCategory = category;
+        const modal = document.getElementById('docsModal');
+        const title = document.getElementById('docsModalTitle');
+        const container = document.getElementById('docsListContainer');
+        
+        title.textContent = `📄 ${category.toUpperCase()}`;
+        container.innerHTML = '<div class="loading show"><div class="spinner"></div><p>Fetching documents...</p></div>';
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
 
-    // ── Logout ─────────────────────────────────────────────────────────────────
-    logoutBtn.addEventListener('click', () => {
-        currentUser = null;
-        dashboardPage.classList.remove('active');
-        loginPage.classList.add('active');
-        resultsSection.classList.remove('show');
-        resultsContainer.innerHTML = '';
+        try {
+            const q = query(collection(db, "portal_documents"), where("category", "==", category), orderBy("uploadedAt", "desc"));
+            const snapshot = await getDocs(q);
+
+            if (snapshot.empty) {
+                container.innerHTML = '<div class="no-results"><p>No documents found in this folder.</p></div>';
+                return;
+            }
+
+            let html = '<div class="job-grid">';
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const dateStr = data.uploadedAt ? data.uploadedAt.toDate().toLocaleDateString('en-GB') : 'Unknown Date';
+                const viewedDocs = JSON.parse(localStorage.getItem(`viewed_${currentUser.name}`) || "[]");
+                const isUnread = !viewedDocs.includes(doc.id);
+                const safeName = data.name.replace(/'/g, "\\'"); 
+
+                html += `
+                    <a href="${data.url}" target="_blank" rel="noopener noreferrer" 
+                       onclick="handleDocClick('${doc.id}', '${safeName}', ${isUnread})"
+                       class="job-card" 
+                       style="display:flex; align-items:center; justify-content:space-between; text-decoration:none; border-left: 4px solid ${isUnread ? 'var(--error)' : 'var(--accent)'};">
+                        <div>
+                            <div style="font-weight: 700; color: var(--text-light); margin-bottom: 4px;">
+                                ${data.name} ${isUnread ? '<span style="color:var(--error); font-size:0.75rem; margin-left: 8px;">[NEW]</span>' : ''}
+                            </div>
+                            <div style="font-family:'DM Mono', monospace; font-size:0.75rem; color:var(--text-muted);">Added: ${dateStr}</div>
+                        </div>
+                        <span style="color:var(--accent); font-size:1.5rem;">↓</span>
+                    </a>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+
+        } catch (error) {
+            console.error(error);
+            container.innerHTML = `<div class="error-message show">⚠ Error loading documents: ${error.message}</div>`;
+        }
+    };
+
+    document.getElementById('closeDocsModal').addEventListener('click', () => {
+        document.getElementById('docsModal').classList.remove('show');
+        document.body.style.overflow = '';
+    });
+
+    // ── SIGNATURE MODAL LOGIC ──────────────────────────────────────────────────
+    window.handleDocClick = function(docId, docName, isUnread) {
+        if (isUnread) {
+            pendingSigDocId = docId;
+            document.getElementById('sigDocName').innerText = docName;
+            document.getElementById('signatureInput').value = '';
+            document.getElementById('sigError').classList.remove('show');
+            document.getElementById('signatureModal').classList.add('show');
+        }
+    };
+
+    document.getElementById('closeSigModal').addEventListener('click', () => {
+        document.getElementById('signatureModal').classList.remove('show');
+        pendingSigDocId = null;
+    });
+
+    document.getElementById('submitSigBtn').addEventListener('click', async () => {
+        const sig = document.getElementById('signatureInput').value.trim();
+        
+        if (sig.toLowerCase() !== currentUser.name.toLowerCase()) {
+            const err = document.getElementById('sigError');
+            err.innerText = '⚠ Signature must match your logged-in username (' + currentUser.name + ')';
+            err.classList.add('show');
+            return;
+        }
+        
+        // Mark as read locally
+        let viewedDocs = JSON.parse(localStorage.getItem(`viewed_${currentUser.name}`) || "[]");
+        if (!viewedDocs.includes(pendingSigDocId)) {
+            viewedDocs.push(pendingSigDocId);
+            localStorage.setItem(`viewed_${currentUser.name}`, JSON.stringify(viewedDocs));
+            
+            // Save signature to Database for compliance
+            try {
+                await addDoc(collection(db, "document_signatures"), {
+                    engineerName: currentUser.name,
+                    documentId: pendingSigDocId,
+                    documentName: document.getElementById('sigDocName').innerText,
+                    signedAt: serverTimestamp()
+                });
+            } catch(e) { console.error("Could not save signature to DB", e); }
+
+            refreshDocumentStatus(); 
+        }
+        
+        document.getElementById('signatureModal').classList.remove('show');
+        alert("Thank you. Your acknowledgment has been recorded.");
+        
+        // Refresh the open list to remove the red unread badge
+        if (currentDocsCategory) {
+            openDocsModal(currentDocsCategory);
+        }
+    });
+
+    // ── Capacity Modal ─────────────────────────────────────────────────────────
+    window.openCapacityModal = function() {
+        const modal  = document.getElementById('capacityModal');
+        const iframe = document.getElementById('capacityIframe');
+        if (!iframe.getAttribute('data-loaded')) {
+            iframe.src = 'https://oes-performance.vercel.app/capacity2.html';
+            iframe.setAttribute('data-loaded', '1');
+        }
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    };
+    document.getElementById('closeCapacityModal').addEventListener('click', () => {
+        document.getElementById('capacityModal').classList.remove('show');
+        document.body.style.overflow = '';
     });
 
     // ── Show Daily Breakdown ───────────────────────────────────────────────────
     showBreakdownBtn.addEventListener('click', async () => {
+        if (isPortalLocked) return;
+
         const startDate = startDateInput.value;
         const endDate   = endDateInput.value;
 
@@ -913,7 +1023,7 @@
         resultsContainer.innerHTML = '';
 
         try {
-            // ── Fetch Sureserve jobs ──
+            // Fetch Sureserve jobs
             const sureserveSnap = await getDocs(
                 query(collection(db, 'SP-SureserveData'), where('resource', '==', currentUser.name))
             );
@@ -928,7 +1038,7 @@
                 }
             });
 
-            // ── Fetch SP Submitted Data ──
+            // Fetch SP Submitted Data
             const submittedSnap = await getDocs(
                 query(collection(db, 'SP Submitted Data'), where('outcomeResource', '==', currentUser.name))
             );
@@ -943,14 +1053,14 @@
                 }
             });
 
-            // ── Fetch Additional Payments ──
+            // Fetch Additional Payments
             const paymentsSnap = await getDocs(
                 query(collection(db, 'SP Additional Payment'), where('engineerName', '==', currentUser.name))
             );
             additionalPayments = [];
             paymentsSnap.forEach(doc => additionalPayments.push(doc.data()));
 
-            // ── Fetch Attendance ──
+            // Fetch Attendance
             const attendanceSnap = await getDocs(
                 query(collection(db, 'SP Attendance'), where('engineerName', '==', currentUser.name))
             );
@@ -960,7 +1070,7 @@
                 if (d.date) attendanceData[d.date] = d.attendance;
             });
 
-            // ── Calculate & display ──
+            // Calculate & display
             const periodTotals = calculatePeriodTotals(sureserveDataByDate, additionalPayments, startDate, endDate, attendanceData);
             displayResults(dataByDate, totalJobs, startDate, endDate, attendanceData, sureserveDataByDate);
             updatePeriodSummary(periodTotals);
@@ -983,14 +1093,11 @@
         let approvedCount         = 0;
         let totalHolidayBonus     = 0;
 
-        // Iterate ALL attendance dates in range
         Object.entries(attendanceData).forEach(([stdDate, attendance]) => {
             if (!isDateInRange(stdDate, startDate, endDate)) return;
 
             const isHoliday = (attendance === 'H' || attendance === 'H/H');
-
             if (isHoliday) {
-                // Holiday day — always use average bonus regardless of Sureserve data
                 const displayDate = convertToDisplayDate(stdDate);
                 const avg = getAverageBonusForDate(currentUser.name, displayDate);
                 if (avg > 0) {
@@ -1001,12 +1108,10 @@
             }
         });
 
-        // Normal working days with Sureserve data
         Object.entries(sureserveDataByDate).forEach(([date, dayJobs]) => {
             const stdDate    = convertToStandardDate(date);
             const attendance = stdDate ? attendanceData[stdDate] : null;
 
-            // Skip holiday days — already handled above
             if (attendance === 'H' || attendance === 'H/H') return;
 
             const completedJobs = dayJobs.filter(j => isCompleted(j.status));
@@ -1023,7 +1128,6 @@
             }
         });
 
-        // Approved additional payments
         additionalPayments.forEach(payment => {
             if (isDateInRange(payment.paymentDate, startDate, endDate)) {
                 const status = payment.status || 'Awaiting Approval';
@@ -1044,7 +1148,6 @@
         periodApprovedCount.textContent    = `${totals.approvedPaymentsCount} submission${totals.approvedPaymentsCount !== 1 ? 's' : ''}`;
     }
 
-    // ── Bonus Summary Card (normal working days) ───────────────────────────────
     function createBonusSummary(date, sureserveJobs) {
         const completedJobs = sureserveJobs.filter(j => isCompleted(j.status));
         if (completedJobs.length === 0) return null;
@@ -1129,9 +1232,6 @@
         return bonusDiv;
     }
 
-    // ── Holiday Bonus Card ─────────────────────────────────────────────────────
-    // Always shown on holiday days. Shows the average bonus, the month it's
-    // based on, and whether it's a full or half day.
     function createHolidayBonusSummary(date, attendance) {
         const avg = getAverageBonusForDate(currentUser.name, date);
         const isHalfDay    = attendance === 'H/H';
@@ -1140,7 +1240,6 @@
         const div = document.createElement('div');
         div.className = 'holiday-bonus-summary';
 
-        // Derive the month name for display
         let monthName = '';
         try {
             const [d, m, y] = date.split('/');
@@ -1176,16 +1275,10 @@
         return div;
     }
 
-    // ── Display Results ────────────────────────────────────────────────────────
     function displayResults(dataByDate, totalJobs, startDate, endDate, attendanceData, sureserveDataByDate) {
         resultsContainer.innerHTML = '';
         totalRecords.textContent = `${totalJobs} jobs`;
 
-        // Build the full set of dates to show:
-        // 1. Dates with SP Submitted jobs
-        // 2. Dates with Sureserve jobs
-        // 3. Dates with Additional Payments in range
-        // 4. ★ Holiday dates in attendance, even if no jobs at all
         const allDates = new Set([
             ...Object.keys(dataByDate),
             ...Object.keys(sureserveDataByDate),
@@ -1194,7 +1287,6 @@
                 .map(p => convertToDisplayDate(p.paymentDate))
         ]);
 
-        // Add holiday dates from attendance that fall in range
         Object.entries(attendanceData).forEach(([stdDate, attendance]) => {
             if (!isDateInRange(stdDate, startDate, endDate)) return;
             if (attendance === 'H' || attendance === 'H/H') {
@@ -1237,7 +1329,6 @@
             `;
             daySection.appendChild(dayHeader);
 
-            // SP Submitted Data jobs
             if (jobs.length > 0) {
                 jobs.sort((a, b) => (a.startTime || '99:99').localeCompare(b.startTime || '99:99'));
                 const grid = document.createElement('div');
@@ -1256,17 +1347,14 @@
                 daySection.appendChild(grid);
             }
 
-            // ★ Holiday bonus always takes priority on holiday days
             if (isHoliday) {
                 const holidayBonus = createHolidayBonusSummary(date, attendance);
                 if (holidayBonus) daySection.appendChild(holidayBonus);
             } else if (sureserveJobs.length > 0) {
-                // Normal working day — show points/bonus breakdown
                 const bonusSummary = createBonusSummary(date, sureserveJobs);
                 if (bonusSummary) daySection.appendChild(bonusSummary);
             }
 
-            // Additional payments for this date
             const displayDate  = convertToDisplayDate(date);
             const datePayments = additionalPayments.filter(p => convertToDisplayDate(p.paymentDate) === displayDate);
             datePayments.forEach(payment => daySection.appendChild(createAdditionalPaymentCard(payment)));
@@ -1275,7 +1363,7 @@
         });
     }
 
-    // ── Helpers ────────────────────────────────────────────────────────────────
+    // ── Utility Formatting ─────────────────────────────────────────────────────
     function isDateInRange(dateStr, startStr, endStr) {
         if (!dateStr) return false;
         let date;
@@ -1344,7 +1432,7 @@
         return div.innerHTML;
     }
 
-    // ── Additional Payment Card ────────────────────────────────────────────────
+    // ── Additional Payment Component ───────────────────────────────────────────
     function createAdditionalPaymentCard(payment) {
         const card   = document.createElement('div');
         const status = payment.status || 'Awaiting Approval';
@@ -1404,7 +1492,7 @@
         return card;
     }
 
-    // ── Payments Modal ─────────────────────────────────────────────────────────
+    // ── Payments Form Submission ───────────────────────────────────────────────
     function resetModal() {
         paymentsForm.reset();
         document.getElementById('overtimeSection').classList.remove('show');
@@ -1414,6 +1502,7 @@
     }
 
     submitPaymentsBtn.addEventListener('click', () => {
+        if (isPortalLocked) return;
         paymentsModal.classList.add('show');
         document.getElementById('paymentDate').valueAsDate = new Date();
     });
@@ -1489,7 +1578,7 @@
                 const rate = dow === 0 ? 39.90384615 : dow === 6 ? 29.92788462 : 24.93990385;;
                 const amt  = hrs * rate;
                 const day  = dow === 0 ? 'Sunday' : dow === 6 ? 'Saturday' : 'Weekday';
-                html  += `<div class="payment-line"><span>Overtime (${hrs.toFixed(2)} hrs @ £${rate} – ${day})</span><span>£${amt.toFixed(2)}</span></div>`;
+                html  += `<div class="payment-line"><span>Overtime (${hrs.toFixed(2)} hrs @ £${rate.toFixed(2)} – ${day})</span><span>£${amt.toFixed(2)}</span></div>`;
                 total += amt;
             }
         }
@@ -1512,7 +1601,6 @@
         return (endMins - startMins) / 60;
     }
 
-    // ── Submit Payment ─────────────────────────────────────────────────────────
     paymentsForm.addEventListener('submit', async e => {
         e.preventDefault();
 
@@ -1582,6 +1670,7 @@
             alert('Error submitting payment. Please try again.');
         }
     });
+
 </script>
 </body>
 </html>
