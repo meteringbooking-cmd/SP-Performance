@@ -134,6 +134,10 @@
             border-color: var(--accent);
             box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.1);
         }
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
 
         .checkbox-group { display: flex; flex-direction: column; gap: 0.75rem; }
 
@@ -433,13 +437,15 @@
             });
         }
 
+        // Bulletproof parsing: Set everything to NOON (12:00:00) to prevent DST drift
         function getAverageBonusForDate(engineerName, dateStr) {
             let date;
             if (dateStr.includes('/')) {
                 const [d, m, y] = dateStr.split('/');
-                date = new Date(y, m - 1, d);
+                date = new Date(y, m - 1, d, 12, 0, 0, 0);
             } else {
-                date = new Date(dateStr);
+                const temp = new Date(dateStr);
+                date = new Date(temp.getFullYear(), temp.getMonth(), temp.getDate(), 12, 0, 0, 0);
             }
             const monthNames = ['January','February','March','April','May','June',
                                 'July','August','September','October','November','December'];
@@ -560,8 +566,9 @@
                     currentAttendanceData = await fetchAttendanceData();
                 }
 
-                const sd = new Date(startDateInput.value).toISOString().split('T')[0];
-                const ed = new Date(endDateInput.value).toISOString().split('T')[0];
+                // Extract exact strings directly from the inputs
+                const sd = startDateInput.value; // YYYY-MM-DD
+                const ed = endDateInput.value;   // YYYY-MM-DD
 
                 let csv, filename;
 
@@ -596,10 +603,15 @@
             const total = payments.reduce((s, p) => s + (p.totalAmount || 0), 0);
             document.getElementById('totalValue').textContent = `£${total.toFixed(2)}`;
             document.getElementById('engineersCount').textContent = new Set(payments.map(p => p.engineerName)).size;
-            const sd = new Date(startDateInput.value);
-            const ed = new Date(endDateInput.value);
+            
+            // Manual parsing to avoid visual DST drift in the dashboard
+            const [sy, sm, sDay] = startDateInput.value.split('-');
+            const sdDate = new Date(sy, sm - 1, sDay);
+            const [ey, em, eDay] = endDateInput.value.split('-');
+            const edDate = new Date(ey, em - 1, eDay);
+            
             document.getElementById('dateRange').textContent =
-                `${sd.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})} – ${ed.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})}`;
+                `${sdDate.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})} – ${edDate.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})}`;
         }
 
         // ── Preview table ────────────────────────────────────────────────────
@@ -629,9 +641,6 @@
         }
 
         // ── Bonus CSV ────────────────────────────────────────────────────────
-        // One row per engineer per day in range.
-        // Holiday days → average bonus (full or half day).
-        // Working days → points-based bonus from Firebase.
         function generateBonusCSV(sureserveData, attendanceData) {
             let csv = '\uFEFF';
             csv += [
@@ -658,7 +667,7 @@
             ]);
 
             Array.from(allEngineers).sort().forEach(eng => {
-                const engSureserve  = sureserveData[eng]   || {};
+                const engSureserve  = sureserveData[eng]  || {};
                 const engAttendance = attendanceData[eng]   || {};
 
                 // Collect all display-format dates for this engineer
@@ -809,29 +818,40 @@
             return true;
         }
 
+        // Bulletproof Date Checking Function
         function isDateInRange(dateStr, startStr, endStr) {
             if (!dateStr) return false;
-            let date;
+            
+            let targetDate;
             if (dateStr.includes('/')) {
                 const [d, m, y] = dateStr.split('/');
                 if (!d || !m || !y) return false;
-                date = new Date(y, m - 1, d);
+                targetDate = new Date(y, m - 1, d, 12, 0, 0, 0); // Noon
             } else {
-                date = new Date(dateStr);
+                const temp = new Date(dateStr);
+                if (isNaN(temp.getTime())) return false;
+                targetDate = new Date(temp.getFullYear(), temp.getMonth(), temp.getDate(), 12, 0, 0, 0); // Noon
             }
-            const start = new Date(startStr);
-            const end   = new Date(endStr);
-            end.setHours(23, 59, 59, 999);
-            return date >= start && date <= end;
+
+            const [sy, sm, sd] = startStr.split('-');
+            const start = new Date(sy, sm - 1, sd, 0, 0, 0, 0); // Start of day
+
+            const [ey, em, ed] = endStr.split('-');
+            const end = new Date(ey, em - 1, ed, 23, 59, 59, 999); // End of day
+
+            return targetDate >= start && targetDate <= end;
         }
 
+        // Bulletproof parsing
         function parseDateString(dateStr) {
             if (!dateStr) return new Date(0);
             if (dateStr.includes('/')) {
                 const [d, m, y] = dateStr.split('/');
-                return new Date(y, m - 1, d);
+                return new Date(y, m - 1, d, 12, 0, 0, 0);
             }
-            return new Date(dateStr);
+            const temp = new Date(dateStr);
+            if (isNaN(temp.getTime())) return new Date(0);
+            return new Date(temp.getFullYear(), temp.getMonth(), temp.getDate(), 12, 0, 0, 0);
         }
 
         // DD/MM/YYYY → YYYY-MM-DD
@@ -841,11 +861,18 @@
             return `${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`;
         }
 
-        // YYYY-MM-DD → DD/MM/YYYY
+        // YYYY-MM-DD → DD/MM/YYYY (Using manual splitting to prevent offset drift)
         function convertToDisplayDate(dateStr) {
             if (dateStr && dateStr.includes('/')) return dateStr;
-            const d = new Date(dateStr);
-            return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+            
+            if (dateStr && dateStr.includes('-')) {
+                const [y, m, d] = dateStr.split('-');
+                if (y && m && d) return `${d}/${m}/${y}`;
+            }
+
+            // Absolute fallback
+            const dt = new Date(dateStr);
+            return `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()}`;
         }
     </script>
 </body>
