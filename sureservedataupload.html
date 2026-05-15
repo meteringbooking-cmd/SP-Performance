@@ -450,8 +450,7 @@
                             <li><strong>Column R (index 17):</strong> Status (Job Outcome)</li>
                         </ul>
                         <br>
-                        Points values are read directly from <strong>Column E</strong> and stored in Firebase. Jobs with no value in Column E will be flagged.<br><br>
-                        <strong>Note:</strong> Uploading files with existing Job References will update/overwrite those specific jobs, preventing duplicate entries.
+                        Points values are read directly from <strong>Column E</strong> and stored in Firebase. Jobs with no value in Column E will be flagged.
                     </div>
                 </div>
 
@@ -570,7 +569,7 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, doc, setDoc, serverTimestamp, collection, getDocs, writeBatch } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, addDoc, serverTimestamp, collection, getDocs, writeBatch } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyCMmUOdW2uEIGVd6XQfWXKF8eaFmwEog1g",
@@ -867,13 +866,14 @@
         // ── Upload to Firebase ──
         uploadBtn.addEventListener('click', async () => {
             if (validRecords.length === 0) { showError('No valid records to upload'); return; }
-            if (!confirm(`Upload ${validRecords.length} record(s) to Firebase? Existing Job References will be updated.`)) return;
+            if (!confirm(`Upload ${validRecords.length} record(s) to Firebase?`)) return;
 
             hideAlerts();
             actionButtons.style.display = 'none';
             progressContainer.classList.add('show');
 
             try {
+                const collectionRef = collection(db, 'SP-SureserveData');
                 let uploadedCount = 0;
                 let errorCount    = 0;
 
@@ -892,10 +892,8 @@
                             docData.points = validRecords[i].points;
                         }
 
-                        const safeDocId = String(validRecords[i].ref).replace(/[^a-zA-Z0-9-_]/g, '_');
-                        const docRef = doc(db, 'SP-SureserveData', safeDocId);
-
-                        await setDoc(docRef, docData, { merge: true });
+                        // Add document normally without deduplication logic
+                        await addDoc(collectionRef, docData);
                         uploadedCount++;
                     } catch (err) {
                         console.error('Error uploading record:', err);
