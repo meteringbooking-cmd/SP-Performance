@@ -629,16 +629,27 @@
             return div.innerHTML;
         }
 
-        // Robust date parser for both UK (DD/MM/YYYY) and ISO (YYYY-MM-DD) string formats
+        // Bulletproof Date Parser that protects against Timezone and DST drift
         function parseDateString(dateStr) {
             if (!dateStr) return null;
-            // Check for DD/MM/YYYY or DD-MM-YYYY format
-            const ukMatch = dateStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
-            if (ukMatch) {
-                return new Date(ukMatch[3], ukMatch[2] - 1, ukMatch[1]);
+            
+            // Remove any potential hidden characters or whitespace
+            const cleanStr = String(dateStr).trim();
+            
+            // Match DD/MM/YYYY or DD-MM-YYYY format anywhere in the string
+            const match = cleanStr.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+            if (match) {
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10) - 1; // 0-indexed month
+                const year = parseInt(match[3], 10);
+                
+                // IMPORTANT: Set to 12:00 Noon, not Midnight. 
+                // This buffers against DST shifts pushing the date into the previous/next day.
+                return new Date(year, month, day, 12, 0, 0, 0); 
             }
+            
             // Fallback for standard parsable dates
-            const d = new Date(dateStr);
+            const d = new Date(cleanStr);
             return isNaN(d.getTime()) ? null : d;
         }
 
@@ -863,7 +874,7 @@
             unknownToggleBtn.classList.remove('show');
         });
 
-        // ── Upload to Firebase ──
+        // ── Upload to Firebase (Duplicate Checks Removed) ──
         uploadBtn.addEventListener('click', async () => {
             if (validRecords.length === 0) { showError('No valid records to upload'); return; }
             if (!confirm(`Upload ${validRecords.length} record(s) to Firebase?`)) return;
@@ -949,10 +960,12 @@
                 return;
             }
 
-            const startDate = new Date(deleteStart.value);
-            startDate.setHours(0, 0, 0, 0); // Start of day
-            const endDate = new Date(deleteEnd.value);
-            endDate.setHours(23, 59, 59, 999); // End of day
+            // Manually split the string so the browser doesn't assume UTC and shift the day
+            const [startYear, startMonth, startDay] = deleteStart.value.split('-');
+            const startDate = new Date(startYear, startMonth - 1, startDay, 0, 0, 0, 0); // Start of day
+
+            const [endYear, endMonth, endDay] = deleteEnd.value.split('-');
+            const endDate = new Date(endYear, endMonth - 1, endDay, 23, 59, 59, 999); // End of day
 
             if (startDate > endDate) {
                 showError('The Start Date must be before or equal to the End Date.');
@@ -976,6 +989,8 @@
                     const data = docSnap.data();
                     if (data.dateOfAppointment) {
                         const apptDate = parseDateString(data.dateOfAppointment);
+                        
+                        // We check if the parsed date (which is set to Noon) falls between start and end bounds
                         if (apptDate && apptDate >= startDate && apptDate <= endDate) {
                             docsToDelete.push(docSnap.ref);
                         }
