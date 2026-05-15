@@ -133,8 +133,8 @@
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
             background: var(--card-accent, var(--accent)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
         }
-        .hub-card:hover:not(.locked) { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .hub-card:hover:not(.locked)::before { transform: scaleX(1); }
+        .hub-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .hub-card:hover::before { transform: scaleX(1); }
 
         .hub-card-icon {
             display: inline-flex; align-items: center; justify-content: center; width: 54px; height: 54px;
@@ -142,25 +142,20 @@
             color: var(--card-accent, var(--accent)); margin-bottom: 1.5rem; transition: all 0.3s ease;
         }
         .hub-card-icon svg { width: 28px; height: 28px; stroke-width: 2; }
-        .hub-card:hover:not(.locked) .hub-card-icon {
+        .hub-card:hover .hub-card-icon {
             background: var(--card-accent, var(--accent)); color: white; transform: scale(1.1); border-color: transparent; box-shadow: 0 8px 20px -8px var(--card-accent, var(--accent));
         }
 
         .hub-card-label { font-family: 'Work Sans', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--text-light); margin-bottom: 0.5rem; text-transform: uppercase; }
         .hub-card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
 
-        /* Notification Badge & Locks */
+        /* Notification Badge */
         .nav-badge {
             position: absolute; top: 16px; right: 16px; background: var(--error); color: white;
             font-family: 'DM Mono', monospace; font-size: 0.7rem; padding: 4px 8px; border-radius: 8px;
             font-weight: 700; animation: pulse 2s infinite; border: 2px solid var(--bg-card);
         }
         @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
-
-        .hub-card.locked { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.8); }
-        .hub-card.locked:hover { background: var(--bg-card); transform: none; box-shadow: none; border-color: var(--border); }
-        .hub-card.locked::before { display: none; }
-        .lock-overlay { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--error); margin-top: 12px; text-transform: uppercase; }
 
         /* ── Bonus Breakdown Components ── */
         .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; margin-bottom: 2rem; }
@@ -366,13 +361,9 @@
         </header>
 
         <main>
-            <div id="globalLockWarning" class="error-message" style="margin-bottom: 2rem; font-size: 1rem;">
-                ⚠ ACCESS LOCKED: You have unread documents. Please review them in the resources below to unlock your bonus breakdown.
-            </div>
-
             <div class="hub-grid">
                 
-                <button id="btn-view-bonus" class="hub-card" style="--card-accent:#00A3E0;" onclick="checkLock(showBonusScreen)">
+                <button id="btn-view-bonus" class="hub-card" style="--card-accent:#00A3E0;" onclick="showBonusScreen()">
                     <span class="hub-card-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -679,13 +670,11 @@
     const periodBonusPoints      = document.getElementById('periodBonusPoints');
     const periodApprovedPayments = document.getElementById('periodApprovedPayments');
     const periodApprovedCount    = document.getElementById('periodApprovedCount');
-    const globalLockWarning      = document.getElementById('globalLockWarning');
 
     // ── State ──────────────────────────────────────────────────────────────────
     let currentUser        = null;
     let additionalPayments = [];
     let averageBonuses     = {};
-    let isPortalLocked     = false;
 
     let currentDocsCategory = '';
     let pendingSigDocId = null;
@@ -776,7 +765,7 @@
             const snapshot = await getDocs(collection(db, "portal_documents"));
             const viewedDocs = JSON.parse(localStorage.getItem(`viewed_${currentUser.name}`) || "[]");
             
-            let hasNewToolbox = false, hasNewVehicle = false, hasNewDNO = false, unreadCount = 0;
+            let hasNewToolbox = false, hasNewVehicle = false, hasNewDNO = false;
 
             snapshot.forEach(doc => {
                 if (!viewedDocs.includes(doc.id)) {
@@ -784,7 +773,6 @@
                     if (cat === "Toolbox Talks") hasNewToolbox = true;
                     if (cat === "Vehicle Documents") hasNewVehicle = true;
                     if (cat === "DNO Guides") hasNewDNO = true;
-                    unreadCount++;
                 }
             });
 
@@ -792,29 +780,8 @@
             document.getElementById('badge-Vehicle').style.display = hasNewVehicle ? 'block' : 'none';
             document.getElementById('badge-DNO').style.display = hasNewDNO ? 'block' : 'none';
 
-            isPortalLocked = unreadCount > 0;
-            const bonusBtn = document.getElementById('btn-view-bonus');
-            const msgBonus = document.getElementById('lock-msg-bonus');
-
-            if (isPortalLocked) {
-                bonusBtn.classList.add('locked');
-                msgBonus.innerHTML = '<div class="lock-overlay">⚠ ACCESS LOCKED: PLEASE READ NEW DOCUMENTS FIRST</div>';
-                globalLockWarning.style.display = 'block';
-            } else {
-                bonusBtn.classList.remove('locked');
-                msgBonus.innerText = 'Daily breakdown, earnings summary, and additional payment submissions.';
-                globalLockWarning.style.display = 'none';
-            }
         } catch (e) { console.error("Error checking unread docs:", e); }
     }
-
-    window.checkLock = function(targetFunction) {
-        if (isPortalLocked) {
-            alert("Action Required: You have unread documents.\n\nPlease check Toolbox Talks, Vehicle Documents, or DNO Guides to unlock your performance data.");
-            return;
-        }
-        targetFunction();
-    };
 
     // ── UI Navigation ──────────────────────────────────────────────────────────
     window.showHub = function() {
@@ -1010,8 +977,6 @@
 
     // ── Show Daily Breakdown ───────────────────────────────────────────────────
     showBreakdownBtn.addEventListener('click', async () => {
-        if (isPortalLocked) return;
-
         const startDate = startDateInput.value;
         const endDate   = endDateInput.value;
 
@@ -1502,7 +1467,6 @@
     }
 
     submitPaymentsBtn.addEventListener('click', () => {
-        if (isPortalLocked) return;
         paymentsModal.classList.add('show');
         document.getElementById('paymentDate').valueAsDate = new Date();
     });
