@@ -173,7 +173,10 @@
         .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0, 163, 224, 0.3); }
         .btn-success { background: linear-gradient(135deg, var(--success) 0%, #059669 100%); color: white; }
         .btn-success:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-danger { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--error); color: var(--error); }
+        .btn-danger:hover:not(:disabled) { background: var(--error); color: white; transform: translateY(-2px); box-shadow: 0 8px 16px rgba(239, 68, 68, 0.3); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+        
         .btn-group { display: flex; gap: 1rem; justify-content: center; }
 
         .progress-container { display: none; margin-top: 2rem; }
@@ -219,6 +222,28 @@
         .stat-card { padding: 1.5rem; background: var(--bg-dark); border-radius: 12px; border-left: 4px solid var(--accent); }
         .stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
         .stat-value { font-size: 1.75rem; font-weight: 700; color: var(--text-light); font-family: 'DM Mono', monospace; }
+
+        /* Form Controls */
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 163, 224, 0.2);
+        }
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
 
         /* Missing Points Panel */
         .unknown-panel {
@@ -396,12 +421,12 @@
                 <a href="index.html" class="back-btn">←</a>
                 <h1>Sureserve Data Upload</h1>
             </div>
-            <p class="subtitle">UPLOAD CSV DATA TO FIREBASE</p>
+            <p class="subtitle">UPLOAD & MANAGE FIREBASE DATA</p>
         </header>
 
         <main>
             <div id="successAlert" class="alert alert-success">
-                <strong>✓ Success!</strong> Data uploaded successfully to Firebase. Re-uploaded jobs were updated to prevent duplicates.
+                <strong>✓ Success!</strong> <span id="successMessage">Data processed successfully.</span>
             </div>
             <div id="errorAlert" class="alert alert-error">
                 <strong>✗ Error!</strong> <span id="errorMessage"></span>
@@ -410,6 +435,7 @@
                 <strong>⚠ Warning!</strong> <span id="warningMessage"></span>
             </div>
 
+            <!-- Upload Card -->
             <div class="card">
                 <div class="info-box">
                     <div class="info-box-title">📋 CSV Format Requirements</div>
@@ -487,6 +513,30 @@
                     <p>Processing file...</p>
                 </div>
             </div>
+
+            <!-- Bulk Delete Card -->
+            <div class="card" id="deleteCard">
+                <h2 class="section-title" style="color: var(--error); border-bottom-color: var(--border);">🗑️ Bulk Delete by Date</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.5;">
+                    Select a date range to delete all matching jobs based on their <strong>Date of Appointment</strong>. This action will permanently remove records from the database and cannot be undone.
+                </p>
+                <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.85rem; font-weight: 600; color: var(--text-light);">Start Date</label>
+                        <input type="date" id="deleteStart" class="form-control">
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.85rem; font-weight: 600; color: var(--text-light);">End Date</label>
+                        <input type="date" id="deleteEnd" class="form-control">
+                    </div>
+                </div>
+                <div class="btn-group" style="justify-content: flex-start;">
+                    <button id="deleteBtn" class="btn btn-danger" style="width: 100%; justify-content: center;">
+                        <span>⚠️</span> Delete Records in Range
+                    </button>
+                </div>
+                <div id="deleteProgress" class="progress-text" style="display: none; margin-top: 1.5rem; color: var(--warning); font-weight: 600;">Processing...</div>
+            </div>
         </main>
     </div>
 
@@ -517,10 +567,10 @@
     <!-- Papa Parse -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
-    <!-- Firebase SDK (Updated to import doc and setDoc) -->
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, doc, setDoc, serverTimestamp, collection, getDocs, writeBatch } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyCMmUOdW2uEIGVd6XQfWXKF8eaFmwEog1g",
@@ -551,6 +601,7 @@
         const progressText      = document.getElementById('progressText');
         const loadingSection    = document.getElementById('loadingSection');
         const successAlert      = document.getElementById('successAlert');
+        const successMessage    = document.getElementById('successMessage');
         const errorAlert        = document.getElementById('errorAlert');
         const warningAlert      = document.getElementById('warningAlert');
         const errorMessage      = document.getElementById('errorMessage');
@@ -562,9 +613,63 @@
         const closeUnknownPanel = document.getElementById('closeUnknownPanel');
         const unknownToggleBtn  = document.getElementById('unknownToggleBtn');
         const toggleBtnText     = document.getElementById('toggleBtnText');
+        
+        // Delete Elements
+        const deleteStart       = document.getElementById('deleteStart');
+        const deleteEnd         = document.getElementById('deleteEnd');
+        const deleteBtn         = document.getElementById('deleteBtn');
+        const deleteProgress    = document.getElementById('deleteProgress');
 
         let parsedData   = [];
         let validRecords = [];
+
+        // ── Helper functions ──
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text || '';
+            return div.innerHTML;
+        }
+
+        // Robust date parser for both UK (DD/MM/YYYY) and ISO (YYYY-MM-DD) string formats
+        function parseDateString(dateStr) {
+            if (!dateStr) return null;
+            // Check for DD/MM/YYYY or DD-MM-YYYY format
+            const ukMatch = dateStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+            if (ukMatch) {
+                return new Date(ukMatch[3], ukMatch[2] - 1, ukMatch[1]);
+            }
+            // Fallback for standard parsable dates
+            const d = new Date(dateStr);
+            return isNaN(d.getTime()) ? null : d;
+        }
+
+        function hideAlerts() {
+            successAlert.classList.remove('show');
+            errorAlert.classList.remove('show');
+            warningAlert.classList.remove('show');
+        }
+
+        function showSuccess(message) {
+            hideAlerts();
+            successMessage.textContent = message;
+            successAlert.classList.add('show');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => successAlert.classList.remove('show'), 6000);
+        }
+
+        function showError(message) {
+            hideAlerts();
+            errorMessage.textContent = message;
+            errorAlert.classList.add('show');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showWarning(message) {
+            hideAlerts();
+            warningMessage.textContent = message;
+            warningAlert.classList.add('show');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         // ── File input handlers ──
         uploadArea.addEventListener('click', () => fileInput.click());
@@ -614,19 +719,16 @@
             let skipped      = 0;
             let noPointsCount = 0;
 
-            // Track descriptions missing points for the side panel
             const noPointsDescriptions = {};
 
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
 
-                // Must have at least 18 columns and a Ref (B) + Description (C)
                 if (row.length < 18 || !row[1] || !row[2]) {
                     skipped++;
                     continue;
                 }
 
-                // ── Read points directly from Column E (index 4) ──
                 const rawPoints = String(row[4] || '').trim();
                 const points    = parseFloat(rawPoints);
                 const hasPoints = !isNaN(points) && points > 0;
@@ -635,7 +737,7 @@
                     ref:               String(row[1]  || '').trim(),
                     description:       String(row[2]  || '').trim(),
                     dateOfAppointment: String(row[3]  || '').trim(),
-                    points:            hasPoints ? points : null,   // null = no value in col E
+                    points:            hasPoints ? points : null, 
                     resource:          String(row[6]  || '').trim(),
                     status:            String(row[17] || '').trim(),
                     uploadedAt:        new Date().toISOString()
@@ -667,7 +769,6 @@
 
             const noPointsTypes = Object.keys(noPointsDescriptions).length;
 
-            // Update stats
             document.getElementById('totalRows').textContent   = data.length - 1;
             document.getElementById('validRows').textContent   = validRecords.length;
             document.getElementById('skippedRows').textContent = skipped;
@@ -681,7 +782,6 @@
             displayPreview(validRecords);
             actionButtons.style.display = 'flex';
 
-            // Show missing points panel if needed
             if (noPointsTypes > 0) {
                 populateUnknownPanel(noPointsDescriptions, noPointsTypes);
                 unknownPanel.classList.add('show');
@@ -695,7 +795,6 @@
         function populateUnknownPanel(noPointsDescriptions, count) {
             unknownBadgeCount.textContent = count;
             toggleBtnText.textContent = `${count} Missing Point${count !== 1 ? 's' : ''}`;
-
             unknownPanelBody.innerHTML = '';
 
             Object.entries(noPointsDescriptions)
@@ -716,7 +815,6 @@
 
         function displayPreview(records) {
             const previewData = records.slice(0, 10);
-
             let tableHTML = `
                 <table>
                     <thead>
@@ -766,7 +864,7 @@
             unknownToggleBtn.classList.remove('show');
         });
 
-        // ── Upload to Firebase (Updated to use setDoc to prevent duplicates) ──
+        // ── Upload to Firebase ──
         uploadBtn.addEventListener('click', async () => {
             if (validRecords.length === 0) { showError('No valid records to upload'); return; }
             if (!confirm(`Upload ${validRecords.length} record(s) to Firebase? Existing Job References will be updated.`)) return;
@@ -790,20 +888,14 @@
                             uploadedAt:        serverTimestamp()
                         };
 
-                        // Only store points field if there's an actual value
                         if (validRecords[i].points !== null) {
                             docData.points = validRecords[i].points;
                         }
 
-                        // 1. Create a safe ID using the Job Reference (remove any characters that Firebase doesn't like in IDs)
                         const safeDocId = String(validRecords[i].ref).replace(/[^a-zA-Z0-9-_]/g, '_');
-                        
-                        // 2. Reference the specific document using that ID
                         const docRef = doc(db, 'SP-SureserveData', safeDocId);
 
-                        // 3. Use setDoc with { merge: true } to update if it exists, or create if it doesn't
                         await setDoc(docRef, docData, { merge: true });
-                        
                         uploadedCount++;
                     } catch (err) {
                         console.error('Error uploading record:', err);
@@ -818,7 +910,7 @@
                 progressContainer.classList.remove('show');
 
                 if (errorCount === 0) {
-                    showSuccess();
+                    showSuccess(`Data uploaded successfully. ${uploadedCount} record(s) processed.`);
                 } else {
                     showWarning(`Uploaded ${uploadedCount} record(s). ${errorCount} record(s) failed.`);
                 }
@@ -850,36 +942,85 @@
             validRecords = [];
             progressBar.style.width  = '0%';
             progressText.textContent = 'Uploading... 0%';
+        }
+
+        // ── Bulk Delete Logic ──
+        deleteBtn.addEventListener('click', async () => {
+            if (!deleteStart.value || !deleteEnd.value) {
+                showError('Please select both a Start Date and an End Date.');
+                return;
+            }
+
+            const startDate = new Date(deleteStart.value);
+            startDate.setHours(0, 0, 0, 0); // Start of day
+            const endDate = new Date(deleteEnd.value);
+            endDate.setHours(23, 59, 59, 999); // End of day
+
+            if (startDate > endDate) {
+                showError('The Start Date must be before or equal to the End Date.');
+                return;
+            }
+
+            const confirmMsg = `WARNING: Are you sure you want to delete ALL records with an appointment date between ${startDate.toLocaleDateString()} and ${endDate.toLocaleDateString()}?\n\nThis cannot be undone!`;
+            if (!confirm(confirmMsg)) return;
+
             hideAlerts();
-        }
+            deleteBtn.disabled = true;
+            deleteProgress.style.display = 'block';
+            deleteProgress.textContent = 'Scanning database for matching records...';
 
-        function showSuccess() {
-            hideAlerts();
-            successAlert.classList.add('show');
-            setTimeout(() => successAlert.classList.remove('show'), 5000);
-        }
+            try {
+                const snapshot = await getDocs(collection(db, 'SP-SureserveData'));
+                const docsToDelete = [];
 
-        function showError(message) {
-            hideAlerts();
-            errorMessage.textContent = message;
-            errorAlert.classList.add('show');
-        }
+                // Filter documents by parsing their string date
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data.dateOfAppointment) {
+                        const apptDate = parseDateString(data.dateOfAppointment);
+                        if (apptDate && apptDate >= startDate && apptDate <= endDate) {
+                            docsToDelete.push(docSnap.ref);
+                        }
+                    }
+                });
 
-        function showWarning(message) {
-            warningMessage.textContent = message;
-            warningAlert.classList.add('show');
-        }
+                if (docsToDelete.length === 0) {
+                    showWarning('No records were found with appointment dates in that range.');
+                    resetDeleteUI();
+                    return;
+                }
 
-        function hideAlerts() {
-            successAlert.classList.remove('show');
-            errorAlert.classList.remove('show');
-            warningAlert.classList.remove('show');
-        }
+                if (!confirm(`Found ${docsToDelete.length} matching record(s). Proceed with deletion?`)) {
+                    resetDeleteUI();
+                    return;
+                }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text || '';
-            return div.innerHTML;
+                deleteProgress.textContent = `Deleting ${docsToDelete.length} record(s)...`;
+
+                // Firestore batched writes (max 500 operations per batch)
+                const chunkSize = 500;
+                for (let i = 0; i < docsToDelete.length; i += chunkSize) {
+                    const chunk = docsToDelete.slice(i, i + chunkSize);
+                    const batch = writeBatch(db);
+                    chunk.forEach(ref => batch.delete(ref));
+                    await batch.commit();
+                }
+
+                showSuccess(`Successfully deleted ${docsToDelete.length} record(s) from the database.`);
+                deleteStart.value = '';
+                deleteEnd.value = '';
+
+            } catch (error) {
+                console.error("Delete Error:", error);
+                showError(`Error deleting records: ${error.message}`);
+            } finally {
+                resetDeleteUI();
+            }
+        });
+
+        function resetDeleteUI() {
+            deleteBtn.disabled = false;
+            deleteProgress.style.display = 'none';
         }
     </script>
 </body>
