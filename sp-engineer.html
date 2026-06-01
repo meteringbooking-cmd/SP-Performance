@@ -421,6 +421,17 @@
                     <span class="hub-card-arrow">↗</span>
                 </button>
 
+                <button class="hub-card" style="--card-accent:#10B981;" onclick="openReferralModal()">
+                    <span class="hub-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+                        </svg>
+                    </span>
+                    <div class="hub-card-label">Submit Referral</div>
+                    <div class="hub-card-desc">Refer an engineer to join the Scottish Power team.</div>
+                    <span class="hub-card-arrow">↗</span>
+                </button>
+
             </div>
         </main>
         <footer>NGU - Scottish Power - Engineer Dashboard - Barry Dixon</footer>
@@ -620,6 +631,36 @@
     </div>
 </div>
 
+<div id="referralModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title" style="color: var(--accent);">🤝 Submit Referral</h2>
+            <button class="close-btn" id="closeReferralModal">×</button>
+        </div>
+        <form id="referralForm">
+            <div class="form-group">
+                <label for="refereeName">Candidate's Full Name</label>
+                <input type="text" id="refereeName" required placeholder="e.g., Jane Doe">
+            </div>
+            
+            <div class="form-group">
+                <label for="refereeContact">Candidate's Phone or Email</label>
+                <input type="text" id="refereeContact" required placeholder="e.g., 07123456789">
+            </div>
+
+            <div class="form-group">
+                <label for="referralNotes">Why are they a good fit?</label>
+                <textarea id="referralNotes" rows="3" placeholder="Add any background info or experience they have..."></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" id="cancelReferral">Cancel</button>
+                <button type="submit" class="btn btn-primary">Submit Referral</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script type="module">
     import { initializeApp }    from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getFirestore, collection, query, where, getDocs, addDoc, serverTimestamp, orderBy } 
@@ -665,6 +706,10 @@
     const closeModal             = document.getElementById('closeModal');
     const cancelPayment          = document.getElementById('cancelPayment');
     const paymentsForm           = document.getElementById('paymentsForm');
+
+    // New Referral Modal Refs
+    const referralModal          = document.getElementById('referralModal');
+    const referralForm           = document.getElementById('referralForm');
     
     const periodBonusTotal       = document.getElementById('periodBonusTotal');
     const periodBonusPoints      = document.getElementById('periodBonusPoints');
@@ -973,6 +1018,44 @@
     document.getElementById('closeCapacityModal').addEventListener('click', () => {
         document.getElementById('capacityModal').classList.remove('show');
         document.body.style.overflow = '';
+    });
+    
+    // ── Referral Modal Logic ───────────────────────────────────────────────────
+    window.openReferralModal = function() {
+        referralModal.classList.add('show');
+    };
+
+    document.getElementById('closeReferralModal').addEventListener('click', () => {
+        referralModal.classList.remove('show');
+        referralForm.reset();
+    });
+    
+    document.getElementById('cancelReferral').addEventListener('click', () => {
+        referralModal.classList.remove('show');
+        referralForm.reset();
+    });
+
+    referralForm.addEventListener('submit', async e => {
+        e.preventDefault();
+        
+        const referralData = {
+            referredBy: currentUser.name,
+            candidateName: document.getElementById('refereeName').value.trim(),
+            candidateContact: document.getElementById('refereeContact').value.trim(),
+            notes: document.getElementById('referralNotes').value.trim(),
+            status: 'New',
+            timestamp: serverTimestamp()
+        };
+
+        try {
+            await addDoc(collection(db, 'SP Referrals'), referralData);
+            alert('Referral submitted successfully!');
+            referralModal.classList.remove('show');
+            referralForm.reset();
+        } catch (err) {
+            console.error(err);
+            alert('Error submitting referral. Please try again.');
+        }
     });
 
     // ── Show Daily Breakdown ───────────────────────────────────────────────────
