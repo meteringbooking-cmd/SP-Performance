@@ -234,7 +234,7 @@
         }
         .rolling-sections {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 1rem;
             flex: 1;
             align-content: start;
@@ -366,9 +366,6 @@
             <div class="card-title" style="color:var(--purple)">⚡ Transactional</div>
             <div class="engineers-grid" id="grid-transactional"></div>
 
-            <div class="card-title" style="color:var(--teal)">📅 Day Rate</div>
-            <div class="engineers-grid" id="grid-dayrate"></div>
-
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2rem;">
                 <div style="font-family:'DM Mono';">Daily Total: <span id="totalDisplay" style="color:var(--success); font-size:1.5rem; font-weight:600;">£0.00</span></div>
                 <button class="btn btn-primary" id="saveBtn" onclick="saveData()">💾 Save Entries</button>
@@ -392,15 +389,7 @@
                 <div id="averages-container" class="averages-strip"></div>
                 <div class="summary-col" id="summary-col">
                     <div class="summary-stat">
-                        <div class="summary-stat-label">⚡ Transactional Avg</div>
-                        <div class="summary-stat-value transactional" id="sum-transactional">—</div>
-                    </div>
-                    <div class="summary-stat">
-                        <div class="summary-stat-label">📅 Day Rate Avg</div>
-                        <div class="summary-stat-value dayrate" id="sum-dayrate">—</div>
-                    </div>
-                    <div class="summary-stat">
-                        <div class="summary-stat-label">📊 Overall Avg</div>
+                        <div class="summary-stat-label" id="sum-overall-label">📊 Overall Avg</div>
                         <div class="summary-stat-value overall" id="sum-overall">—</div>
                     </div>
                 </div>
@@ -453,20 +442,19 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const TRANSACTIONAL = ["Alistair Cavan", "Craig Steel", "Jonathan Chyla", "Mehdi Khamseh", "Muhammed Zafar", "Neil Burns", "Tomas Anderson"].sort();
-    const DAYRATE = ["Allan Grant", "Harris Saleem", "Kris Armstrong", "Ryan Clark", "Scott Coyle"].sort();
+    const TRANSACTIONAL = ["Alistair Cavan", "Craig Steel", "Jonathan Chyla", "Mehdi Khamseh", "Muhammed Zafar", "Neil Burns", "Tomas Anderson", "Allan Grant", "Harris Saleem", "Kris Armstrong", "Ryan Clark", "Scott Coyle"].sort();
+    const DAYRATE = []; // Day Rate category retired — everyone now lives under Transactional
     const HIGHLIGHT_LIST = ["Allan Grant", "Harris Saleem", "Kris Armstrong", "Ryan Clark", "Scott Coyle"];
 
     // State
     let lastDates = [];
     let lastDataMap = {};
+    let lastEngStats = {};
     let activeFilters = []; // empty array = show all engineers
 
     function init() {
         const tGrid = document.getElementById('grid-transactional');
-        const dGrid = document.getElementById('grid-dayrate');
         TRANSACTIONAL.forEach(n => tGrid.innerHTML += createCard(n, 'transactional'));
-        DAYRATE.forEach(n => dGrid.innerHTML += createCard(n, 'dayrate'));
         document.getElementById('entryDate').value = new Date().toISOString().split('T')[0];
         loadDateData();
     }
@@ -557,6 +545,7 @@
         dates.sort();
         lastDates = dates;
         lastDataMap = dataMap;
+        lastEngStats = engStats;
         activeFilters = [];
 
         buildFilterChips();
@@ -574,11 +563,8 @@
 
         let html = `<span class="filter-chip chip-all active" data-name="all" onclick="applyFilter('all', event)">All</span>`;
         TRANSACTIONAL.forEach(name => {
-            html += `<span class="filter-chip chip-transactional" data-name="${name}" onclick="applyFilter('${name}', event)">${name}</span>`;
-        });
-        DAYRATE.forEach(name => {
             const isOrange = HIGHLIGHT_LIST.includes(name);
-            html += `<span class="filter-chip ${isOrange ? 'chip-orange' : 'chip-dayrate'}" data-name="${name}" onclick="applyFilter('${name}', event)">${name}</span>`;
+            html += `<span class="filter-chip ${isOrange ? 'chip-orange' : 'chip-transactional'}" data-name="${name}" onclick="applyFilter('${name}', event)">${name}</span>`;
         });
         chipsEl.innerHTML = html;
     }
@@ -618,8 +604,27 @@
         });
 
         renderPivot(lastDates, lastDataMap, activeFilters);
+        updateOverallAvg(activeFilters);
         updateBanner();
     };
+
+    function updateOverallAvg(filterNames) {
+        const names = (filterNames && filterNames.length > 0) ? filterNames : TRANSACTIONAL;
+        let total = 0, days = 0;
+        names.forEach(n => {
+            if (lastEngStats[n]) { total += lastEngStats[n].total; days += lastEngStats[n].count; }
+        });
+        const avg = days > 0 ? total / days : null;
+
+        const label = document.getElementById('sum-overall-label');
+        const value = document.getElementById('sum-overall');
+        if (filterNames && filterNames.length > 0) {
+            label.textContent = filterNames.length === 1 ? `📊 ${filterNames[0]} Avg` : `📊 Selected Avg (${filterNames.length})`;
+        } else {
+            label.textContent = '📊 Overall Avg';
+        }
+        value.textContent = avg !== null ? `£${avg.toFixed(2)}` : '—';
+    }
 
     window.clearFilter = () => applyFilter('all');
 
@@ -716,23 +721,9 @@
 
         container.innerHTML =
             makeCol('transactional', '⚡ Transactional', t1) +
-            makeCol('transactional', '⚡ Transactional', t2) +
-            makeCol('dayrate', '📅 Day Rate', DAYRATE);
+            makeCol('transactional', '⚡ Transactional', t2);
 
-        const groupAvg = (names) => {
-            let total = 0, days = 0;
-            names.forEach(n => { if (stats[n]) { total += stats[n].total; days += stats[n].count; } });
-            return days > 0 ? total / days : null;
-        };
-
-        const fmt = v => v !== null ? `£${v.toFixed(2)}` : '—';
-        const tAvg = groupAvg(TRANSACTIONAL);
-        const dAvg = groupAvg(DAYRATE);
-        const oAvg = groupAvg([...TRANSACTIONAL, ...DAYRATE]);
-
-        document.getElementById('sum-transactional').textContent = fmt(tAvg);
-        document.getElementById('sum-dayrate').textContent = fmt(dAvg);
-        document.getElementById('sum-overall').textContent = fmt(oAvg);
+        updateOverallAvg(activeFilters);
     }
 
     async function renderRollingMonth() {
@@ -779,7 +770,6 @@
         };
 
         let html = renderRollingSection(TRANSACTIONAL, 'transactional', '⚡ Transactional');
-        html += renderRollingSection(DAYRATE, 'dayrate', '📅 Day Rate');
 
         container.innerHTML = html || '<div class="rolling-empty">No data in last 30 days.</div>';
     }
