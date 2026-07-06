@@ -394,7 +394,7 @@
                     </div>
                 </div>
                 <div class="rolling-panel">
-                    <div class="rolling-panel-title">📅 Rolling Month Avg <span style="font-size:0.6rem; color:var(--text-muted); font-weight:400; margin-left:0.4rem;">— click a name to filter, ctrl/cmd+click to add more</span></div>
+                    <div class="rolling-panel-title">📅 Rolling Month Avg <span style="font-size:0.6rem; color:var(--text-muted); font-weight:400; margin-left:0.4rem;">— shows selected engineers only; use the chips below to add more</span></div>
                     <div class="rolling-sections" id="rolling-container">
                         <div class="rolling-empty" style="grid-column:1/-1;">Generate a report to view.</div>
                     </div>
@@ -450,6 +450,7 @@
     let lastDates = [];
     let lastDataMap = {};
     let lastEngStats = {};
+    let lastRollingStats = {};
     let activeFilters = []; // empty array = show all engineers
 
     function init() {
@@ -605,6 +606,7 @@
 
         renderPivot(lastDates, lastDataMap, activeFilters);
         updateOverallAvg(activeFilters);
+        renderRollingList(activeFilters);
         updateBanner();
     };
 
@@ -751,10 +753,20 @@
             });
         });
 
-        const renderRollingSection = (names, labelClass, labelText) => {
+        lastRollingStats = rollingStats;
+        renderRollingList(activeFilters);
+    }
+
+    function renderRollingList(filterNames) {
+        const container = document.getElementById('rolling-container');
+        const filtered = filterNames && filterNames.length > 0;
+        const names = filtered ? TRANSACTIONAL.filter(n => filterNames.includes(n)) : TRANSACTIONAL;
+
+        const renderRollingSection = (list, labelClass, labelText) => {
+            if (list.length === 0) return '';
             let html = `<div><div class="rolling-section-label ${labelClass}">${labelText}</div>`;
-            names.forEach(name => {
-                const s = rollingStats[name];
+            list.forEach(name => {
+                const s = lastRollingStats[name];
                 const isHighlighted = HIGHLIGHT_LIST.includes(name);
                 const avg = s && s.count > 0 ? s.total / s.count : null;
                 html += `<div class="rolling-row" data-name="${name}" onclick="applyFilter('${name}', event)">
@@ -769,9 +781,10 @@
             return html;
         };
 
-        let html = renderRollingSection(TRANSACTIONAL, 'transactional', '⚡ Transactional');
+        const labelText = filtered ? `⚡ Selected (${names.length})` : '⚡ Transactional';
+        const html = renderRollingSection(names, 'transactional', labelText);
 
-        container.innerHTML = html || '<div class="rolling-empty">No data in last 30 days.</div>';
+        container.innerHTML = html || '<div class="rolling-empty">No matching engineers.</div>';
     }
 
     window.switchTab = (t) => {
