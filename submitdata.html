@@ -611,8 +611,8 @@
                 <p class="section-subtitle">HEADCOUNT, JOB VOLUME AND METERS FOR THE WORKSCREEN</p>
 
                 <div class="info-box">
-                    <strong>Today</strong> &ndash; submit the headcount, jobs and meters; they show in the <em>Today</em> column of the Scottish Power tile.<br>
-                    <strong>Yesterday</strong> &ndash; submit the meter count only. Jobs come from the data upload above, headcount from the SP attendance page, and Comp % is worked out as normal.
+                    Whatever you enter for a date is used on the workscreen for that date &ndash; <strong>Today</strong> feeds the Today column, and the previous working day feeds the <strong>Yesterday</strong> column (which switches over at 11am).<br>
+                    Yesterday's <strong>MPH</strong> = meters &divide; headcount. Anything you leave blank is worked out automatically instead: jobs from the data upload, headcount from the SP attendance page.
                 </div>
 
                 <div class="form-group">
@@ -628,12 +628,12 @@
                     <div class="form-group">
                         <label for="figHeadcount">Headcount</label>
                         <input type="number" id="figHeadcount" min="0" step="0.5" inputmode="decimal" placeholder="e.g. 28">
-                        <div class="field-hint">People working. Only used for yesterday if no SP attendance was entered.</div>
+                        <div class="field-hint">People working. Leave blank to use the SP attendance page.</div>
                     </div>
                     <div class="form-group">
                         <label for="figJobs">Jobs volume</label>
                         <input type="number" id="figJobs" min="0" step="1" inputmode="numeric" placeholder="e.g. 140">
-                        <div class="field-hint">Number of jobs for the day.</div>
+                        <div class="field-hint">Leave blank to use the uploaded jobs.</div>
                     </div>
                     <div class="form-group">
                         <label for="figMeters">Meters</label>
